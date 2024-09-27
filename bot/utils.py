@@ -15,10 +15,8 @@ def download(path_or_url: str) -> str:
         resp = httpx.get(url=path_or_url, headers=DEFAULT_HEADERS)
         resp.raise_for_status()
 
-        with tempfile.NamedTemporaryFile(
-            delete=False,
-            suffix=".pdf" if resp.headers.get("content-type") == "application/pdf" else None,
-        ) as fp:
+        suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
             fp.write(resp.content)
             f = fp.name
     else:
@@ -28,13 +26,9 @@ def download(path_or_url: str) -> str:
 
 
 def find_url(s: str) -> str:
-    # Regular expression pattern to match URLs
     url_pattern = r"https?://[^\s]+"
 
-    # Search for the pattern in the input string
     match = re.search(url_pattern, s)
-
-    # Return the URL if a match is found, otherwise return an empty string
     if match:
         return match.group(0)
 
@@ -55,6 +49,7 @@ def load_pdf(f: str) -> str:
 
 def load_url(url: str) -> str:
     f = download(url)
+
     if f.endswith(".pdf"):
         return load_pdf(f)
 
