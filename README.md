@@ -5,7 +5,10 @@
 ```
 BOT_TOKEN=
 BOT_WHITELIST=
+
 OPENAI_API_KEY=
+# or
+GOOGLE_API_KEY=
 ```
 
 ```shell
