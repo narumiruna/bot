@@ -30,6 +30,7 @@ jobs:
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
           echo BOT_WHITELIST=${{ vars.BOT_WHITELIST }} >> .env
           echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
+          echo REDIS_URL=${{ secrets.REDIS_URL }} >> .env
       - name: Stop and disable service
         continue-on-error: true
         working-directory: ${{ env.PLIST_DIR }}

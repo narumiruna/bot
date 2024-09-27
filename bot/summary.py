@@ -5,9 +5,6 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSerializable
 from langchain_openai import ChatOpenAI
 
-
-
-
 PROMPT_TEMPLATE = """請使用台灣用語的繁體中文撰寫以下文章的簡明重點摘要，並以條列式呈現：
 {text}
 
