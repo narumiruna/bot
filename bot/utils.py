@@ -67,7 +67,7 @@ def set_llm_cache_from_env() -> None:
     redis_url = os.getenv("REDIS_URL")
     if redis_url:
         logger.info(f"Using Redis cache at {redis_url}")
-        cache = RedisCache(redis_url)
+        cache = RedisCache(redis_url, prefix="langchain")
     else:
         cache = SQLiteCache()
 
