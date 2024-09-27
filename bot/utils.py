@@ -60,6 +60,8 @@ def load_youtube(url: str) -> str:
 
 
 def load_url(url: str) -> str:
+    # https://python.langchain.com/docs/integrations/document_loaders/
+
     with contextlib.suppress(ValueError):
         return load_youtube(url)
 
