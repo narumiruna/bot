@@ -72,7 +72,7 @@ class Bot:
             await update.message.reply_text("Failed to load URL")
             return
 
-        summarized = summarize()
+        summarized = summarize(text)
         logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, summarized)
 
         await update.message.reply_text(summarized)
