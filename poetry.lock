@@ -1022,20 +1022,6 @@ pydantic = [
 requests = ">=2,<3"
 
 [[package]]
-name = "llmsherpa"
-version = "0.1.4"
-description = "Strategic APIs to Accelerate LLM Use Cases"
-optional = false
-python-versions = "*"
-files = [
-    {file = "llmsherpa-0.1.4-py3-none-any.whl", hash = "sha256:88a651eacf221a997a9a9795903fbb70ddb211cd2e82831507de01284c917667"},
-    {file = "llmsherpa-0.1.4.tar.gz", hash = "sha256:18789840ded3d7e37db6a5c668dac2b0a58f20e426beaed3e60554dee0a5ecb0"},
-]
-
-[package.dependencies]
-urllib3 = "*"
-
-[[package]]
 name = "loguru"
 version = "0.7.2"
 description = "Python logging made (stupidly) simple"
@@ -2489,4 +2475,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "dc0f2e3c47865ce22ae7ac108c167d0ace4980de37a47c0d753fa051173ba26f"
+content-hash = "25e7f848db15e5ba5b849ae96a1a13d62890cb61deee6e1303a262bba83114ad"
