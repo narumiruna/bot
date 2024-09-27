@@ -42,22 +42,24 @@ class Bot:
         if update.message.text is None:
             return
 
-        logger.info("Received message: '{}' from: {}", update.message.text, update.message.chat.full_name)
+        logger.info("Received message: '{}' from chat ID: {}", update.message.text, update.message.chat_id)
 
         if update.message.chat_id not in self.whitelist:
             logger.info("Chat ID {} not in whitelist", update.message.chat_id)
             return
 
-        url = find_url(update.message.text.lstrip("/sum").strip())
+        raw_text = update.message.text
+        if update.message.reply_to_message is not None and update.message.reply_to_message.text is not None:
+            raw_text += "\n" + update.message.reply_to_message.text
+
+        url = find_url(raw_text)
         if not url:
             logger.info("No URL found in message")
             return
 
         logger.info("Found URL: {}", url)
 
-        text = load_url(url)
-
-        reply_text = summarize(text)
+        reply_text = summarize(load_url(url))
         logger.info("Replying to: {} with: {}", update.message.chat.full_name, reply_text)
 
         await update.message.reply_text(reply_text)
