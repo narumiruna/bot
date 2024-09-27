@@ -23,4 +23,18 @@ def get_chain() -> RunnableSerializable:
 def summarize(text: str) -> str:
     chain = get_chain()
     ai_message: AIMessage = chain.invoke({"text": text})
-    return ai_message.pretty_repr()
+
+    content: str | list[str | dict] = ai_message.content
+    if isinstance(content, str):
+        return content
+
+    contents = []
+    for item in content:
+        if isinstance(item, str):
+            contents.append(f"• {item}")
+
+        if isinstance(item, dict):
+            for k, v in item.items():
+                contents.append(f"• {k}: {v}")
+
+    return "\n".join(contents)
