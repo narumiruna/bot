@@ -14,10 +14,11 @@ from .utils import load_url
 
 
 class Bot:
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, whitelist: list[str]) -> None:
         self.app = Application.builder().token(token).build()
         self.app.add_handler(CommandHandler("sum", self.summarize_url))
         self.app.run_polling(allowed_updates=Update.ALL_TYPES)
+        self.whitelist = whitelist
 
     @classmethod
     def from_env(cls):
@@ -25,7 +26,11 @@ class Bot:
         if token is None:
             raise ValueError("BOT_TOKEN is not set")
 
-        return cls(token=token)
+        whitelist = os.getenv("WHITELIST", "").split(",")
+        if not token:
+            raise ValueError("WHITELIST is not set")
+
+        return cls(token=token, whitelist=whitelist)
 
     async def summarize_url(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         if update.message is None:
@@ -35,6 +40,10 @@ class Bot:
             return
 
         logger.info("Received message: '{}' from: {}", update.message.text, update.message.chat.full_name)
+
+        if update.message.chat_id not in self.whitelist:
+            logger.info("Chat ID {} not in whitelist", update.message.chat_id)
+            return
 
         url = find_url(update.message.text.lstrip("/sum").strip().split(" "))
         if not url:

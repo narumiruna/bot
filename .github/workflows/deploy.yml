@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  UNIT: dev.narumi.bot
+  WORKDIR: /Users/narumi/services/bot
+  PLIST_DIR: /Users/narumi/Library/LaunchAgents
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: pipx install .
+      - name: Install package
+        run: |
+          pipx uninstall bot
+          pipx install .
+      - name: Create dotenv
+        run: |
+          echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
+      - name: Stop and disable service
+        continue-on-error: true
+        working-directory: ${{ env.PLIST_DIR }}
+        run: |
+          launchctl stop ${{ env.UNIT }}
+          launchctl unload bot.plist
+      - name: Copy files
+        run: |
+          mkdir -p ${{ env.WORKDIR }}
+          mv .env ${{ env.WORKDIR }}
+          mv bot.plist ${{ env.PLIST_DIR }}
+      - name: Start service
+        working-directory: ${{ env.PLIST_DIR }}
+        run: |
+          launchctl load -w bot.plist
+          launchctl start ${{ env.UNIT }}
