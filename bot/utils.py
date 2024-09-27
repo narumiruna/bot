@@ -7,6 +7,7 @@ from pathlib import Path
 import httpx
 from langchain.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
+from langchain_community.document_loaders import YoutubeLoader
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -55,6 +56,11 @@ def load_pdf(f: str) -> str:
 
 
 def load_url(url: str) -> str:
+    if url.startswith("https://www.youtube.com/") or url.startswith("https://youtu.be/"):
+        loader = YoutubeLoader(url, add_video_info=False)
+        docs = loader.load()
+        return "\n".join([doc.page_content for doc in docs])
+
     f = download(url)
 
     if f.endswith(".pdf"):
