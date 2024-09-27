@@ -4,6 +4,7 @@ import tempfile
 
 import httpx
 from langchain.globals import set_llm_cache
+from langchain_community.cache import BaseCache
 from langchain_community.cache import SQLiteCache
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
@@ -62,7 +63,7 @@ def load_url(url: str) -> str:
 
 
 def set_llm_cache_from_env() -> None:
-    cache = None
+    cache: BaseCache | None = None
 
     redis_url = os.getenv("REDIS_URL")
     if redis_url:
