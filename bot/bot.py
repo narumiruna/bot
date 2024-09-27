@@ -30,7 +30,7 @@ class Bot:
             raise ValueError("BOT_TOKEN is not set")
 
         whitelist = os.getenv("BOT_WHITELIST")
-        if token is None:
+        if whitelist is None:
             raise ValueError("BOT_WHITELIST is not set")
 
         return cls(token=token, whitelist=[int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")])
