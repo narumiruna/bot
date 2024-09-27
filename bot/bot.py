@@ -16,7 +16,6 @@ from .utils import load_url
 class Bot:
     def __init__(self, token: str, whitelist: list[int]) -> None:
         self.whitelist = whitelist
-
         logger.info("whitelist: {}", self.whitelist)
 
         self.app = Application.builder().token(token).build()
@@ -24,22 +23,19 @@ class Bot:
         self.app.run_polling(allowed_updates=Update.ALL_TYPES)
 
     @classmethod
-    def from_env(cls):
+    def from_env(cls) -> Bot:
         token = os.getenv("BOT_TOKEN")
-        if token is None:
+        if not token:
             raise ValueError("BOT_TOKEN is not set")
 
         whitelist = os.getenv("BOT_WHITELIST")
-        if whitelist is None:
+        if not whitelist:
             raise ValueError("BOT_WHITELIST is not set")
 
         return cls(token=token, whitelist=[int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")])
 
     async def summarize_url(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        if update.message is None:
-            return
-
-        if update.message.text is None:
+        if not update.message or not update.message.text:
             return
 
         logger.info("Received message: '{}' from chat ID: {}", update.message.text, update.message.chat_id)
@@ -49,7 +45,7 @@ class Bot:
             return
 
         raw_text = update.message.text
-        if update.message.reply_to_message is not None and update.message.reply_to_message.text is not None:
+        if update.message.reply_to_message and update.message.reply_to_message.text:
             raw_text += "\n" + update.message.reply_to_message.text
 
         url = find_url(raw_text)
