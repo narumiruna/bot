@@ -52,6 +52,12 @@ def load_pdf(f: str) -> str:
     return "\n".join([doc.page_content for doc in docs])
 
 
+def load_youtube_transcript(video_id: str) -> str:
+    loader = YoutubeLoader(video_id, add_video_info=True, language=["en", "zh", "ja"])
+    docs = loader.load()
+    return "\n".join([doc.page_content for doc in docs])
+
+
 # parse by regex
 def parse_youtube_video_id(url: str) -> str:
     # https://www.youtube.com/watch?v=VIDEO_ID
@@ -70,9 +76,9 @@ def parse_youtube_video_id(url: str) -> str:
 def load_url(url: str) -> str:
     video_id = parse_youtube_video_id(url)
     if video_id:
-        loader = YoutubeLoader(video_id, add_video_info=True, language=["en", "zh", "ja"])
-        docs = loader.load()
-        return "\n".join([doc.page_content for doc in docs])
+        transcript = load_youtube_transcript(video_id)
+        if transcript:
+            return transcript
 
     f = download(url)
 
