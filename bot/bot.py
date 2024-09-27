@@ -9,7 +9,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
 
 from .summary import summarize
-from .utils import load_url
+from .utils import load_document
 from .utils import parse_url
 
 
@@ -66,7 +66,7 @@ class Bot:
         logger.info("Found URL: {}", url)
 
         # TODO: Handle the type of URL here, reply with a message if it cannot be processed
-        text = load_url(url)
+        text = load_document(url)
         if not text:
             logger.info("Failed to load URL")
             await update.message.reply_text("Failed to load URL")

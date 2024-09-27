@@ -11,6 +11,7 @@ from langchain_community.cache import SQLiteCache
 from langchain_community.document_loaders import YoutubeLoader
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
+from langchain_core.documents import Document
 from langchain_core.language_models.chat_models import BaseChatModel
 from loguru import logger
 
@@ -41,36 +42,22 @@ def parse_url(s: str) -> str:
     return ""
 
 
-def load_html(f: str) -> str:
-    loader = BSHTMLLoader(f)
-    docs = loader.load()
+def docs_to_str(docs: list[Document]) -> str:
     return "\n".join([doc.page_content for doc in docs])
 
 
-def load_pdf(f: str) -> str:
-    loader = PyPDFLoader(f)
-    docs = loader.load()
-    return "\n".join([doc.page_content for doc in docs])
-
-
-def load_youtube(url: str) -> str:
-    loader = YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["en", "zh", "ja"])
-    docs = loader.load()
-    return "\n".join([doc.page_content for doc in docs])
-
-
-def load_url(url: str) -> str:
+def load_document(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
     with contextlib.suppress(ValueError):
-        return load_youtube(url)
+        return docs_to_str(YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["zh", "ja", "en"]).load())
 
     f = download(url)
 
     if f.endswith(".pdf"):
-        return load_pdf(f)
+        return docs_to_str(PyPDFLoader(f).load())
 
-    return load_html(f)
+    return docs_to_str(BSHTMLLoader(f).load())
 
 
 def set_sqlite_llm_cache() -> None:
