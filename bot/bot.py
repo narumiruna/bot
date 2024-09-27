@@ -15,15 +15,22 @@ from .utils import load_url
 
 class Bot:
     def __init__(self, token: str, whitelist: list[int]) -> None:
+        """
+        Initialize the bot with a token and a whitelist of chat IDs.
+        """
         self.whitelist = whitelist
         logger.info("whitelist: {}", self.whitelist)
 
+        # Create the application and add the command handler
         self.app = Application.builder().token(token).build()
         self.app.add_handler(CommandHandler("sum", self.summarize_url))
         self.app.run_polling(allowed_updates=Update.ALL_TYPES)
 
     @classmethod
     def from_env(cls) -> Bot:
+        """
+        Create a Bot instance using environment variables for the token and whitelist.
+        """
         token = os.getenv("BOT_TOKEN")
         if not token:
             raise ValueError("BOT_TOKEN is not set")
@@ -35,6 +42,9 @@ class Bot:
         return cls(token=token, whitelist=[int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")])
 
     async def summarize_url(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+        """
+        Summarize the URL found in the message text and reply with the summary.
+        """
         if not update.message or not update.message.text:
             return
 
