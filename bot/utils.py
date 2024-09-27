@@ -1,9 +1,13 @@
 import re
 import tempfile
+from pathlib import Path
 
 import httpx
+from langchain.globals import set_llm_cache
+from langchain_community.cache import SQLiteCache
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
+from loguru import logger
 
 DEFAULT_HEADERS = {
     "User-Agent": "Chrome/126.0.0.0 Safari/537.36",
@@ -54,3 +58,10 @@ def load_url(url: str) -> str:
         return load_pdf(f)
 
     return load_html(f)
+
+
+def setup_cache() -> None:
+    database_path = Path.home() / ".cache" / ".langchain.db"
+    logger.info("Using cache database: {}", database_path)
+    cache = SQLiteCache(database_path.as_posix())
+    set_llm_cache(cache)

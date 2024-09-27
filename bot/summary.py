@@ -1,16 +1,11 @@
 import functools
-from pathlib import Path
 
-from langchain.globals import set_llm_cache
-from langchain_community.cache import SQLiteCache
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSerializable
 from langchain_openai import ChatOpenAI
 
-database_path = Path.home() / ".cache" / ".langchain.db"
-cache = SQLiteCache(database_path.as_posix())
-set_llm_cache(cache)
+
 
 
 PROMPT_TEMPLATE = """請使用台灣用語的繁體中文撰寫以下文章的簡明重點摘要，並以條列式呈現：

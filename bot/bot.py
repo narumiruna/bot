@@ -66,6 +66,6 @@ class Bot:
         logger.info("Found URL: {}", url)
 
         reply_text = summarize(load_url(url))
-        logger.info("Replying to: {} with: {}", update.message.chat.full_name, reply_text)
+        logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, reply_text)
 
         await update.message.reply_text(reply_text)
