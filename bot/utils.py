@@ -60,7 +60,10 @@ def load_youtube(video_id: str) -> str:
 
 
 def load_url(url: str) -> str:
-    video_id = YoutubeLoader.extract_video_id(url)
+    try:
+        video_id = YoutubeLoader.extract_video_id(url)
+    except ValueError:
+        video_id = None
     if video_id:
         return load_youtube(video_id)
 
