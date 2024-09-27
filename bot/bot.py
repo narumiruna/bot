@@ -14,11 +14,14 @@ from .utils import load_url
 
 
 class Bot:
-    def __init__(self, token: str, whitelist: list[str]) -> None:
+    def __init__(self, token: str, whitelist: list[int]) -> None:
+        self.whitelist = whitelist
+
+        logger.info("whitelist: {}", self.whitelist)
+
         self.app = Application.builder().token(token).build()
         self.app.add_handler(CommandHandler("sum", self.summarize_url))
         self.app.run_polling(allowed_updates=Update.ALL_TYPES)
-        self.whitelist = whitelist
 
     @classmethod
     def from_env(cls):
@@ -26,11 +29,11 @@ class Bot:
         if token is None:
             raise ValueError("BOT_TOKEN is not set")
 
-        whitelist = os.getenv("WHITELIST", "").split(",")
-        if not token:
-            raise ValueError("WHITELIST is not set")
+        whitelist = os.getenv("BOT_WHITELIST")
+        if token is None:
+            raise ValueError("BOT_WHITELIST is not set")
 
-        return cls(token=token, whitelist=whitelist)
+        return cls(token=token, whitelist=[int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")])
 
     async def summarize_url(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         if update.message is None:
@@ -45,7 +48,7 @@ class Bot:
             logger.info("Chat ID {} not in whitelist", update.message.chat_id)
             return
 
-        url = find_url(update.message.text.lstrip("/sum").strip().split(" "))
+        url = find_url(update.message.text.lstrip("/sum").strip())
         if not url:
             logger.info("No URL found in message")
             return
@@ -53,6 +56,8 @@ class Bot:
         logger.info("Found URL: {}", url)
 
         text = load_url(url)
-        logger.info("Loaded text from URL: {}", text)
 
-        await update.message.reply_text(summarize(text))
+        reply_text = summarize(text)
+        logger.info("Replying to: {} with: {}", update.message.chat.full_name, reply_text)
+
+        await update.message.reply_text(reply_text)

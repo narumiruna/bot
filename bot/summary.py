@@ -21,7 +21,7 @@ PROMPT_TEMPLATE = """請使用台灣用語的繁體中文撰寫以下文章的�
 
 @functools.cache
 def get_chain() -> RunnableSerializable:
-    llm = ChatOpenAI(temperature=0, model="gpt-4o")
+    llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
     prompt = PromptTemplate.from_template(PROMPT_TEMPLATE)
     chain = prompt | llm
     return chain
