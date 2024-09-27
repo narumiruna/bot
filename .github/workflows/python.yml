@@ -24,6 +24,7 @@ jobs:
       - uses: narumiruna/setup-poetry@v1
         with:
           poetry-version: ${{ matrix.poetry-version }}
+          cache: true
       - name: Install dependencies
         run: poetry install --sync
       - name: Lint
