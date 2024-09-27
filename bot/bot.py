@@ -9,8 +9,8 @@ from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
 
 from .summary import summarize
-from .utils import find_url
 from .utils import load_url
+from .utils import parse_url
 
 
 class Bot:
@@ -58,7 +58,7 @@ class Bot:
         if update.message.reply_to_message and update.message.reply_to_message.text:
             raw_text += "\n" + update.message.reply_to_message.text
 
-        url = find_url(raw_text)
+        url = parse_url(raw_text)
         if not url:
             logger.info("No URL found in message")
             return

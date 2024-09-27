@@ -7,6 +7,7 @@ from pathlib import Path
 import httpx
 from langchain.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
+from langchain_community.document_loaders import YoutubeLoader
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -18,21 +19,18 @@ DEFAULT_HEADERS = {
 
 
 def download(path_or_url: str) -> str:
-    if path_or_url.startswith("http"):
-        resp = httpx.get(url=path_or_url, headers=DEFAULT_HEADERS)
-        resp.raise_for_status()
+    resp = httpx.get(url=path_or_url, headers=DEFAULT_HEADERS)
+    resp.raise_for_status()
 
-        suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
-        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
-            fp.write(resp.content)
-            f = fp.name
-    else:
-        f = path_or_url
+    suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
+        fp.write(resp.content)
+        return fp.name
 
-    return f
+    return ""
 
 
-def find_url(s: str) -> str:
+def parse_url(s: str) -> str:
     url_pattern = r"https?://[^\s]+"
 
     match = re.search(url_pattern, s)
@@ -54,7 +52,28 @@ def load_pdf(f: str) -> str:
     return "\n".join([doc.page_content for doc in docs])
 
 
+# parse by regex
+def parse_youtube_video_id(url: str) -> str:
+    # https://www.youtube.com/watch?v=VIDEO_ID
+    match = re.search(r"watch\?v=([a-zA-Z0-9_-]+)", url)
+    if match:
+        return match.group(1)
+
+    # https://youtu.be/VIDEO_ID
+    match = re.search(r"youtu\.be/([a-zA-Z0-9_-]+)", url)
+    if match:
+        return match.group(1)
+
+    return ""
+
+
 def load_url(url: str) -> str:
+    video_id = parse_youtube_video_id(url)
+    if video_id:
+        loader = YoutubeLoader(video_id, add_video_info=True, language=["en", "zh", "ja"])
+        docs = loader.load()
+        return "\n".join([doc.page_content for doc in docs])
+
     f = download(url)
 
     if f.endswith(".pdf"):
