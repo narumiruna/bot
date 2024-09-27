@@ -53,19 +53,15 @@ def load_pdf(f: str) -> str:
     return "\n".join([doc.page_content for doc in docs])
 
 
-def load_youtube(video_id: str) -> str:
-    loader = YoutubeLoader(video_id, add_video_info=True, language=["en", "zh", "ja"])
+def load_youtube(url: str) -> str:
+    loader = YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["en", "zh", "ja"])
     docs = loader.load()
     return "\n".join([doc.page_content for doc in docs])
 
 
 def load_url(url: str) -> str:
-    try:
-        video_id = YoutubeLoader.extract_video_id(url)
-    except ValueError:
-        video_id = None
-    if video_id:
-        return load_youtube(video_id)
+    with contextlib.suppress(ValueError):
+        return load_youtube(url)
 
     f = download(url)
 
