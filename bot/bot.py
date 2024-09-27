@@ -69,7 +69,8 @@ class Bot:
         text = load_url(url)
         if not text:
             logger.info("Failed to load URL")
-            return update.message.reply_text("Failed to load URL")
+            await update.message.reply_text("Failed to load URL")
+            return
 
         summarized = summarize()
         logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, summarized)
