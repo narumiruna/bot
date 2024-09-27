@@ -6,10 +6,13 @@ from langchain_core.runnables import RunnableSerializable
 
 from .utils import get_llm_from_env
 
-PROMPT_TEMPLATE = """請使用台灣用語的繁體中文撰寫以下文章的簡明重點摘要，並以條列式呈現：
+PROMPT_TEMPLATE = """以台灣用語的繁體中文撰寫以下文章的簡明重點摘要，並以條列式呈現，每個條目簡明扼要，聚焦於文章的關鍵內容。  
+最後根據文章內容，創造並添加 3-5 個相關的英文 hashtag（例如：#Technology, #Innovation）。這些 hashtag 應準確反映文章的主題與重點。
+
+文章內容：  
 {text}
 
-摘要："""
+摘要："""  # noqa
 
 
 @functools.cache
