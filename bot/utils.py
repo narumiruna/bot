@@ -1,3 +1,4 @@
+import contextlib
 import functools
 import os
 import re
@@ -52,33 +53,16 @@ def load_pdf(f: str) -> str:
     return "\n".join([doc.page_content for doc in docs])
 
 
-def load_youtube_transcript(video_id: str) -> str:
+def load_youtube(video_id: str) -> str:
     loader = YoutubeLoader(video_id, add_video_info=True, language=["en", "zh", "ja"])
     docs = loader.load()
     return "\n".join([doc.page_content for doc in docs])
 
 
-# parse by regex
-def parse_youtube_video_id(url: str) -> str:
-    # https://www.youtube.com/watch?v=VIDEO_ID
-    match = re.search(r"watch\?v=([a-zA-Z0-9_-]+)", url)
-    if match:
-        return match.group(1)
-
-    # https://youtu.be/VIDEO_ID
-    match = re.search(r"youtu\.be/([a-zA-Z0-9_-]+)", url)
-    if match:
-        return match.group(1)
-
-    return ""
-
-
 def load_url(url: str) -> str:
-    video_id = parse_youtube_video_id(url)
+    video_id = YoutubeLoader.extract_video_id(url)
     if video_id:
-        transcript = load_youtube_transcript(video_id)
-        if transcript:
-            return transcript
+        return load_youtube(video_id)
 
     f = download(url)
 
