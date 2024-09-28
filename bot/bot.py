@@ -10,7 +10,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
 from telegram.ext import filters
 
-from .summary import summarize
+from .summarize import summarize
 from .translate import translate
 from .utils import load_document
 from .utils import parse_url
