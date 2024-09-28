@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Callable
 
 from loguru import logger
 from telegram import Update
@@ -77,7 +78,7 @@ async def summarize_url(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(summarized)
 
 
-def create_translate_callback(lang: str) -> callable:
+def create_translate_callback(lang: str) -> Callable:
     async def translate_lang(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         logger.info(update)
 
