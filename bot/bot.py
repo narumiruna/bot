@@ -17,13 +17,20 @@ from .utils import parse_url
 
 def get_full_message_text(update: Update) -> str:
     """
-    Extract the full text of the message and the reply-to message, if any.
+    Extract the full text of the message and the text of the reply-to message, if any.
+
+    Args:
+        update (Update): The update object containing the message.
+
+    Returns:
+        str: The combined message text and reply text, if available.
     """
     message = update.message
-    reply_message = message.reply_to_message
+    if not message:
+        return ""
 
-    message_text = message.text if message.text else ""
-    reply_text = reply_message.text if reply_message and reply_message.text else ""
+    message_text = message.text or ""
+    reply_text = message.reply_to_message.text if message.reply_to_message and message.reply_to_message.text else ""
 
     return f"{message_text}\n{reply_text}" if reply_text else message_text
 
