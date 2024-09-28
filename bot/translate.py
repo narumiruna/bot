@@ -7,13 +7,12 @@ from langchain_core.runnables import RunnableSerializable
 from .utils import ai_message_repr
 from .utils import get_llm_from_env
 
-PROMPT_TEMPLATE = """用台灣用語的繁體中文，簡潔地以條列式總結文章重點。
-在摘要後直接加入相關的英文 hashtag，以空格分隔。
+PROMPT_TEMPLATE = """翻譯文本為{lang}，提供相關文法要點和用法說明，並附上清晰的例子和範句，以增強理解。
 
-文章內容：
+文本：
 {text}
 
-摘要："""  # noqa
+翻譯："""  # noqa
 
 
 @functools.cache
@@ -24,7 +23,7 @@ def get_chain() -> RunnableSerializable:
     return chain
 
 
-def summarize(text: str) -> str:
+def translate(text: str, lang: str = "日文") -> str:
     chain = get_chain()
-    ai_message: AIMessage = chain.invoke({"text": text})
+    ai_message: AIMessage = chain.invoke({"text": text, "lang": lang})
     return ai_message_repr(ai_message)

@@ -13,6 +13,7 @@ from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.messages import AIMessage
 from loguru import logger
 
 DEFAULT_HEADERS = {
@@ -82,3 +83,20 @@ def get_llm_from_env() -> BaseChatModel:
         return ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
     else:
         raise ValueError("No API key found in environment variables")
+
+
+def ai_message_repr(ai_message: AIMessage) -> str:
+    content: str | list[str | dict] = ai_message.content
+    if isinstance(content, str):
+        return content
+
+    contents = []
+    for item in content:
+        if isinstance(item, str):
+            contents.append(f"• {item}")
+
+        if isinstance(item, dict):
+            for k, v in item.items():
+                contents.append(f"• {k}: {v}")
+
+    return "\n".join(contents)
