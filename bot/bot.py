@@ -77,18 +77,21 @@ async def summarize_url(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(summarized)
 
 
-async def translate_jp(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    logger.info(update)
+def create_translate_callback(lang: str) -> callable:
+    async def translate_lang(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+        logger.info(update)
 
-    if not update.message or not update.message.text:
-        return
+        if not update.message or not update.message.text:
+            return
 
-    raw_text = get_full_message_text(update)
+        raw_text = get_full_message_text(update)
 
-    translated = translate(raw_text, lang="日文")
-    logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
+        translated = translate(raw_text, lang=lang)
+        logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
 
-    await update.message.reply_text(translated)
+        await update.message.reply_text(translated)
+
+    return translate_lang
 
 
 def run_bot() -> None:
@@ -103,6 +106,8 @@ def run_bot() -> None:
 
     app = Application.builder().token(token).build()
     app.add_handler(CommandHandler("sum", summarize_url, filters=filters.Chat(chat_ids)))
-    app.add_handler(CommandHandler("jp", translate_jp, filters=filters.Chat(chat_ids)))
+    app.add_handler(CommandHandler("jp", create_translate_callback("日文"), filters=filters.Chat(chat_ids)))
+    app.add_handler(CommandHandler("tc", create_translate_callback("繁體中文"), filters=filters.Chat(chat_ids)))
+    app.add_handler(CommandHandler("en", create_translate_callback("英文"), filters=filters.Chat(chat_ids)))
     app.add_handler(CommandHandler("chat_id", show_chat_id))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
