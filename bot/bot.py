@@ -48,56 +48,52 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Summarize the URL found in the message text and reply with the summary.
     """
-    if not update.message or not update.message.text:
+    message_text = get_message_text(update)
+    if not message_text:
         return
 
-    raw_text = get_message_text(update)
-
-    url = parse_url(raw_text)
+    url = parse_url(message_text)
     if not url:
         logger.info("No URL found in message")
         return
-
     logger.info("Found URL: {}", url)
 
     # TODO: Handle the type of URL here, reply with a message if it cannot be processed
-    text = load_document(url)
-    if not text:
-        logger.info("Failed to load URL")
-        await update.message.reply_text("Failed to load URL")
+    doc_text = load_document(url)
+    if not doc_text:
+        logger.info("Failed to load URL: {}", url)
+        await update.message.reply_text(f"Failed to load URL: {url}")
         return
 
-    summarized = summarize(text)
-    logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, summarized)
+    text = summarize(doc_text)
+    logger.info("Summarized text: {}", text)
 
-    await update.message.reply_text(summarized)
+    await update.message.reply_text(text)
 
 
 def create_translate_callback(lang: str) -> Callable:
     async def translate_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        if not update.message or not update.message.text:
+        message_text = get_message_text(update)
+        if not message_text:
             return
 
-        raw_text = get_message_text(update)
+        text = translate(message_text, lang=lang)
+        logger.info("Translated text to {}: {}", lang, text)
 
-        translated = translate(raw_text, lang=lang)
-        logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
-
-        await update.message.reply_text(translated)
+        await update.message.reply_text(text)
 
     return translate_
 
 
 async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message or not update.message.text:
+    message_text = get_message_text(update)
+    if not message_text:
         return
 
-    raw_text = get_message_text(update)
+    text = polish(message_text)
+    logger.info("Polished text: {}", text)
 
-    polished = polish(raw_text)
-    logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, polished)
-
-    await update.message.reply_text(polished)
+    await update.message.reply_text(text)
 
 
 def run_bot() -> None:
