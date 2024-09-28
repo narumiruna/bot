@@ -19,6 +19,21 @@ from .utils import parse_url
 
 
 def get_message_text(update: Update) -> str:
+    """
+    Extracts and returns the text from an update message.
+
+    If the message is a reply, it includes the text of the replied-to message
+    followed by the text of the current message. If there is no message or
+    text, it returns an empty string.
+
+    Args:
+        update (Update): The update object containing the message.
+
+    Returns:
+        str: The concatenated text of the replied-to message and the current message,
+             or just the current message text if there is no reply, or an empty string
+             if there is no message.
+    """
     message = update.message
     if not message:
         return ""
@@ -30,13 +45,30 @@ def get_message_text(update: Update) -> str:
 
 
 async def log_message_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Logs the details of a message update and its context.
+
+    Args:
+        update (Update): The update object containing the message details.
+        context (ContextTypes.DEFAULT_TYPE): The context object containing the context of the update.
+
+    Returns:
+        None
+    """
     logger.info("Message Update: {}", update)
     logger.info("Message Context: {}", context)
 
 
 async def show_chat_id_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    Show the chat ID of the current chat.
+    Asynchronously sends a message containing the chat ID of the incoming update.
+
+    Args:
+        update (Update): The incoming update object from the Telegram bot.
+        _ (ContextTypes.DEFAULT_TYPE): The context object (not used in this function).
+
+    Returns:
+        None
     """
     if not update.message:
         return
@@ -46,7 +78,19 @@ async def show_chat_id_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    Summarize the URL found in the message text and reply with the summary.
+    Handle the summarization of a document from a URL provided in the message.
+
+    This function extracts the message text from the update, parses it to find a URL,
+    loads the document from the URL, summarizes the document, and replies with the
+    summarized text. If any step fails, appropriate log messages are generated and
+    a failure message is sent as a reply.
+
+    Args:
+        update (Update): The update object containing the message.
+        _ (ContextTypes.DEFAULT_TYPE): The context object (unused).
+
+    Returns:
+        None
     """
     message_text = get_message_text(update)
     if not message_text:
@@ -71,8 +115,35 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(text)
 
 
-def get_translate_callback(lang: str) -> Callable:
+def create_translate_callback(lang: str) -> Callable:
+    """
+    Creates an asynchronous callback function for translating messages to a specified language.
+
+    Args:
+        lang (str): The target language code for translation.
+
+    Returns:
+        Callable: An asynchronous function that translates the message text in an update to the specified language
+        and replies with the translated text.
+
+    The returned function:
+        - Extracts the message text from the update.
+        - Translates the message text to the specified language.
+        - Logs the translated text.
+        - Sends the translated text as a reply to the original message.
+    """
+
     async def translate_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+        """
+        Asynchronously translates the text from an update message to a specified language and replies with the translated text.
+
+        Args:
+            update (Update): The update object containing the message to be translated.
+            _ (ContextTypes.DEFAULT_TYPE): The context type, not used in this function.
+
+        Returns:
+            None
+        """
         message_text = get_message_text(update)
         if not message_text:
             return
@@ -86,6 +157,16 @@ def get_translate_callback(lang: str) -> Callable:
 
 
 async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handle an update by polishing the message text and replying with the polished text.
+
+    Args:
+        update (Update): The update object containing the message to be polished.
+        _ (ContextTypes.DEFAULT_TYPE): The context object (not used in this function).
+
+    Returns:
+        None
+    """
     message_text = get_message_text(update)
     if not message_text:
         return
@@ -109,9 +190,9 @@ def run_bot() -> None:
 
     app = Application.builder().token(token).build()
     app.add_handler(CommandHandler("sum", summarize_, filters=chat_filter))
-    app.add_handler(CommandHandler("jp", get_translate_callback("日文"), filters=chat_filter))
-    app.add_handler(CommandHandler("tc", get_translate_callback("繁體中文"), filters=chat_filter))
-    app.add_handler(CommandHandler("en", get_translate_callback("英文"), filters=chat_filter))
+    app.add_handler(CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter))
+    app.add_handler(CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter))
+    app.add_handler(CommandHandler("en", create_translate_callback("英文"), filters=chat_filter))
     app.add_handler(CommandHandler("polish", polish_, filters=chat_filter))
     app.add_handler(CommandHandler("chat_id", show_chat_id_))
     app.add_handler(MessageHandler(filters=chat_filter, callback=log_message_))
