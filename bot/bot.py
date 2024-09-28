@@ -135,7 +135,8 @@ def create_translate_callback(lang: str) -> Callable:
 
     async def translate_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         """
-        Asynchronously translates the text from an update message to a specified language and replies with the translated text.
+        Asynchronously translates the text from an update message to a specified language and replies
+        with the translated text.
 
         Args:
             update (Update): The update object containing the message to be translated.
