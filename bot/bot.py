@@ -9,6 +9,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
 
 from .summary import summarize
+from .translate import translate
 from .utils import load_document
 from .utils import parse_url
 
@@ -24,6 +25,7 @@ class Bot:
         # Create the application and add the command handler
         self.app = Application.builder().token(token).build()
         self.app.add_handler(CommandHandler("sum", self.summarize_url))
+        self.app.add_handler(CommandHandler("jp", self.translate_jp))
         self.app.run_polling(allowed_updates=Update.ALL_TYPES)
 
     @classmethod
@@ -76,3 +78,22 @@ class Bot:
         logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, summarized)
 
         await update.message.reply_text(summarized)
+
+    async def translate_jp(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+        if not update.message or not update.message.text:
+            return
+
+        logger.info("Received message: '{}' from chat ID: {}", update.message.text, update.message.chat_id)
+
+        if update.message.chat_id not in self.whitelist:
+            logger.info("Chat ID {} not in whitelist", update.message.chat_id)
+            return
+
+        raw_text = update.message.text
+        if update.message.reply_to_message and update.message.reply_to_message.text:
+            raw_text += "\n" + update.message.reply_to_message.text
+
+        translated = translate(raw_text, lang="日文")
+        logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
+
+        await update.message.reply_text(translated)
