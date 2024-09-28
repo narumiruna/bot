@@ -71,7 +71,7 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(text)
 
 
-def create_translate_callback(lang: str) -> Callable:
+def get_translate_callback(lang: str) -> Callable:
     async def translate_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         message_text = get_message_text(update)
         if not message_text:
@@ -109,9 +109,9 @@ def run_bot() -> None:
 
     app = Application.builder().token(token).build()
     app.add_handler(CommandHandler("sum", summarize_, filters=chat_filter))
-    app.add_handler(CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter))
-    app.add_handler(CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter))
-    app.add_handler(CommandHandler("en", create_translate_callback("英文"), filters=chat_filter))
+    app.add_handler(CommandHandler("jp", get_translate_callback("日文"), filters=chat_filter))
+    app.add_handler(CommandHandler("tc", get_translate_callback("繁體中文"), filters=chat_filter))
+    app.add_handler(CommandHandler("en", get_translate_callback("英文"), filters=chat_filter))
     app.add_handler(CommandHandler("polish", polish_, filters=chat_filter))
     app.add_handler(CommandHandler("chat_id", show_chat_id_))
     app.add_handler(MessageHandler(filters=chat_filter, callback=log_message_))
