@@ -92,6 +92,9 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     Returns:
         None
     """
+    if not update.message:
+        return
+
     message_text = get_message_text(update)
     if not message_text:
         return
@@ -145,6 +148,9 @@ def create_translate_callback(lang: str) -> Callable:
         Returns:
             None
         """
+        if not update.message:
+            return
+
         message_text = get_message_text(update)
         if not message_text:
             return
@@ -168,6 +174,9 @@ async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     Returns:
         None
     """
+    if not update.message:
+        return
+
     message_text = get_message_text(update)
     if not message_text:
         return
