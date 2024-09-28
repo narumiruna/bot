@@ -50,7 +50,9 @@ def load_document(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
     with contextlib.suppress(ValueError):
-        return docs_to_str(YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["zh", "ja", "en"]).load())
+        return docs_to_str(
+            YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["zh-Hant", "zh-Hans", "ja", "en"]).load()
+        )
 
     f = download(url)
 
