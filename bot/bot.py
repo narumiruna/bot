@@ -15,6 +15,19 @@ from .utils import load_document
 from .utils import parse_url
 
 
+def get_full_message_text(update: Update) -> str:
+    """
+    Extract the full text of the message and the reply-to message, if any.
+    """
+    message = update.message
+    reply_message = message.reply_to_message
+
+    message_text = message.text if message.text else ""
+    reply_text = reply_message.text if reply_message and reply_message.text else ""
+
+    return f"{message_text}\n{reply_text}" if reply_text else message_text
+
+
 class Bot:
     def __init__(self, token: str, whitelist: list[int]) -> None:
         """
@@ -65,9 +78,7 @@ class Bot:
         if not update.message or not update.message.text:
             return
 
-        raw_text = update.message.text
-        if update.message.reply_to_message and update.message.reply_to_message.text:
-            raw_text += "\n" + update.message.reply_to_message.text
+        raw_text = get_full_message_text(update)
 
         url = parse_url(raw_text)
         if not url:
@@ -94,9 +105,7 @@ class Bot:
         if not update.message or not update.message.text:
             return
 
-        raw_text = update.message.text
-        if update.message.reply_to_message and update.message.reply_to_message.text:
-            raw_text += "\n" + update.message.reply_to_message.text
+        raw_text = get_full_message_text(update)
 
         translated = translate(raw_text, lang="日文")
         logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
