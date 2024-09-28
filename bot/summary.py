@@ -7,7 +7,7 @@ from langchain_core.runnables import RunnableSerializable
 from .utils import get_llm_from_env
 
 PROMPT_TEMPLATE = """以台灣用語的繁體中文撰寫文章的重點摘要，使用條列式，每個條目簡潔聚焦於關鍵內容。
-最後，根據文章內容創造準確反映主題與重點的英文 hashtag。
+最後，根據文章內容創造準確反映主題與重點的英文 hashtag。直接呈現，不要加上 "Hashtags:" 或其他標題，並以空格分隔。
 
 Hashtag 範例：
 #Technology #Innovation #AI #MachineLearning #DeepLearning
