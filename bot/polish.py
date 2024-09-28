@@ -18,7 +18,7 @@ def get_chain() -> RunnableSerializable:
     return chain
 
 
-def polish(text: str, lang: str) -> str:
+def polish(text: str) -> str:
     chain = get_chain()
-    ai_message: AIMessage = chain.invoke({"text": text, "lang": lang})
+    ai_message: AIMessage = chain.invoke({"text": text})
     return ai_message_repr(ai_message)
