@@ -35,86 +35,74 @@ def get_full_message_text(update: Update) -> str:
     return f"{message_text}\n{reply_text}" if reply_text else message_text
 
 
-class Bot:
-    def __init__(self, token: str, whitelist: list[int]) -> None:
-        """
-        Initialize the bot with a token and a whitelist of chat IDs.
-        """
-        self.whitelist = whitelist
-        logger.info("whitelist: {}", self.whitelist)
+async def show_chat_id(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Show the chat ID of the current chat.
+    """
+    if not update.message:
+        return
 
-        # Create the application and add the command handler
-        self.app = Application.builder().token(token).build()
-        self.app.add_handler(CommandHandler("sum", self.summarize_url, filters=filters.Chat(self.whitelist)))
-        self.app.add_handler(CommandHandler("jp", self.translate_jp, filters=filters.Chat(self.whitelist)))
-        self.app.add_handler(CommandHandler("chat_id", self.show_chat_id))
-        self.app.run_polling(allowed_updates=Update.ALL_TYPES)
+    await update.message.reply_text(f"Chat ID: {update.message.chat_id}")
 
-    @classmethod
-    def from_env(cls) -> Bot:
-        """
-        Create a Bot instance using environment variables for the token and whitelist.
-        """
-        token = os.getenv("BOT_TOKEN")
-        if not token:
-            raise ValueError("BOT_TOKEN is not set")
 
-        whitelist = os.getenv("BOT_WHITELIST")
-        if not whitelist:
-            raise ValueError("BOT_WHITELIST is not set")
+async def summarize_url(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Summarize the URL found in the message text and reply with the summary.
+    """
 
-        return cls(token=token, whitelist=[int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")])
+    logger.info(update)
 
-    # show chat_id
-    async def show_chat_id(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        """
-        Show the chat ID of the current chat.
-        """
-        if not update.message:
-            return
+    if not update.message or not update.message.text:
+        return
 
-        await update.message.reply_text(f"Chat ID: {update.message.chat_id}")
+    raw_text = get_full_message_text(update)
 
-    async def summarize_url(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        """
-        Summarize the URL found in the message text and reply with the summary.
-        """
+    url = parse_url(raw_text)
+    if not url:
+        logger.info("No URL found in message")
+        return
 
-        logger.info(update)
+    logger.info("Found URL: {}", url)
 
-        if not update.message or not update.message.text:
-            return
+    # TODO: Handle the type of URL here, reply with a message if it cannot be processed
+    text = load_document(url)
+    if not text:
+        logger.info("Failed to load URL")
+        await update.message.reply_text("Failed to load URL")
+        return
 
-        raw_text = get_full_message_text(update)
+    summarized = summarize(text)
+    logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, summarized)
 
-        url = parse_url(raw_text)
-        if not url:
-            logger.info("No URL found in message")
-            return
+    await update.message.reply_text(summarized)
 
-        logger.info("Found URL: {}", url)
 
-        # TODO: Handle the type of URL here, reply with a message if it cannot be processed
-        text = load_document(url)
-        if not text:
-            logger.info("Failed to load URL")
-            await update.message.reply_text("Failed to load URL")
-            return
+async def translate_jp(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info(update)
 
-        summarized = summarize(text)
-        logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, summarized)
+    if not update.message or not update.message.text:
+        return
 
-        await update.message.reply_text(summarized)
+    raw_text = get_full_message_text(update)
 
-    async def translate_jp(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        logger.info(update)
+    translated = translate(raw_text, lang="日文")
+    logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
 
-        if not update.message or not update.message.text:
-            return
+    await update.message.reply_text(translated)
 
-        raw_text = get_full_message_text(update)
 
-        translated = translate(raw_text, lang="日文")
-        logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, translated)
+def run_bot() -> None:
+    token = os.getenv("BOT_TOKEN")
+    if not token:
+        raise ValueError("BOT_TOKEN is not set")
 
-        await update.message.reply_text(translated)
+    whitelist = os.getenv("BOT_WHITELIST")
+    if not whitelist:
+        raise ValueError("BOT_WHITELIST is not set")
+    chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]
+
+    app = Application.builder().token(token).build()
+    app.add_handler(CommandHandler("sum", summarize_url, filters=filters.Chat(chat_ids)))
+    app.add_handler(CommandHandler("jp", translate_jp, filters=filters.Chat(chat_ids)))
+    app.add_handler(CommandHandler("chat_id", show_chat_id))
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
