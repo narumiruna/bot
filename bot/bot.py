@@ -59,10 +59,11 @@ class Bot:
         """
         Summarize the URL found in the message text and reply with the summary.
         """
+
+        logger.info(update)
+
         if not update.message or not update.message.text:
             return
-
-        logger.info("Received message: '{}' from chat ID: {}", update.message.text, update.message.chat_id)
 
         raw_text = update.message.text
         if update.message.reply_to_message and update.message.reply_to_message.text:
@@ -88,10 +89,10 @@ class Bot:
         await update.message.reply_text(summarized)
 
     async def translate_jp(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+        logger.info(update)
+
         if not update.message or not update.message.text:
             return
-
-        logger.info("Received message: '{}' from chat ID: {}", update.message.text, update.message.chat_id)
 
         raw_text = update.message.text
         if update.message.reply_to_message and update.message.reply_to_message.text:
