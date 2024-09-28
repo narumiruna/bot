@@ -22,16 +22,14 @@ DEFAULT_HEADERS = {
 }
 
 
-def download(path_or_url: str) -> str:
-    resp = httpx.get(url=path_or_url, headers=DEFAULT_HEADERS, follow_redirects=True)
+def download(url: str) -> str:
+    resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
 
     suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
         fp.write(resp.content)
         return fp.name
-
-    return ""
 
 
 def parse_url(s: str) -> str:
