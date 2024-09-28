@@ -7,7 +7,7 @@ from langchain_core.runnables import RunnableSerializable
 from .utils import ai_message_repr
 from .utils import get_llm_from_env
 
-PROMPT_TEMPLATE = """翻譯文本為{lang}，提供相關文法要點和用法說明，並附上清晰的例子和範句，以增強理解。
+PROMPT_TEMPLATE = """翻譯文本為{lang}，並提供簡潔的文法和用法說明，搭配範例句子以增強理解。
 
 文本：
 {text}
