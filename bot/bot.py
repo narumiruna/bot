@@ -10,6 +10,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
 from telegram.ext import filters
 
+from .polish import polish
 from .summarize import summarize
 from .translate import translate
 from .utils import load_document
@@ -36,7 +37,7 @@ def get_full_message_text(update: Update) -> str:
     return f"{message_text}\n{reply_text}" if reply_text else message_text
 
 
-async def show_chat_id(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def show_chat_id_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Show the chat ID of the current chat.
     """
@@ -46,7 +47,7 @@ async def show_chat_id(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(f"Chat ID: {update.message.chat_id}")
 
 
-async def summarize_url(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Summarize the URL found in the message text and reply with the summary.
     """
@@ -79,7 +80,7 @@ async def summarize_url(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def create_translate_callback(lang: str) -> Callable:
-    async def translate_lang(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    async def translate_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         logger.info(update)
 
         if not update.message or not update.message.text:
@@ -92,7 +93,21 @@ def create_translate_callback(lang: str) -> Callable:
 
         await update.message.reply_text(translated)
 
-    return translate_lang
+    return translate_
+
+
+async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info(update)
+
+    if not update.message or not update.message.text:
+        return
+
+    raw_text = get_full_message_text(update)
+
+    polished = polish(raw_text)
+    logger.info("Replying to chat ID: {} with: {}", update.message.chat_id, polished)
+
+    await update.message.reply_text(polished)
 
 
 def run_bot() -> None:
@@ -104,11 +119,13 @@ def run_bot() -> None:
     if not whitelist:
         raise ValueError("BOT_WHITELIST is not set")
     chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]
+    chat_filter = filters.Chat(chat_ids)
 
     app = Application.builder().token(token).build()
-    app.add_handler(CommandHandler("sum", summarize_url, filters=filters.Chat(chat_ids)))
-    app.add_handler(CommandHandler("jp", create_translate_callback("日文"), filters=filters.Chat(chat_ids)))
-    app.add_handler(CommandHandler("tc", create_translate_callback("繁體中文"), filters=filters.Chat(chat_ids)))
-    app.add_handler(CommandHandler("en", create_translate_callback("英文"), filters=filters.Chat(chat_ids)))
-    app.add_handler(CommandHandler("chat_id", show_chat_id))
+    app.add_handler(CommandHandler("sum", summarize_, filters=chat_filter))
+    app.add_handler(CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter))
+    app.add_handler(CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter))
+    app.add_handler(CommandHandler("en", create_translate_callback("英文"), filters=chat_filter))
+    app.add_handler(CommandHandler("polish", polish_, filters=chat_filter))
+    app.add_handler(CommandHandler("chat_id", show_chat_id_))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
