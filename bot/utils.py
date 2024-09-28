@@ -16,7 +16,8 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from loguru import logger
 
 DEFAULT_HEADERS = {
-    "User-Agent": "Chrome/126.0.0.0 Safari/537.36",
+    "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
 }
 
 
