@@ -2,7 +2,7 @@ from dotenv import find_dotenv
 from dotenv import load_dotenv
 
 from .bot import run_bot
-from .utils import set_sqlite_llm_cache
+from .llm import set_sqlite_llm_cache
 
 
 def main():
