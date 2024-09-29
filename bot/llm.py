@@ -5,19 +5,21 @@ from pathlib import Path
 from langchain.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
+from langchain_openai.chat_models import ChatOpenAI
 from loguru import logger
 
 
 @functools.cache
 def get_llm_from_env() -> BaseChatModel:
-    if "OPENAI_API_KEY" in os.environ:
-        from langchain_openai import ChatOpenAI
+    model = os.getenv("MODEL", "gpt-4o-mini")
+    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    logger.info("language model: {}, temperature: {}", model, temperature)
 
-        return ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    elif "GOOGLE_API_KEY" in os.environ:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-
-        return ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+    if model.startswith("gpt-"):
+        return ChatOpenAI(model=model, temperature=temperature)
+    elif model.startswith("gemini-"):
+        return ChatGoogleGenerativeAI(model=model, temperature=temperature)
     else:
         raise ValueError("No API key found in environment variables")
 
