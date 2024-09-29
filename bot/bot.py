@@ -18,6 +18,7 @@ from .translate import translate
 from .translate import translate_and_explain
 from .utils import load_document
 from .utils import parse_url
+from .yahoo_finance import query_tickers
 
 
 def get_message_text(update: Update) -> str:
@@ -105,6 +106,19 @@ async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(text)
 
 
+async def query_ticker_from_yahoo_finance_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message:
+        return
+
+    if not context.args:
+        return
+
+    text = query_tickers(context.args)
+    logger.info("Tickers: {}", text)
+
+    await update.message.reply_text(text)
+
+
 async def help_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
@@ -142,6 +156,7 @@ def run_bot() -> None:
             CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter),
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
             CommandHandler("polish", polish_, filters=chat_filter),
+            CommandHandler("yf", query_ticker_from_yahoo_finance_, filters=chat_filter),
             CommandHandler("echo", echo_message_),
             MessageHandler(filters=chat_filter, callback=log_message_),
         ]
