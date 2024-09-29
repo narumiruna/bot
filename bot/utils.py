@@ -1,17 +1,13 @@
 import contextlib
 import re
 import tempfile
-from pathlib import Path
 
 import httpx
-from langchain.globals import set_llm_cache
-from langchain_community.cache import SQLiteCache
 from langchain_community.document_loaders import YoutubeLoader
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
-from loguru import logger
 
 DEFAULT_HEADERS = {
     "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
@@ -57,15 +53,6 @@ def load_document(url: str) -> str:
         return docs_to_str(PyPDFLoader(f).load())
 
     return docs_to_str(BSHTMLLoader(f).load())
-
-
-def set_sqlite_llm_cache() -> None:
-    database_path = Path.home() / ".cache" / ".langchain.db"
-    logger.info("Using SQLite cache: {}", database_path)
-
-    cache = SQLiteCache(database_path.as_posix())
-
-    set_llm_cache(cache)
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
