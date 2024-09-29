@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from typing import Callable
 
@@ -35,11 +36,11 @@ async def log_message_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     logger.info("Message Context: {}", context)
 
 
-async def show_chat_id_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def echo_message_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
-    await update.message.reply_text(f"Chat ID: {update.message.chat_id}")
+    await update.message.reply_text(json.dumps(update.message.to_dict(), indent=2))
 
 
 async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
@@ -104,6 +105,23 @@ async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(text)
 
 
+async def help_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message:
+        return
+
+    help_text = (
+        "/help - Show this help message\n"
+        "/sum - Summarize a document\n"
+        "/jp - Translate text to Japanese\n"
+        "/tc - Translate text to Traditional Chinese\n"
+        "/en - Translate text to English\n"
+        "/polish - Polish text\n"
+        "/echo - Echo the message\n"
+    )
+
+    await update.message.reply_text(help_text)
+
+
 def run_bot() -> None:
     token = os.getenv("BOT_TOKEN")
     if not token:
@@ -116,11 +134,16 @@ def run_bot() -> None:
     chat_filter = filters.Chat(chat_ids)
 
     app = Application.builder().token(token).build()
-    app.add_handler(CommandHandler("sum", summarize_, filters=chat_filter))
-    app.add_handler(CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter))
-    app.add_handler(CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter))
-    app.add_handler(CommandHandler("en", create_translate_callback("英文"), filters=chat_filter))
-    app.add_handler(CommandHandler("polish", polish_, filters=chat_filter))
-    app.add_handler(CommandHandler("chat_id", show_chat_id_))
-    app.add_handler(MessageHandler(filters=chat_filter, callback=log_message_))
+    app.add_handlers(
+        [
+            CommandHandler("help", help_, filters=chat_filter),
+            CommandHandler("sum", summarize_, filters=chat_filter),
+            CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter),
+            CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter),
+            CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
+            CommandHandler("polish", polish_, filters=chat_filter),
+            CommandHandler("echo", echo_message_),
+            MessageHandler(filters=chat_filter, callback=log_message_),
+        ]
+    )
     app.run_polling(allowed_updates=Update.ALL_TYPES)
