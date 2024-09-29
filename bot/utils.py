@@ -1,6 +1,8 @@
 import contextlib
 import re
 import tempfile
+from urllib.parse import urlparse
+from urllib.parse import urlunparse
 
 import httpx
 from langchain_community.document_loaders import YoutubeLoader
@@ -47,6 +49,9 @@ def load_document(url: str) -> str:
             YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["zh-Hant", "zh-Hans", "ja", "en"]).load()
         )
 
+    # fix twitter url
+    url = fix_twitter(url)
+
     f = download(url)
 
     if f.endswith(".pdf"):
@@ -70,3 +75,22 @@ def ai_message_repr(ai_message: AIMessage) -> str:
                 contents.append(f"• {k}: {v}")
 
     return "\n".join(contents)
+
+
+def fix_twitter(url: str) -> str:
+    replacements = {
+        # "twitter.com": "vxtwitter.com",
+        # "x.com": "fixvx.com",
+        # "twitter.com": "twittpr.com",
+        # "x.com": "fixupx.com",
+        "twitter.com": "api.fxtwitter.com",
+        "x.com": "api.fxtwitter.com",
+    }
+
+    parsed_url = urlparse(url)
+    if parsed_url.netloc in replacements:
+        new_netloc = replacements[parsed_url.netloc]
+        fixed_url = parsed_url._replace(netloc=new_netloc)
+        return urlunparse(fixed_url)
+
+    return url
