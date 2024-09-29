@@ -38,7 +38,7 @@ def parse_url(s: str) -> str:
 
 
 def docs_to_str(docs: list[Document]) -> str:
-    return "\n".join([doc.page_content for doc in docs])
+    return "\n".join([doc.page_content.strip() for doc in docs])
 
 
 def load_document(url: str) -> str:
