@@ -14,6 +14,7 @@ from telegram.ext import filters
 from .polish import polish
 from .summarize import summarize
 from .translate import translate
+from .translate import translate_and_explain
 from .utils import load_document
 from .utils import parse_url
 
@@ -69,7 +70,7 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def create_translate_callback(lang: str) -> Callable:
-    async def translate_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    async def translate_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not update.message:
             return
 
@@ -77,8 +78,12 @@ def create_translate_callback(lang: str) -> Callable:
         if not message_text:
             return
 
-        text = translate(message_text, lang=lang)
-        logger.info("Translated text to {}: {}", lang, text)
+        if context.args and context.args[0] == "explain":
+            text = translate_and_explain(message_text, lang=lang)
+            logger.info("Translated and explained text to {}: {}", lang, text)
+        else:
+            text = translate(message_text, lang=lang)
+            logger.info("Translated text to {}: {}", lang, text)
 
         await update.message.reply_text(text)
 
