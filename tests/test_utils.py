@@ -15,8 +15,8 @@ from bot.utils import parse_url
 @pytest.mark.parametrize(
     "url, expected",
     [
-        ("https://twitter.com/someuser/status/1234567890", "https://twittpr.com/someuser/status/1234567890"),
-        ("https://x.com/someuser/status/1234567890", "https://fixupx.com/someuser/status/1234567890"),
+        ("https://twitter.com/someuser/status/1234567890", "https://api.fxtwitter.com/someuser/status/1234567890"),
+        ("https://x.com/someuser/status/1234567890", "https://api.fxtwitter.com/someuser/status/1234567890"),
         ("https://example.com/someuser/status/1234567890", "https://example.com/someuser/status/1234567890"),
         ("twitter.com/someuser/status/1234567890", "twitter.com/someuser/status/1234567890"),
         (
