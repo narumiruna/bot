@@ -1,4 +1,4 @@
-# bot
+# Narumi's Telegram Bot
 
 .env
 
@@ -14,6 +14,8 @@ GOOGLE_API_KEY=
 ```
 
 ```shell
+pip install pipx
+pipx install poetry
 poetry install
 poetry run bot
 ```
