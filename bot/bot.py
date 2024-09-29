@@ -32,9 +32,8 @@ def get_message_text(update: Update) -> str:
     return f"{reply_text}\n{message_text}" if reply_text else message_text
 
 
-async def log_message_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def log_message_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Message Update: {}", update)
-    logger.info("Message Context: {}", context)
 
 
 async def echo_message_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
