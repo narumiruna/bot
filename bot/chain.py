@@ -3,7 +3,7 @@ import functools
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSerializable
 
-from .utils import get_llm_from_env
+from .llm import get_llm_from_env
 
 
 @functools.cache
