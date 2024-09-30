@@ -47,7 +47,9 @@ def load_document(url: str) -> str:
 
     with contextlib.suppress(ValueError):
         return docs_to_str(
-            YoutubeLoader.from_youtube_url(url, add_video_info=True, language=["zh-Hant", "zh-Hans", "ja", "en"]).load()
+            YoutubeLoader.from_youtube_url(
+                url, add_video_info=True, language=["zh-TW", "zh-Hant", "zh-Hans", "ja", "en"]
+            ).load()
         )
 
     # fix twitter url
