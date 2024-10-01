@@ -1,6 +1,8 @@
 import contextlib
 import re
+import subprocess
 import tempfile
+from pathlib import Path
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
@@ -10,6 +12,7 @@ from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
+from loguru import logger
 
 DEFAULT_HEADERS = {
     "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
@@ -26,6 +29,35 @@ def download(url: str) -> str:
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
         fp.write(resp.content)
         return fp.name
+
+
+def download_html_by_singlefile(url: str, cookies_file: str | None = None) -> str:
+    filename = tempfile.mktemp(suffix=".html")
+    logger.info("download {} to {}", url, filename)
+
+    cmds = ["/Users/narumi/.local/bin/single-file"]
+
+    if cookies_file is not None:
+        if not Path(cookies_file).exists():
+            raise FileNotFoundError("cookies file not found")
+
+        cmds += [
+            "--browser-cookies-file",
+            cookies_file,
+        ]
+
+    cmds += [
+        "--filename-conflict-action",
+        "overwrite",
+        url,
+        filename,
+    ]
+    try:
+        subprocess.run(cmds)
+        return filename
+    except Exception as e:
+        logger.error("failed to download html by single-file: {}", e)
+        return ""
 
 
 def parse_url(s: str) -> str:
@@ -55,7 +87,8 @@ def load_document(url: str) -> str:
     # fix twitter url
     url = fix_twitter(url)
 
-    f = download(url)
+    # download html or pdf
+    f = download_html_by_singlefile(url) if "facebook.com" in url else download(url)
 
     if f.endswith(".pdf"):
         return docs_to_str(PyPDFLoader(f).load())
