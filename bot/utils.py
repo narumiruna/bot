@@ -21,6 +21,15 @@ DEFAULT_HEADERS = {
 }
 
 
+DOMAINS_DOWNLOADING_BY_SINGLEFILE = [
+    "facebook.com",
+    "www.threads.net",
+]
+
+
+DEFAULT_LANGUAGE_CODES = ["zh-TW", "zh-Hant", "zh-Hans", "ja", "en"]
+
+
 def download(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
@@ -31,9 +40,8 @@ def download(url: str) -> str:
         return fp.name
 
 
-def download_html_by_singlefile(url: str, cookies_file: str | None = None) -> str:
+def download_by_singlefile(url: str, cookies_file: str | None = None) -> str:
     filename = tempfile.mktemp(suffix=".html")
-    logger.info("download {} to {}", url, filename)
 
     cmds = ["/Users/narumi/.local/bin/single-file"]
 
@@ -52,12 +60,9 @@ def download_html_by_singlefile(url: str, cookies_file: str | None = None) -> st
         url,
         filename,
     ]
-    try:
-        subprocess.run(cmds)
-        return filename
-    except Exception as e:
-        logger.error("failed to download html by single-file: {}", e)
-        return ""
+
+    subprocess.run(cmds)
+    return filename
 
 
 def parse_url(s: str) -> str:
@@ -80,7 +85,9 @@ def load_document(url: str) -> str:
     with contextlib.suppress(ValueError):
         return docs_to_str(
             YoutubeLoader.from_youtube_url(
-                url, add_video_info=True, language=["zh-TW", "zh-Hant", "zh-Hans", "ja", "en"]
+                url,
+                add_video_info=True,
+                language=DEFAULT_LANGUAGE_CODES,
             ).load()
         )
 
@@ -88,7 +95,14 @@ def load_document(url: str) -> str:
     url = fix_twitter(url)
 
     # download html or pdf
-    f = download_html_by_singlefile(url) if "facebook.com" in url else download(url)
+    if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
+        try:
+            f = download_by_singlefile(url)
+        except Exception as e:
+            logger.error("failed to download by singlefile: {}", e)
+            return ""
+    else:
+        f = download(url)
 
     if f.endswith(".pdf"):
         return docs_to_str(PyPDFLoader(f).load())
