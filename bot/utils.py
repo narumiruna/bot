@@ -27,7 +27,7 @@ DOMAINS_DOWNLOADING_BY_SINGLEFILE = [
 ]
 
 
-DEFAULT_LANGUAGE_CODES = ["zh-TW", "zh-Hant", "zh-Hans", "ja", "en"]
+DEFAULT_LANGUAGE_CODES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en"]
 
 
 def download(url: str) -> str:
