@@ -157,8 +157,8 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
     if developer_chat_id:
         await context.bot.send_message(chat_id=developer_chat_id, text=message, parse_mode=ParseMode.HTML)
 
-    if isinstance(update, Update) and update.message:
-        await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
+    # if isinstance(update, Update) and update.message:
+    #     await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
 
 
 def run_bot() -> None:
