@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
+import chardet
 import httpx
 import numpy as np
 import whisper
@@ -116,6 +117,13 @@ def load_youtube_transcripts(url: str) -> str:
     return load_transcribe_by_whisper(url)
 
 
+def detect_encoding(f: str) -> str | None:
+    with open(f, "rb") as fp:
+        raw_data = fp.read()
+        result = chardet.detect(raw_data)
+        return result["encoding"]
+
+
 def load_document(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
@@ -134,7 +142,7 @@ def load_document(url: str) -> str:
     if f.endswith(".pdf"):
         return docs_to_str(PyPDFLoader(f).load())
 
-    return docs_to_str(BSHTMLLoader(f).load())
+    return docs_to_str(BSHTMLLoader(f, open_encoding=detect_encoding(f)).load())
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
