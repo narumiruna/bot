@@ -8,7 +8,7 @@ from bot.utils import ai_message_repr
 from bot.utils import docs_to_str
 from bot.utils import download
 from bot.utils import fix_twitter
-from bot.utils import load_document
+from bot.utils import load_document_from_url
 from bot.utils import parse_url
 
 
@@ -75,6 +75,6 @@ def test_download():
 
 def test_load_document():
     url = "https://www.example.com"
-    content = load_document(url)
+    content = load_document_from_url(url)
     assert isinstance(content, str)
     assert len(content) > 0

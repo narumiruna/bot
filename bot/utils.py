@@ -79,7 +79,7 @@ def docs_to_str(docs: list[Document]) -> str:
     return "\n".join([doc.page_content.strip() for doc in docs])
 
 
-def load_document(url: str) -> str:
+def load_document_from_url(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
     with contextlib.suppress(ValueError):

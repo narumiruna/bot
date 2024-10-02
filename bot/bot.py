@@ -18,7 +18,7 @@ from .polish import polish
 from .summarize import summarize
 from .translate import translate
 from .translate import translate_and_explain
-from .utils import load_document
+from .utils import load_document_from_url
 from .utils import parse_url
 from .yahoo_finance import query_tickers
 
@@ -61,7 +61,7 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
     # TODO: Handle the type of URL here, reply with a message if it cannot be processed
     try:
-        doc_text = load_document(url)
+        doc_text = load_document_from_url(url)
     except Exception as e:
         logger.error("Failed to load URL: {}", e)
         await update.message.reply_text(f"Failed to load URL: {url}")
