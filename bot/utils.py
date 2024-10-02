@@ -207,7 +207,7 @@ def replace_domain(url: str) -> str:
     return url
 
 
-def download_by_ytdlp(url: str) -> str:
+def ytdlp_download(url: str) -> str:
     filename = tempfile.mktemp()
 
     ydl_opts = {
@@ -276,7 +276,7 @@ def load_whisper_model() -> whisper.Whisper:
 
 @functools.cache
 def load_transcribe_by_whisper(url: str) -> str:
-    f = download_by_ytdlp(url)
+    f = ytdlp_download(url)
     audio = load_audio(f)
     model = load_whisper_model()
     result = model.transcribe(audio)
