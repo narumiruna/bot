@@ -1,5 +1,6 @@
 import contextlib
 import functools
+import os
 import re
 import subprocess
 import tempfile
@@ -30,12 +31,6 @@ DEFAULT_HEADERS = {
 }
 
 
-DOMAINS_DOWNLOADING_BY_SINGLEFILE = [
-    "facebook.com",
-    "www.threads.net",
-]
-
-
 DEFAULT_LANGUAGE_CODES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en"]
 
 DOMAIN_REPLACEMENTS = {
@@ -47,7 +42,9 @@ DOMAIN_REPLACEMENTS = {
     "x.com": "api.fxtwitter.com",
 }
 
-FFMPEG_LOCATION = "/opt/homebrew/bin/ffmpeg"
+
+def get_ffmpeg_path_from_env() -> str:
+    return os.getenv("FFMPEG_PATH", "/opt/homebrew/bin/ffmpeg")
 
 
 def is_pdf(url: str) -> bool:
@@ -204,6 +201,8 @@ def replace_domain(url: str) -> str:
 
 
 def ytdlp_download(url: str) -> str:
+    ffmpeg_path = get_ffmpeg_path_from_env()
+
     filename = tempfile.mktemp()
 
     ydl_opts = {
@@ -216,7 +215,7 @@ def ytdlp_download(url: str) -> str:
             }
         ],
         "outtmpl": filename,
-        "ffmpeg_location": FFMPEG_LOCATION,
+        "ffmpeg_location": ffmpeg_path,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -241,12 +240,13 @@ def load_audio(file: str, sr: int = 16000):
     -------
     A NumPy array containing the audio waveform, in float32 dtype.
     """
+    ffmpeg_path = get_ffmpeg_path_from_env()
 
     # This launches a subprocess to decode audio while down-mixing
     # and resampling as necessary.  Requires the ffmpeg CLI in PATH.
     # fmt: off
     cmd = [
-        FFMPEG_LOCATION,
+        ffmpeg_path,
         "-nostdin",
         "-threads", "0",
         "-i", file,
