@@ -49,8 +49,9 @@ def download_by_httpx(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
 
+    print(resp.encoding)
     suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, encoding="utf-8") as fp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
         fp.write(resp.content)
         return fp.name
 
