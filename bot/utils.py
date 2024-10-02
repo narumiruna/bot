@@ -12,7 +12,6 @@ from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
-from loguru import logger
 
 DEFAULT_HEADERS = {
     "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
@@ -39,7 +38,7 @@ DOMAIN_REPLACEMENTS = {
 }
 
 
-def download(url: str) -> str:
+def download_by_httpx(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
 
@@ -88,7 +87,7 @@ def docs_to_str(docs: list[Document]) -> str:
     return "\n".join([doc.page_content.strip() for doc in docs])
 
 
-def load_document_from_url(url: str) -> str:
+def load_document(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
     with contextlib.suppress(ValueError):
@@ -103,15 +102,11 @@ def load_document_from_url(url: str) -> str:
     # replace domain
     url = replace_domain(url)
 
-    # download html or pdf
+    # download
     if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
-        try:
-            f = download_by_singlefile(url)
-        except Exception as e:
-            logger.error("failed to download {} by singlefile: {}", url, e)
-            return ""
+        f = download_by_singlefile(url)
     else:
-        f = download(url)
+        f = download_by_httpx(url)
 
     if f.endswith(".pdf"):
         return docs_to_str(PyPDFLoader(f).load())

@@ -18,7 +18,7 @@ from .polish import polish
 from .summarize import summarize
 from .translate import translate
 from .translate import translate_and_explain
-from .utils import load_document_from_url
+from .utils import load_document
 from .utils import parse_url
 from .yahoo_finance import query_tickers
 
@@ -55,27 +55,16 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
     url = parse_url(message_text)
     if not url:
-        logger.info("No URL found in message")
-        return
-    logger.info("Found URL: {}", url)
-
-    # TODO: Handle the type of URL here, reply with a message if it cannot be processed
-    try:
-        doc_text = load_document_from_url(url)
-    except Exception as e:
-        logger.error("Failed to load URL: {}", e)
-        await update.message.reply_text(f"Failed to load URL: {url}")
         return
 
-    if not doc_text:
-        logger.info("Failed to load URL: {}", url)
-        await update.message.reply_text(f"Failed to load URL: {url}")
+    text = load_document(url)
+    if not text:
         return
 
-    text = summarize(doc_text)
-    logger.info("Summarized text: {}", text)
+    summarized = summarize(text)
+    logger.info("Summarized text: {}", summarized)
 
-    await update.message.reply_text(text)
+    await update.message.reply_text(summarized)
 
 
 def create_translate_callback(lang: str) -> Callable:

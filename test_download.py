@@ -1,6 +1,4 @@
-
-
-from bot.utils import download
+from bot.utils import download_by_httpx
 
 # def save_cookies(client: httpx.Client):
 #     with open("cookies.pk", "wb") as f:
@@ -23,7 +21,7 @@ from bot.utils import download
 def main() -> None:
     # url = "https://www.nature.com/articles/s41586-024-07930-y"
     url = "https://www.nature.com/articles/s41586-024-07930-y.pdf"
-    path = download(url)
+    path = download_by_httpx(url)
     print(path)
 
 
