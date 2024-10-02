@@ -187,5 +187,5 @@ def run_bot() -> None:
         ]
     )
 
-    app.add_error_handler(error_callback)
+    # app.add_error_handler(error_callback)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
