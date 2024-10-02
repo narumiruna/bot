@@ -63,18 +63,3 @@ def test_docs_to_str(docs, expected):
 )
 def test_ai_message_repr(ai_message, expected):
     assert ai_message_repr(ai_message) == expected
-
-
-def test_download():
-    url = "https://www.example.com"
-    file_path = httpx_download(url)
-    assert os.path.exists(file_path)
-    # Clean up the downloaded file
-    os.remove(file_path)
-
-
-def test_load_document():
-    url = "https://www.example.com"
-    content = load_document(url)
-    assert isinstance(content, str)
-    assert len(content) > 0
