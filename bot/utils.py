@@ -113,7 +113,7 @@ def download_by_singlefile(url: str, cookies_file: str | None = None) -> str:
     ]
 
     subprocess.run(cmds)
-    return docs_to_str(BSHTMLLoader(filename).load())
+    return filename
 
 
 def parse_url(s: str) -> str:
