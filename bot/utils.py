@@ -45,6 +45,12 @@ DOMAIN_REPLACEMENTS = {
 FFMPEG_LOCATION = "/opt/homebrew/bin/ffmpeg"
 
 
+def is_pdf(url: str) -> bool:
+    resp = httpx.head(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
+    resp.raise_for_status()
+    return resp.headers.get("content-type") == "application/pdf"
+
+
 def download_by_httpx(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
@@ -126,10 +132,11 @@ def load_document(url: str) -> str:
     url = replace_domain(url)
 
     # download
-    if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
-        f = download_by_singlefile(url)
-    else:
-        f = download_by_httpx(url)
+    # if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
+    #     f = download_by_singlefile(url)
+    # else:
+    #     f = download_by_httpx(url)
+    f = download_by_httpx(url) if is_pdf(url) else download_by_singlefile(url)
 
     if f.endswith(".pdf"):
         return docs_to_str(PyPDFLoader(f).load())
