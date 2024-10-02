@@ -165,14 +165,15 @@ def load_document(url: str) -> str:
         return load_pdf(url)
 
     # download
-    if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
-        f = singlefile_download(url)
-        return docs_to_str(BSHTMLLoader(f).load())
+    # if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
+    #     f = singlefile_download(url)
+    #     return docs_to_str(BSHTMLLoader(f).load())
 
-    text = load_html_bs(url)
-    if not text:
-        return docs_to_str(BSHTMLLoader(singlefile_download(url)).load())
-    return text
+    # text = load_html_bs(url)
+    # if not text:
+    #     return docs_to_str(BSHTMLLoader(singlefile_download(url)).load())
+    f = singlefile_download(url)
+    return docs_to_str(BSHTMLLoader(f).load())
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
