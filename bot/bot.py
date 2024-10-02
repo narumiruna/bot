@@ -148,7 +148,8 @@ async def handle_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> No
     if developer_chat_id:
         await context.bot.send_message(chat_id=developer_chat_id, text=message, parse_mode=ParseMode.HTML)
 
-    await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
+    if isinstance(update, Update):
+        await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
 
 
 def run_bot() -> None:
