@@ -276,7 +276,6 @@ def load_transcribe_by_whisper(url: str) -> str:
     audio = load_audio(f)
     model = load_whisper_model()
     result = model.transcribe(audio)
-    logger.info("transcribe result: {}", result)
     return str(result["text"])
 
 
