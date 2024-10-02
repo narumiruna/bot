@@ -149,7 +149,7 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
         f"<pre>context.error = {html.escape(str(context.error))}</pre>\n\n"
     )
     if context.error:
-        tb_list = traceback.format_exception(context.error, context.error.__traceback__)
+        tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
         tb_string = "".join(tb_list)
         message += f"<pre>Traceback (most recent call last):\n{html.escape(tb_string)}</pre>"
 
