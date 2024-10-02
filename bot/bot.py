@@ -57,6 +57,11 @@ async def summarize_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> No
 
     url = parse_url(message_text)
     if not url:
+        # if no URL is found, summarize the message text
+        # TODO: simplify this logic
+        summarized = summarize(message_text)
+        logger.info("Summarized text: {}", summarized)
+        await update.message.reply_text(summarized)
         return
     logger.info("Parsed URL: {}", url)
 
