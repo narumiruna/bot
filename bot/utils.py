@@ -130,8 +130,12 @@ def docs_to_str(docs: list[Document]) -> str:
     return "\n".join([doc.page_content.strip() for doc in docs])
 
 
-def is_youtube_video_url(url: str) -> bool:
-    return url.startswith("https://www.youtube.com/watch?v=") or url.startswith("https://youtu.be/")
+def is_youtube_url(url: str) -> bool:
+    return (
+        url.startswith("https://www.youtube.com")
+        or url.startswith("https://youtu.be")
+        or url.startswith("https://m.youtube.com")
+    )
 
 
 def load_youtube_transcripts(url: str) -> str:
@@ -155,7 +159,7 @@ def load_youtube_transcripts(url: str) -> str:
 def load_document(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
-    if is_youtube_video_url(url):
+    if is_youtube_url(url):
         return load_youtube_transcripts(url)
 
     # replace domain
