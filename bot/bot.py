@@ -65,6 +65,7 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     except Exception as e:
         logger.error("Failed to load URL: {}", e)
         await update.message.reply_text(f"Failed to load URL: {url}")
+        return
 
     if not doc_text:
         logger.info("Failed to load URL: {}", url)
