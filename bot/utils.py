@@ -29,6 +29,15 @@ DOMAINS_DOWNLOADING_BY_SINGLEFILE = [
 
 DEFAULT_LANGUAGE_CODES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en"]
 
+DOMAIN_REPLACEMENTS = {
+    # "twitter.com": "vxtwitter.com",
+    # "x.com": "fixvx.com",
+    # "twitter.com": "twittpr.com",
+    # "x.com": "fixupx.com",
+    "twitter.com": "api.fxtwitter.com",
+    "x.com": "api.fxtwitter.com",
+}
+
 
 def download(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
@@ -91,15 +100,15 @@ def load_document_from_url(url: str) -> str:
             ).load()
         )
 
-    # fix twitter url
-    url = fix_twitter(url)
+    # replace domain
+    url = replace_domain(url)
 
     # download html or pdf
     if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
         try:
             f = download_by_singlefile(url)
         except Exception as e:
-            logger.error("failed to download by singlefile: {}", e)
+            logger.error("failed to download {} by singlefile: {}", url, e)
             return ""
     else:
         f = download(url)
@@ -127,19 +136,10 @@ def ai_message_repr(ai_message: AIMessage) -> str:
     return "\n".join(contents)
 
 
-def fix_twitter(url: str) -> str:
-    replacements = {
-        # "twitter.com": "vxtwitter.com",
-        # "x.com": "fixvx.com",
-        # "twitter.com": "twittpr.com",
-        # "x.com": "fixupx.com",
-        "twitter.com": "api.fxtwitter.com",
-        "x.com": "api.fxtwitter.com",
-    }
-
+def replace_domain(url: str) -> str:
     parsed_url = urlparse(url)
-    if parsed_url.netloc in replacements:
-        new_netloc = replacements[parsed_url.netloc]
+    if parsed_url.netloc in DOMAIN_REPLACEMENTS:
+        new_netloc = DOMAIN_REPLACEMENTS[parsed_url.netloc]
         fixed_url = parsed_url._replace(netloc=new_netloc)
         return urlunparse(fixed_url)
 

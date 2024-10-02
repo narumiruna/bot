@@ -7,9 +7,9 @@ from langchain_core.messages import AIMessage
 from bot.utils import ai_message_repr
 from bot.utils import docs_to_str
 from bot.utils import download
-from bot.utils import fix_twitter
 from bot.utils import load_document_from_url
 from bot.utils import parse_url
+from bot.utils import replace_domain
 
 
 @pytest.mark.parametrize(
@@ -26,7 +26,7 @@ from bot.utils import parse_url
     ],
 )
 def test_fix_twitter(url, expected):
-    assert fix_twitter(url) == expected
+    assert replace_domain(url) == expected
 
 
 @pytest.mark.parametrize(
