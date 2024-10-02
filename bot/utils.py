@@ -10,6 +10,7 @@ from urllib.parse import urlunparse
 import chardet
 import httpx
 import numpy as np
+import telegraph
 import whisper
 import yt_dlp
 from bs4 import BeautifulSoup
@@ -282,3 +283,17 @@ def load_transcribe_by_whisper(url: str) -> str:
     result = model.transcribe(audio)
     logger.info("transcribe result: {}", result)
     return str(result["text"])
+
+
+@functools.cache
+def get_telegraph_client() -> telegraph.Telegraph:
+    client = telegraph.Telegraph()
+    client.create_account(short_name="Narumi's Bot")
+    return client
+
+
+def create_page(title: str, **kwargs) -> str:
+    client = get_telegraph_client()
+
+    resp = client.create_page(title=title, **kwargs)
+    return resp["url"]
