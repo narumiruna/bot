@@ -60,7 +60,7 @@ async def summarize_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> No
 
     text = load_document(url)
     if not text:
-        await update.message.reply_text(f"Failed to load text from {url}")
+        await update.message.reply_text(f"Unable to load content from: {url}")
         return
     logger.info("Text length: {}", len(text))
 
