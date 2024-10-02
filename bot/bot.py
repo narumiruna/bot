@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import json
 import os
+import traceback
 from typing import Callable
 
 from loguru import logger
@@ -139,6 +140,7 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
     logger.error("Exception while handling an update: {}", context.error)
 
     update_str = update.to_dict() if isinstance(update, Update) else str(update)
+
     message = (
         "An exception was raised while handling an update\n"
         f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}</pre>\n\n"
@@ -146,6 +148,10 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
         f"<pre>context.user_data = {html.escape(str(context.user_data))}</pre>\n\n"
         f"<pre>context.error = {html.escape(str(context.error))}</pre>\n\n"
     )
+    if context.error:
+        tb_list = traceback.format_exception_only(context.error)
+        tb_string = "".join(tb_list)
+        message += f"<pre>Traceback (most recent call last):\n{html.escape(tb_string)}</pre>"
 
     developer_chat_id = os.getenv("DEVELOPER_CHAT_ID", None)
     if developer_chat_id:
