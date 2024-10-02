@@ -124,6 +124,7 @@ async def help_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     help_text = (
+        "code: https://github.com/narumiruna/bot/tree/main/bot\n"
         "/help - Show this help message\n"
         "/sum - Summarize a document\n"
         "/jp - Translate text to Japanese\n"
