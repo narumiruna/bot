@@ -20,6 +20,8 @@ from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
 from loguru import logger
+from youtube_transcript_api import NoTranscriptFound
+from youtube_transcript_api import TranscriptsDisabled
 
 DEFAULT_HEADERS = {
     "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
@@ -140,7 +142,7 @@ def is_youtube_url(url: str) -> bool:
 
 
 def load_youtube_transcripts(url: str) -> str:
-    with contextlib.suppress(ValueError):
+    with contextlib.suppress(ValueError, NoTranscriptFound, TranscriptsDisabled):
         transcripts = docs_to_str(
             YoutubeLoader.from_youtube_url(
                 url,
@@ -169,14 +171,7 @@ def load_document(url: str) -> str:
     if is_pdf(url):
         return load_pdf(url)
 
-    # download
-    # if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
-    #     f = singlefile_download(url)
-    #     return docs_to_str(BSHTMLLoader(f).load())
-
-    # text = load_html_bs(url)
-    # if not text:
-    #     return docs_to_str(BSHTMLLoader(singlefile_download(url)).load())
+    # download the page and convert it to text
     f = singlefile_download(url)
     return docs_to_str(BSHTMLLoader(f).load())
 
