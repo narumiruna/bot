@@ -1,13 +1,9 @@
-import os
-
 import pytest
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
 
 from bot.utils import ai_message_repr
 from bot.utils import docs_to_str
-from bot.utils import httpx_download
-from bot.utils import load_document
 from bot.utils import parse_url
 from bot.utils import replace_domain
 
