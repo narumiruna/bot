@@ -168,8 +168,11 @@ def load_document(url: str) -> str:
     if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
         f = singlefile_download(url)
         return docs_to_str(BSHTMLLoader(f).load())
-    else:
-        return load_html_bs(url)
+
+    text = load_html_bs(url)
+    if not text:
+        return docs_to_str(BSHTMLLoader(singlefile_download(url)).load())
+    return text
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
