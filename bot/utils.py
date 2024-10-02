@@ -76,8 +76,7 @@ def load_html_bs(url: str) -> str:
     resp = httpx.get(url, headers=DEFAULT_HEADERS)
     resp.raise_for_status()
 
-    resp.encoding = detect_encoding(resp.content)
-    soup = BeautifulSoup(resp.text, "html.parser", from_encoding=resp.encoding)
+    soup = BeautifulSoup(resp.content, "html.parser")
     text = soup.get_text(strip=True)
     return text
 
