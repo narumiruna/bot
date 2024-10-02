@@ -7,10 +7,12 @@ from pathlib import Path
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
+import chardet
 import httpx
 import numpy as np
 import whisper
 import yt_dlp
+from bs4 import BeautifulSoup
 from langchain_community.document_loaders import YoutubeLoader
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
@@ -51,6 +53,35 @@ def is_pdf(url: str) -> bool:
     return resp.headers.get("content-type") == "application/pdf"
 
 
+def load_pdf(url: str) -> str:
+    resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
+    resp.raise_for_status()
+
+    suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
+        fp.write(resp.content)
+
+    return docs_to_str(PyPDFLoader(fp.name).load())
+
+
+def detect_encoding(byte_str: bytes) -> str:
+    result = chardet.detect(byte_str)
+    encoding = result["encoding"]
+    if not encoding:
+        return "utf-8"
+    return encoding
+
+
+def load_html_bs(url: str) -> str:
+    resp = httpx.get(url, headers=DEFAULT_HEADERS)
+    resp.raise_for_status()
+
+    resp.encoding = detect_encoding(resp.content)
+    soup = BeautifulSoup(resp.text, "html.parser", from_encoding=resp.encoding)
+    text = soup.get_text(strip=True)
+    return text
+
+
 def download_by_httpx(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
@@ -83,7 +114,7 @@ def download_by_singlefile(url: str, cookies_file: str | None = None) -> str:
     ]
 
     subprocess.run(cmds)
-    return filename
+    return docs_to_str(BSHTMLLoader(filename).load())
 
 
 def parse_url(s: str) -> str:
@@ -131,17 +162,15 @@ def load_document(url: str) -> str:
     # replace domain
     url = replace_domain(url)
 
+    if is_pdf(url):
+        return load_pdf(url)
+
     # download
-    # if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
-    #     f = download_by_singlefile(url)
-    # else:
-    #     f = download_by_httpx(url)
-    f = download_by_httpx(url) if is_pdf(url) else download_by_singlefile(url)
-
-    if f.endswith(".pdf"):
-        return docs_to_str(PyPDFLoader(f).load())
-
-    return docs_to_str(BSHTMLLoader(f).load())
+    if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
+        f = download_by_singlefile(url)
+        return docs_to_str(BSHTMLLoader(f).load())
+    else:
+        return load_html_bs(url)
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
