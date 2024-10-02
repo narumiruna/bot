@@ -3,7 +3,7 @@ from __future__ import annotations
 import html
 import json
 import os
-import traceback
+from traceback import format_exception
 from typing import Callable
 
 from loguru import logger
@@ -146,7 +146,8 @@ def create_error_handler(developer_chat_id: int) -> Callable:
 
         # traceback.format_exception returns the usual python message about an exception, but as a
         # list of strings rather than a single string, so we have to join them together.
-        tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
+
+        tb_list = format_exception(None, context.error, context.error.__traceback__)
         tb_string = "".join(tb_list)
 
         # Build the message with some markup and additional information about what happened.
@@ -195,6 +196,6 @@ def run_bot() -> None:
 
     developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
     if developer_chat_id:
-        app.add_error_handler(create_error_handler(developer_chat_id))
+        app.add_error_handler(create_error_handler(int(developer_chat_id)))
 
     app.run_polling(allowed_updates=Update.ALL_TYPES)
