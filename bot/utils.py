@@ -142,7 +142,7 @@ def load_document(url: str) -> str:
     if f.endswith(".pdf"):
         return docs_to_str(PyPDFLoader(f).load())
 
-    return docs_to_str(BSHTMLLoader(f, open_encoding=detect_encoding(f)).load())
+    return docs_to_str(BSHTMLLoader(f, open_encoding=detect_encoding(f), bs_kwargs={"errors": "ignore"}).load())
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
