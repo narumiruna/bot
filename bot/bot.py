@@ -8,7 +8,6 @@ from typing import Callable
 
 from loguru import logger
 from telegram import Update
-from telegram.constants import ParseMode
 from telegram.ext import Application
 from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
@@ -163,7 +162,7 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
     page_url = create_page(title="Error", html_content=html_content)
     developer_chat_id = os.getenv("DEVELOPER_CHAT_ID", None)
     if developer_chat_id:
-        await context.bot.send_message(chat_id=developer_chat_id, text=page_url, parse_mode=ParseMode.MARKDOWN_V2)
+        await context.bot.send_message(chat_id=developer_chat_id, text=page_url)
 
     # if isinstance(update, Update) and update.message:
     #     await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
