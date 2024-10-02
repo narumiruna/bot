@@ -64,10 +64,10 @@ def load_pdf(url: str) -> str:
     return docs_to_str(PyPDFLoader(fp.name).load())
 
 
-def detect_encoding(text: str) -> str:
-    result = chardet.detect(text)
+def detect_encoding(byte_str: bytes) -> str:
+    result = chardet.detect(byte_str)
     encoding = result["encoding"]
-    if encoding is None:
+    if not encoding:
         return "utf-8"
     return encoding
 
