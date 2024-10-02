@@ -6,7 +6,7 @@ from langchain_core.messages import AIMessage
 
 from bot.utils import ai_message_repr
 from bot.utils import docs_to_str
-from bot.utils import download_by_httpx
+from bot.utils import httpx_download
 from bot.utils import load_document
 from bot.utils import parse_url
 from bot.utils import replace_domain
@@ -67,7 +67,7 @@ def test_ai_message_repr(ai_message, expected):
 
 def test_download():
     url = "https://www.example.com"
-    file_path = download_by_httpx(url)
+    file_path = httpx_download(url)
     assert os.path.exists(file_path)
     # Clean up the downloaded file
     os.remove(file_path)

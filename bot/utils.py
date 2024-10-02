@@ -81,7 +81,7 @@ def load_html_bs(url: str) -> str:
     return text
 
 
-def download_by_httpx(url: str) -> str:
+def httpx_download(url: str) -> str:
     resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     resp.raise_for_status()
 
@@ -91,7 +91,7 @@ def download_by_httpx(url: str) -> str:
         return fp.name
 
 
-def download_by_singlefile(url: str, cookies_file: str | None = None) -> str:
+def singlefile_download(url: str, cookies_file: str | None = None) -> str:
     filename = tempfile.mktemp(suffix=".html")
 
     cmds = ["/Users/narumi/.local/bin/single-file"]
@@ -166,7 +166,7 @@ def load_document(url: str) -> str:
 
     # download
     if urlparse(url).netloc in DOMAINS_DOWNLOADING_BY_SINGLEFILE:
-        f = download_by_singlefile(url)
+        f = singlefile_download(url)
         return docs_to_str(BSHTMLLoader(f).load())
     else:
         return load_html_bs(url)
