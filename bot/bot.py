@@ -132,27 +132,24 @@ async def help_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(help_text)
 
 
-def create_error_handler(developer_chat_id: int) -> Callable:
-    async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Log the error and send a telegram message to notify the developer."""
-        # Log the error before we do anything else, so we can see it even if something breaks.
-        logger.error("Exception while handling an update: {}", context.error)
+async def handle_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.error("Exception while handling an update: {}", context.error)
 
-        # Build the message with some markup and additional information about what happened.
-        # You might need to add some logic to deal with messages longer than the 4096 character limit.
-        update_str = update.to_dict() if isinstance(update, Update) else str(update)
-        message = (
-            "An exception was raised while handling an update\n"
-            f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}"
-            "</pre>\n\n"
-            f"<pre>context.chat_data = {html.escape(str(context.chat_data))}</pre>\n\n"
-            f"<pre>context.user_data = {html.escape(str(context.user_data))}</pre>\n\n"
-        )
+    update_str = update.to_dict() if isinstance(update, Update) else str(update)
+    message = (
+        "An exception was raised while handling an update\n"
+        f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}</pre>\n\n"
+        f"<pre>context.chat_data = {html.escape(str(context.chat_data))}</pre>\n\n"
+        f"<pre>context.user_data = {html.escape(str(context.user_data))}</pre>\n\n"
+        f"<pre>context.error = {html.escape(str(context.error))}</pre>\n\n"
+    )
 
-        # Finally, send the message
+    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID", None)
+    if developer_chat_id:
         await context.bot.send_message(chat_id=developer_chat_id, text=message, parse_mode=ParseMode.HTML)
 
-    return error_handler
+    if isinstance(update, Update):
+        await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
 
 
 def run_bot() -> None:
@@ -181,8 +178,5 @@ def run_bot() -> None:
         ]
     )
 
-    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
-    if developer_chat_id:
-        app.add_error_handler(create_error_handler(int(developer_chat_id)))
-
+    app.add_error_handler(handle_error)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
