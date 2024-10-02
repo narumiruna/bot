@@ -34,18 +34,18 @@ def get_message_text(update: Update) -> str:
     return f"{reply_text}\n{message_text}" if reply_text else message_text
 
 
-async def log_message_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def log_message_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Message Update: {}", update)
 
 
-async def echo_message_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def echo_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
     await update.message.reply_text(json.dumps(update.message.to_dict(), indent=2))
 
 
-async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def summarize_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -88,7 +88,7 @@ def create_translate_callback(lang: str) -> Callable:
     return translate_
 
 
-async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def polish_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -102,7 +102,7 @@ async def polish_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(text)
 
 
-async def query_ticker_from_yahoo_finance_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def yf_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -115,7 +115,7 @@ async def query_ticker_from_yahoo_finance_(update: Update, context: ContextTypes
     await update.message.reply_text(text)
 
 
-async def help_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def help_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -132,7 +132,7 @@ async def help_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(help_text)
 
 
-async def handle_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.error("Exception while handling an update: {}", context.error)
 
     update_str = update.to_dict() if isinstance(update, Update) else str(update)
@@ -166,17 +166,17 @@ def run_bot() -> None:
     app = Application.builder().token(token).build()
     app.add_handlers(
         [
-            CommandHandler("help", help_, filters=chat_filter),
-            CommandHandler("sum", summarize_, filters=chat_filter),
+            CommandHandler("help", help_callback, filters=chat_filter),
+            CommandHandler("sum", summarize_callback, filters=chat_filter),
             CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter),
             CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter),
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
-            CommandHandler("polish", polish_, filters=chat_filter),
-            CommandHandler("yf", query_ticker_from_yahoo_finance_, filters=chat_filter),
-            CommandHandler("echo", echo_message_),
-            MessageHandler(filters=chat_filter, callback=log_message_),
+            CommandHandler("polish", polish_callback, filters=chat_filter),
+            CommandHandler("yf", yf_callback, filters=chat_filter),
+            CommandHandler("echo", echo_callback),
+            MessageHandler(filters=chat_filter, callback=log_message_callback),
         ]
     )
 
-    app.add_error_handler(handle_error)
+    app.add_error_handler(error_callback)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
