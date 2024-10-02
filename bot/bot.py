@@ -60,7 +60,12 @@ async def summarize_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Found URL: {}", url)
 
     # TODO: Handle the type of URL here, reply with a message if it cannot be processed
-    doc_text = load_document(url)
+    try:
+        doc_text = load_document(url)
+    except Exception as e:
+        logger.error("Failed to load URL: {}", e)
+        await update.message.reply_text(f"Failed to load URL: {url}")
+
     if not doc_text:
         logger.info("Failed to load URL: {}", url)
         await update.message.reply_text(f"Failed to load URL: {url}")
