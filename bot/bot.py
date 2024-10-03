@@ -14,12 +14,12 @@ from telegram.ext import ContextTypes
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
+from .loaders import load_url
 from .polish import polish
 from .summarize import summarize
 from .translate import translate
 from .translate import translate_and_explain
 from .utils import create_page
-from .utils import load_document
 from .utils import parse_url
 from .yahoo_finance import query_tickers
 
@@ -64,7 +64,7 @@ async def summarize_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> No
         return
     logger.info("Parsed URL: {}", url)
 
-    text = load_document(url)
+    text = load_url(url)
     if not text:
         await update.message.reply_text(f"Unable to load content from: {url}")
         return
