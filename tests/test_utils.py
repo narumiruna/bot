@@ -1,9 +1,7 @@
 import pytest
-from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
 
 from bot.utils import ai_message_repr
-from bot.utils import docs_to_str
 from bot.utils import parse_url
 from bot.utils import replace_domain
 
@@ -36,17 +34,6 @@ def test_fix_twitter(url, expected):
 )
 def test_parse_url(s, expected):
     assert parse_url(s) == expected
-
-
-@pytest.mark.parametrize(
-    "docs, expected",
-    [
-        ([Document(page_content="Page 1"), Document(page_content="Page 2")], "Page 1\nPage 2"),
-        ([], ""),
-    ],
-)
-def test_docs_to_str(docs, expected):
-    assert docs_to_str(docs) == expected
 
 
 @pytest.mark.parametrize(
