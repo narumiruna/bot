@@ -69,8 +69,11 @@ def load_url(url: str) -> str:
         logger.info("Unable to load video transcript for YouTube video: {}", url)
 
     # check and load PDF
-    if is_pdf(url):
-        return load_pdf(url)
+    try:
+        if is_pdf(url):
+            return load_pdf(url)
+    except httpx.HTTPStatusError as e:
+        logger.error("Unable to load PDF: {} ({})", url, e)
 
     # check and load PTT
     if url.startswith("https://www.ptt.cc/bbs"):
