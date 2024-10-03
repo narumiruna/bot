@@ -1,21 +1,13 @@
-import pytest
-
-from bot.loaders.youtube_transcript import YoutubeTranscriptLoader
+from bot.loaders.youtube_transcript import load_youtube_transcript
 from bot.loaders.youtube_transcript import parse_video_id
 
 
-@pytest.fixture
-def loader():
-    return YoutubeTranscriptLoader()
-
-
-def test_load_valid_url_real(loader):
+def test_load_valid_url_real():
     url = "https://youtu.be/3_Kv1VUWz1w"
-    result = loader.load(url)
+    result = load_youtube_transcript(url)
     assert result is not None
     assert isinstance(result, str)
     assert len(result) > 0
-    print(result)
 
 
 def test_parse_video_id_valid():
