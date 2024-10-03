@@ -1,5 +1,4 @@
 import functools
-import os
 import re
 import subprocess
 import tempfile
@@ -141,7 +140,10 @@ def load_document(url: str) -> str:
 
         # if the video has no transcripts
         # download the video and transcribe it by whisper
-        return load_video_transcript(url)
+        transcript = load_video_transcript(url)
+        if transcript:
+            return transcript
+        logger.info("Unable to load video transcript for YouTube video: {}", url)
 
     # replace domain
     url = replace_domain(url)
