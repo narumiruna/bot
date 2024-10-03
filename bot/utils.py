@@ -11,6 +11,7 @@ from langchain_core.messages import AIMessage
 from loguru import logger
 
 from .loaders import load_pdf
+from .loaders import load_ptt
 from .loaders import load_singlefile_html
 from .loaders import load_video_transcript
 from .loaders import load_youtube_transcript
@@ -89,6 +90,9 @@ def load_document(url: str) -> str:
 
     if is_pdf(url):
         return load_pdf(url)
+
+    if url.startswith("https://www.ptt.cc/bbs"):
+        return load_ptt(url)
 
     # download the page and convert it to text
     return load_singlefile_html(url)
