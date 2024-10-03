@@ -52,13 +52,12 @@ def parse_video_id(url: str) -> str | None:
 
 
 class YoutubeTranscriptLoader(Loader):
-    def __init__(self, languages: list[str] = None):
+    def __init__(self, languages: list[str] | None = None):
         self.languages = languages or DEFAULT_LANGUAGES
 
     def load(self, url: str) -> str | None:
         video_id = parse_video_id(url)
         if not video_id:
-            # raise ValueError(f'Could not determine the video ID for the URL "{url}".')
             return None
 
         try:
@@ -69,8 +68,8 @@ class YoutubeTranscriptLoader(Loader):
         try:
             transcript: Transcript = transcript_list.find_transcript(self.languages)
         except NoTranscriptFound:
-            transcript: Transcript = transcript_list.find_transcript(["en"])
+            return None
 
         transcript_pieces: list[dict[str, str | float]] = transcript.fetch()
 
-        return " ".join(transcript_piece.get("text", "").strip() for transcript_piece in transcript_pieces)
+        return " ".join(str(transcript_piece.get("text", "")).strip() for transcript_piece in transcript_pieces)
