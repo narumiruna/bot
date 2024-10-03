@@ -38,6 +38,7 @@ types-requests = "^2.32.0.20240914"
 types-setuptools = "^75.1.0.20240917"
 types-pyopenssl = "^24.1.0.20240722"
 types-redis = "^4.6.0.20240903"
+types-tabulate = "^0.9.0.20240106"
 
 [tool.poetry.scripts]
 bot = "bot.cli:main"
