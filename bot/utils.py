@@ -1,18 +1,16 @@
 import functools
 import re
-import tempfile
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
 import chardet
 import httpx
 import telegraph
-from bs4 import BeautifulSoup
-from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
 from loguru import logger
 
+from .loaders import load_pdf
 from .loaders import load_singlefile_html
 from .loaders import load_video_transcript
 from .loaders import load_youtube_transcript
@@ -23,8 +21,6 @@ DEFAULT_HEADERS = {
     "Cookie": "over18=1",  # ptt
 }
 
-
-DEFAULT_LANGUAGE_CODES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en"]
 
 DOMAIN_REPLACEMENTS = {
     # "twitter.com": "vxtwitter.com",
@@ -42,42 +38,12 @@ def is_pdf(url: str) -> bool:
     return resp.headers.get("content-type") == "application/pdf"
 
 
-def load_pdf(url: str) -> str:
-    resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
-    resp.raise_for_status()
-
-    suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
-        fp.write(resp.content)
-
-    return docs_to_str(PyPDFLoader(fp.name).load())
-
-
 def detect_encoding(byte_str: bytes) -> str:
     result = chardet.detect(byte_str)
     encoding = result["encoding"]
     if not encoding:
         return "utf-8"
     return encoding
-
-
-def load_html_bs(url: str) -> str:
-    resp = httpx.get(url, headers=DEFAULT_HEADERS)
-    resp.raise_for_status()
-
-    soup = BeautifulSoup(resp.content, "html.parser")
-    text = soup.get_text(strip=True)
-    return text
-
-
-def httpx_download(url: str) -> str:
-    resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
-    resp.raise_for_status()
-
-    suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
-        fp.write(resp.content)
-        return fp.name
 
 
 def parse_url(s: str) -> str:
