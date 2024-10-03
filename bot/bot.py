@@ -14,6 +14,7 @@ from telegram.ext import ContextTypes
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
+from .loaders import load_pdf_file
 from .loaders import load_url
 from .polish import polish
 from .summarize import summarize
@@ -46,13 +47,24 @@ async def echo_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(json.dumps(update.message.to_dict(), indent=2))
 
 
-async def summarize_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
     message_text = get_message_text(update)
     if not message_text:
         return
+
+    # if the message is a reply to a pdf document, summarize the pdf document
+    reply_to_message = update.message.reply_to_message
+    if reply_to_message and reply_to_message.document:
+        new_file = await context.bot.get_file(reply_to_message.document.file_id)
+        file_path = await new_file.download_to_drive()
+        if file_path.suffix == ".pdf":
+            text = load_pdf_file(file_path)
+            summarized = summarize(text)
+            await update.message.reply_text(summarized)
+            return
 
     url = parse_url(message_text)
     if not url:
