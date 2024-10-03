@@ -4,8 +4,8 @@ from urllib.parse import urlunparse
 import httpx
 from loguru import logger
 
+from .html import load_html
 from .pdf import load_pdf
-from .ptt import load_ptt
 from .singlefile_html import load_singlefile_html
 from .video_transcript import load_video_transcript
 from .youtube_transcript import load_youtube_transcript
@@ -75,9 +75,12 @@ def load_url(url: str) -> str:
     except httpx.HTTPStatusError as e:
         logger.error("Unable to load PDF: {} ({})", url, e)
 
-    # check and load PTT
-    if url.startswith("https://www.ptt.cc/bbs"):
-        return load_ptt(url)
+    urls = [
+        "https://www.ptt.cc/bbs",
+        "https://ncode.syosetu.com",
+    ]
+    if any(url.startswith(url) for url in urls):
+        return load_html(url)
 
     # download the page by singlefile and convert it to text
     return load_singlefile_html(url)
