@@ -64,7 +64,9 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
             text = load_pdf_file(file_path)
             summarized = summarize(text)
             await update.message.reply_text(summarized)
-            return
+        # delete the downloaded file
+        os.remove(file_path)
+        return
 
     url = parse_url(message_text)
     if not url:
