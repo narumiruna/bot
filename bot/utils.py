@@ -1,8 +1,6 @@
 import functools
 import re
-import subprocess
 import tempfile
-from pathlib import Path
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
@@ -10,12 +8,12 @@ import chardet
 import httpx
 import telegraph
 from bs4 import BeautifulSoup
-from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage
 from loguru import logger
 
+from .loaders import load_singlefile_html
 from .loaders import load_video_transcript
 from .loaders import load_youtube_transcript
 
@@ -82,31 +80,6 @@ def httpx_download(url: str) -> str:
         return fp.name
 
 
-def singlefile_download(url: str, cookies_file: str | None = None) -> str:
-    filename = tempfile.mktemp(suffix=".html")
-
-    cmds = ["/Users/narumi/.local/bin/single-file"]
-
-    if cookies_file is not None:
-        if not Path(cookies_file).exists():
-            raise FileNotFoundError("cookies file not found")
-
-        cmds += [
-            "--browser-cookies-file",
-            cookies_file,
-        ]
-
-    cmds += [
-        "--filename-conflict-action",
-        "overwrite",
-        url,
-        filename,
-    ]
-
-    subprocess.run(cmds)
-    return filename
-
-
 def parse_url(s: str) -> str:
     url_pattern = r"https?://[^\s]+"
 
@@ -152,8 +125,7 @@ def load_document(url: str) -> str:
         return load_pdf(url)
 
     # download the page and convert it to text
-    f = singlefile_download(url)
-    return docs_to_str(BSHTMLLoader(f).load())
+    return load_singlefile_html(url)
 
 
 def ai_message_repr(ai_message: AIMessage) -> str:
