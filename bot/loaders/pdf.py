@@ -21,3 +21,7 @@ def load_pdf(url: str) -> str:
         fp.write(resp.content)
 
     return docs_to_str(PyPDFLoader(fp.name).load())
+
+
+def load_pdf_file(f: str) -> str:
+    return docs_to_str(PyPDFLoader(f).load())
