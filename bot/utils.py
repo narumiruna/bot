@@ -143,7 +143,7 @@ def load_youtube_transcripts(url: str) -> str:
         transcripts = docs_to_str(
             YoutubeLoader.from_youtube_url(
                 url,
-                add_video_info=True,
+                add_video_info=False,
                 language=DEFAULT_LANGUAGE_CODES,
             ).load()
         )
