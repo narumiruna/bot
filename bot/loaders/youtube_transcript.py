@@ -7,8 +7,6 @@ from youtube_transcript_api import TranscriptList
 from youtube_transcript_api import TranscriptsDisabled
 from youtube_transcript_api import YouTubeTranscriptApi
 
-from .loader import Loader
-
 DEFAULT_LANGUAGES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en"]
 ALLOWED_SCHEMES = {"http", "https"}
 ALLOWED_NETLOCS = {
@@ -51,25 +49,23 @@ def parse_video_id(url: str) -> str | None:
     return video_id
 
 
-class YoutubeTranscriptLoader(Loader):
-    def __init__(self, languages: list[str] | None = None):
-        self.languages = languages or DEFAULT_LANGUAGES
+def load_youtube_transcript(url: str, languages: list[str] | None = None) -> str | None:
+    languages = languages or DEFAULT_LANGUAGES
 
-    def load(self, url: str) -> str | None:
-        video_id = parse_video_id(url)
-        if not video_id:
-            return None
+    video_id = parse_video_id(url)
+    if not video_id:
+        return None
 
-        try:
-            transcript_list: TranscriptList = YouTubeTranscriptApi.list_transcripts(video_id)
-        except TranscriptsDisabled:
-            return None
+    try:
+        transcript_list: TranscriptList = YouTubeTranscriptApi.list_transcripts(video_id)
+    except TranscriptsDisabled:
+        return None
 
-        try:
-            transcript: Transcript = transcript_list.find_transcript(self.languages)
-        except NoTranscriptFound:
-            return None
+    try:
+        transcript: Transcript = transcript_list.find_transcript(languages)
+    except NoTranscriptFound:
+        return None
 
-        transcript_pieces: list[dict[str, str | float]] = transcript.fetch()
+    transcript_pieces: list[dict[str, str | float]] = transcript.fetch()
 
-        return " ".join(str(transcript_piece.get("text", "")).strip() for transcript_piece in transcript_pieces)
+    return " ".join(str(transcript_piece.get("text", "")).strip() for transcript_piece in transcript_pieces)
