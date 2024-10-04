@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 
 from bs4 import BeautifulSoup
+from loguru import logger
 
 
 def get_singlefile_path_from_env() -> str:
@@ -11,6 +12,8 @@ def get_singlefile_path_from_env() -> str:
 
 
 def singlefile_download(url: str, cookies_file: str | None = None) -> str:
+    logger.info("Downloading HTML by SingleFile: {}", url)
+
     filename = tempfile.mktemp(suffix=".html")
 
     singlefile_path = get_singlefile_path_from_env()
