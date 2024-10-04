@@ -79,8 +79,9 @@ def load_url(url: str) -> str:
         "https://www.ptt.cc/bbs",
         "https://ncode.syosetu.com",
     ]
-    if any(url.startswith(url) for url in urls):
-        return load_html(url)
+    for url in urls:
+        if url.startswith(url):
+            return load_html(url)
 
     # download the page by singlefile and convert it to text
     return load_singlefile_html(url)
