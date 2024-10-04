@@ -8,6 +8,7 @@ from typing import Callable
 
 from loguru import logger
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import Application
 from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
@@ -41,10 +42,17 @@ async def log_message_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> 
 
 
 async def echo_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
-        return
-
-    await update.message.reply_text(json.dumps(update.message.to_dict(), indent=2))
+    text = html.escape(
+        json.dumps(
+            update.to_dict(),
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
+    await update.message.reply_text(
+        text=f"<pre>{text}</pre>",
+        parse_mode=ParseMode.HTML,
+    )
 
 
 async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
