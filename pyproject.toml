@@ -23,8 +23,8 @@ python-dotenv = "^1.0.1"
 python-telegram-bot = "^21.6"
 telegraph = "^2.2.0"
 torch = [
-    { platform = "darwin", version = "^2.4.1", source = "pypi" },
-    { platform = "linux", version = "^2.4.1+cpu", source = "pytorch-cpu" },
+    { platform = "darwin", version = "2.4.1", source = "pypi" },
+    { platform = "linux", version = "2.4.1+cpu", source = "pytorch-cpu" },
 ]
 yfinance = "^0.2.43"
 youtube-transcript-api = "^0.6.2"
