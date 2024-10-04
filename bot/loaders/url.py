@@ -75,12 +75,12 @@ def load_url(url: str) -> str:
     except httpx.HTTPStatusError as e:
         logger.error("Unable to load PDF: {} ({})", url, e)
 
-    urls = [
+    domains = [
         "https://www.ptt.cc/bbs",
         "https://ncode.syosetu.com",
     ]
-    for url in urls:
-        if url.startswith(url):
+    for domain in domains:
+        if url.startswith(domain):
             return load_html(url)
 
     # download the page by singlefile and convert it to text
