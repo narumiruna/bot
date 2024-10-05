@@ -1,5 +1,5 @@
+import asyncio
 import os
-import subprocess
 import tempfile
 from pathlib import Path
 
@@ -11,7 +11,7 @@ def get_singlefile_path_from_env() -> str:
     return os.getenv("SINGLEFILE_PATH", "/Users/narumi/.local/bin/single-file")
 
 
-def singlefile_download(url: str, cookies_file: str | None = None) -> str:
+async def singlefile_download(url: str, cookies_file: str | None = None) -> str:
     logger.info("Downloading HTML by SingleFile: {}", url)
 
     filename = tempfile.mktemp(suffix=".html")
@@ -36,12 +36,14 @@ def singlefile_download(url: str, cookies_file: str | None = None) -> str:
         filename,
     ]
 
-    subprocess.run(cmds)
+    process = await asyncio.create_subprocess_exec(*cmds)
+    await process.communicate()
+
     return filename
 
 
-def load_singlefile_html(url: str) -> str:
-    f = singlefile_download(url)
+async def load_singlefile_html(url: str) -> str:
+    f = await singlefile_download(url)
 
     with open(f, "rb") as fp:
         soup = BeautifulSoup(fp, "html.parser")
