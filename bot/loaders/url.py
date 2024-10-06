@@ -49,7 +49,7 @@ def replace_domain(url: str) -> str:
     return url
 
 
-def load_url(url: str) -> str:
+async def load_url(url: str) -> str:
     # https://python.langchain.com/docs/integrations/document_loaders/
 
     # replace domain
@@ -84,4 +84,5 @@ def load_url(url: str) -> str:
             return load_html(url)
 
     # download the page by singlefile and convert it to text
-    return load_singlefile_html(url)
+    text = await load_singlefile_html(url)
+    return text

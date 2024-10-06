@@ -86,7 +86,7 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         return
     logger.info("Parsed URL: {}", url)
 
-    text = load_url(url)
+    text = await load_url(url)
     if not text:
         await update.message.reply_text(f"Unable to load content from: {url}")
         return
