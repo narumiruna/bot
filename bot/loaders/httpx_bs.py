@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 
 
-def load_html(url: str) -> str:
+def load_httpx_bs4(url: str) -> str:
     logger.info("Loading HTML: {}", url)
 
     headers = {

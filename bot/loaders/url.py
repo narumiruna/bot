@@ -4,7 +4,7 @@ from urllib.parse import urlunparse
 import httpx
 from loguru import logger
 
-from .html import load_html
+from .httpx_bs import load_httpx_bs4
 from .pdf import load_pdf
 from .singlefile_html import load_singlefile_html
 from .video_transcript import load_video_transcript
@@ -84,7 +84,7 @@ async def load_url(url: str) -> str:
     ]
     for domain in domains:
         if url.startswith(domain):
-            return load_html(url)
+            return load_httpx_bs4(url)
 
     # download the page by singlefile and convert it to text
     text = await load_singlefile_html(url)
