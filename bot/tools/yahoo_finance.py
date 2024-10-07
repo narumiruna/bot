@@ -1,5 +1,4 @@
 import yfinance as yf  # type: ignore
-from loguru import logger
 
 
 def query_tickers(s: str | list[str]) -> str:
@@ -14,8 +13,6 @@ def ticker_repr(t: yf.Ticker) -> str:
     symbol = t.info.get("symbol")
     if symbol is None:
         return f"{t.ticker} not found."
-
-    logger.info("symbol: {}, info: {}", symbol, t.info)
 
     short_name = t.info.get("shortName")
 

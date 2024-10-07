@@ -1,9 +1,54 @@
+import asyncio
+import os
+import tempfile
+from pathlib import Path
+
 import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
 
 
-def load_html(url: str) -> str:
+async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -> str:
+    logger.info("Downloading HTML by SingleFile: {}", url)
+
+    filename = tempfile.mktemp(suffix=".html")
+
+    singlefile_path = os.getenv("SINGLEFILE_PATH", "/Users/narumi/.local/bin/single-file")
+
+    cmds = [singlefile_path]
+
+    if cookies_file is not None:
+        if not Path(cookies_file).exists():
+            raise FileNotFoundError("cookies file not found")
+
+        cmds += [
+            "--browser-cookies-file",
+            cookies_file,
+        ]
+
+    cmds += [
+        "--filename-conflict-action",
+        "overwrite",
+        url,
+        filename,
+    ]
+
+    process = await asyncio.create_subprocess_exec(*cmds)
+    await process.communicate()
+
+    return filename
+
+
+async def load_html_with_singlefile(url: str) -> str:
+    f = await save_html_with_singlefile(url)
+
+    with open(f, "rb") as fp:
+        soup = BeautifulSoup(fp, "html.parser")
+        text = soup.get_text(strip=True)
+    return text
+
+
+def load_html_with_httpx(url: str) -> str:
     logger.info("Loading HTML: {}", url)
 
     headers = {
