@@ -4,14 +4,14 @@ from urllib.parse import urlunparse
 import httpx
 from loguru import logger
 
-from .httpx_bs import load_httpx_bs4
+from .html import load_html_with_httpx
+from .html import load_html_with_singlefile
 from .pdf import load_pdf
-from .singlefile_html import load_singlefile_html
 from .video_transcript import load_video_transcript
 from .youtube_transcript import load_youtube_transcript
 
 
-def is_pdf(url: str) -> bool:
+def is_pdf_url(url: str) -> bool:
     headers = {
         "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",  # noqa
@@ -70,7 +70,7 @@ async def load_url(url: str) -> str:
 
     # check and load PDF
     try:
-        if is_pdf(url):
+        if is_pdf_url(url):
             return load_pdf(url)
     except httpx.HTTPStatusError as e:
         logger.error("Unable to load PDF: {} ({})", url, e)
@@ -84,8 +84,8 @@ async def load_url(url: str) -> str:
     ]
     for domain in domains:
         if url.startswith(domain):
-            return load_httpx_bs4(url)
+            return load_html_with_httpx(url)
 
     # download the page by singlefile and convert it to text
-    text = await load_singlefile_html(url)
+    text = await load_html_with_singlefile(url)
     return text
