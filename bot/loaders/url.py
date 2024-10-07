@@ -80,6 +80,7 @@ async def load_url(url: str) -> str:
         "https://ncode.syosetu.com",
         "https://pubmed.ncbi.nlm.nih.gov",
         "https://www.bnext.com.tw",
+        "https://github.com",
     ]
     for domain in domains:
         if url.startswith(domain):
