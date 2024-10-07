@@ -18,7 +18,6 @@ from telegram.ext import filters
 from . import tools
 from .loaders import load_pdf_file
 from .loaders import load_url
-from .tools.polish import polish
 from .utils import create_page
 from .utils import parse_url
 
@@ -34,11 +33,11 @@ def get_message_text(update: Update) -> str:
     return f"{reply_text}\n{message_text}" if reply_text else message_text
 
 
-async def log_message_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Message Update: {}", update)
 
 
-async def echo_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def echo(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     text = html.escape(
         json.dumps(
             update.to_dict(),
@@ -52,7 +51,7 @@ async def echo_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
-async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -96,7 +95,7 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 def create_translate_callback(lang: str) -> Callable:
-    async def translate_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async def translate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not update.message:
             return
 
@@ -113,10 +112,10 @@ def create_translate_callback(lang: str) -> Callable:
 
         await update.message.reply_text(text)
 
-    return translate_
+    return translate
 
 
-async def polish_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def polish(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -124,13 +123,13 @@ async def polish_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not message_text:
         return
 
-    text = polish(message_text)
+    text = tools.polish(message_text)
     logger.info("Polished text: {}", text)
 
     await update.message.reply_text(text)
 
 
-async def yf_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -143,7 +142,7 @@ async def yf_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     await update.message.reply_text(text)
 
 
-async def help_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -201,15 +200,15 @@ def run_bot() -> None:
     app = Application.builder().token(token).build()
     app.add_handlers(
         [
-            CommandHandler("help", help_callback, filters=chat_filter),
-            CommandHandler("sum", summarize_callback, filters=chat_filter),
+            CommandHandler("help", help, filters=chat_filter),
+            CommandHandler("sum", summarize, filters=chat_filter),
             CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter),
             CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter),
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
-            CommandHandler("polish", polish_callback, filters=chat_filter),
-            CommandHandler("yf", yf_callback, filters=chat_filter),
-            CommandHandler("echo", echo_callback),
-            MessageHandler(filters=chat_filter, callback=log_message_callback),
+            CommandHandler("polish", polish, filters=chat_filter),
+            CommandHandler("yf", query_ticker, filters=chat_filter),
+            CommandHandler("echo", echo),
+            MessageHandler(filters=chat_filter, callback=log_update),
         ]
     )
 
