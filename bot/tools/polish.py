@@ -1,7 +1,7 @@
 from langchain_core.messages import AIMessage
 
-from .chain import get_chain
-from .utils import ai_message_repr
+from ..chain import get_chain
+from ..utils import ai_message_repr
 
 PROMPT_TEMPLATE = """Polish the following text: {text}"""
 

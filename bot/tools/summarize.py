@@ -1,7 +1,7 @@
 from langchain_core.messages import AIMessage
 
-from .chain import get_chain
-from .utils import ai_message_repr
+from ..chain import get_chain
+from ..utils import ai_message_repr
 
 PROMPT_TEMPLATE = """用台灣用語的繁體中文，簡潔地以條列式總結文章重點。
 在摘要後直接加入相關的英文 hashtag，以空格分隔。

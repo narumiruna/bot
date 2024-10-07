@@ -1,7 +1,7 @@
 from langchain_core.messages import AIMessage
 
-from .chain import get_chain
-from .utils import ai_message_repr
+from ..chain import get_chain
+from ..utils import ai_message_repr
 
 TRANSLATE_PROMPT_TEMPLATE = """翻譯以下文字為{lang}：
 

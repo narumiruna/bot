@@ -15,15 +15,12 @@ from telegram.ext import ContextTypes
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
+from . import tools
 from .loaders import load_pdf_file
 from .loaders import load_url
-from .polish import polish
-from .summarize import summarize
-from .translate import translate
-from .translate import translate_and_explain
+from .tools.polish import polish
 from .utils import create_page
 from .utils import parse_url
-from .yahoo_finance import query_tickers
 
 
 def get_message_text(update: Update) -> str:
@@ -70,7 +67,7 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         file_path = await new_file.download_to_drive()
         if file_path.suffix == ".pdf":
             text = load_pdf_file(file_path)
-            summarized = summarize(text)
+            summarized = tools.summarize(text)
             await update.message.reply_text(summarized)
         # delete the downloaded file
         os.remove(file_path)
@@ -80,7 +77,7 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if not url:
         # if no URL is found, summarize the message text
         # TODO: simplify this logic
-        summarized = summarize(message_text)
+        summarized = tools.summarize(message_text)
         logger.info("Summarized text: {}", summarized)
         await update.message.reply_text(summarized)
         return
@@ -92,7 +89,7 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         return
     logger.info("Text length: {}", len(text))
 
-    summarized = summarize(text)
+    summarized = tools.summarize(text)
     logger.info("Summarized text: {}", summarized)
 
     await update.message.reply_text(summarized)
@@ -108,10 +105,10 @@ def create_translate_callback(lang: str) -> Callable:
             return
 
         if context.args and context.args[0] == "explain":
-            text = translate_and_explain(message_text, lang=lang)
+            text = tools.translate_and_explain(message_text, lang=lang)
             logger.info("Translated and explained text to {}: {}", lang, text)
         else:
-            text = translate(message_text, lang=lang)
+            text = tools.translate(message_text, lang=lang)
             logger.info("Translated text to {}: {}", lang, text)
 
         await update.message.reply_text(text)
@@ -140,7 +137,7 @@ async def yf_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if not context.args:
         return
 
-    text = query_tickers(context.args)
+    text = tools.query_tickers(context.args)
     logger.info("Tickers: {}", text)
 
     await update.message.reply_text(text)
