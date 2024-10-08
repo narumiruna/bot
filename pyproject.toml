@@ -20,7 +20,7 @@ python-telegram-bot = "^21.6"
 telegraph = "^2.2.0"
 yfinance = "^0.2.43"
 youtube-transcript-api = "^0.6.2"
-yt-dlp = "^2024.9.27"
+yt-dlp = "^2024.10.7"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.11.2"
