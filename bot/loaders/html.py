@@ -4,6 +4,7 @@ import re
 import tempfile
 from pathlib import Path
 
+import cloudscraper
 import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
@@ -78,6 +79,16 @@ def load_html_with_httpx(url: str, markdown: bool = True) -> str:
     }
 
     resp = httpx.get(url=url, headers=headers, follow_redirects=True)
+    resp.raise_for_status()
+
+    return parse_html(resp.text, markdown=markdown)
+
+
+def load_html_with_cloudscraper(url: str, markdown: bool = True) -> str:
+    logger.info("Loading HTML: {}", url)
+
+    scraper = cloudscraper.create_scraper()
+    resp = scraper.get(url)
     resp.raise_for_status()
 
     return parse_html(resp.text, markdown=markdown)
