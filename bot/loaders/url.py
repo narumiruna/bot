@@ -4,6 +4,7 @@ from urllib.parse import urlunparse
 import httpx
 from loguru import logger
 
+from .html import load_html_with_cloudscraper
 from .html import load_html_with_httpx
 from .html import load_html_with_singlefile
 from .pdf import load_pdf
@@ -75,16 +76,23 @@ async def load_url(url: str) -> str:
     except httpx.HTTPStatusError as e:
         logger.error("Unable to load PDF: {} ({})", url, e)
 
-    domains = [
+    httpx_domains = [
         "https://www.ptt.cc/bbs",
         "https://ncode.syosetu.com",
         "https://pubmed.ncbi.nlm.nih.gov",
         "https://www.bnext.com.tw",
         "https://github.com",
     ]
-    for domain in domains:
+    for domain in httpx_domains:
         if url.startswith(domain):
             return load_html_with_httpx(url)
+
+    cloudscraper_domains = [
+        "https://blog.tripplus.cc",
+    ]
+    for domain in cloudscraper_domains:
+        if url.startswith(domain):
+            return load_html_with_cloudscraper(url)
 
     # download the page by singlefile and convert it to text
     text = await load_html_with_singlefile(url)
