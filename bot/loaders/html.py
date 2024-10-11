@@ -50,7 +50,6 @@ async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -
         ]
 
     cmds += [
-        '--browser-arg="--user-data-dir=/Users/narumi/Library/Application Support/Google/Chrome --incognito"',
         "--filename-conflict-action",
         "overwrite",
         url,
@@ -93,3 +92,8 @@ def load_html_with_cloudscraper(url: str, markdown: bool = True) -> str:
     resp.raise_for_status()
 
     return parse_html(resp.text, markdown=markdown)
+
+
+def load_html_file(f: str) -> str:
+    with open(f, encoding="utf-8") as fp:
+        return parse_html(fp.read())

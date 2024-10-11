@@ -16,6 +16,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import filters
 
 from . import tools
+from .loaders import load_html_file
 from .loaders import load_pdf_file
 from .loaders import load_url
 from .utils import create_page
@@ -66,6 +67,10 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         file_path = await new_file.download_to_drive()
         if file_path.suffix == ".pdf":
             text = load_pdf_file(file_path)
+            summarized = tools.summarize(text)
+            await update.message.reply_text(summarized)
+        elif file_path.suffix == ".html":
+            text = load_html_file(file_path)
             summarized = tools.summarize(text)
             await update.message.reply_text(summarized)
         # delete the downloaded file
