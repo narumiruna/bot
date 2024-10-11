@@ -89,7 +89,7 @@ async def load_url(url: str) -> str:
 
     cloudscraper_domains = [
         "https://blog.tripplus.cc",
-        "https://cloudflare.net",
+        # "https://cloudflare.net",
     ]
     for domain in cloudscraper_domains:
         if url.startswith(domain):

@@ -50,6 +50,7 @@ async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -
         ]
 
     cmds += [
+        '--browser-arg="--user-data-dir=/Users/narumi/Library/Application Support/Google/Chrome --incognito"',
         "--filename-conflict-action",
         "overwrite",
         url,
