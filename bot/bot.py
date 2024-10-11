@@ -52,29 +52,36 @@ async def echo(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
+async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message:
+        return
+
+    document = update.message.document
+    if not document:
+        return
+
+    new_file = await context.bot.get_file(document.file_id)
+    file_path = await new_file.download_to_drive()
+
+    text = None
+    if file_path.suffix == ".pdf":
+        text = load_pdf_file(file_path)
+    elif file_path.suffix == ".html":
+        text = load_html_file(file_path)
+
+    if text:
+        summarized = tools.summarize(text)
+        await update.message.reply_text(summarized)
+
+    os.remove(file_path)
+
+
 async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
     message_text = get_message_text(update)
     if not message_text:
-        return
-
-    # if the message is a reply to a pdf document, summarize the pdf document
-    reply_to_message = update.message.reply_to_message
-    if reply_to_message and reply_to_message.document:
-        new_file = await context.bot.get_file(reply_to_message.document.file_id)
-        file_path = await new_file.download_to_drive()
-        if file_path.suffix == ".pdf":
-            text = load_pdf_file(file_path)
-            summarized = tools.summarize(text)
-            await update.message.reply_text(summarized)
-        elif file_path.suffix == ".html":
-            text = load_html_file(file_path)
-            summarized = tools.summarize(text)
-            await update.message.reply_text(summarized)
-        # delete the downloaded file
-        os.remove(file_path)
         return
 
     url = parse_url(message_text)
@@ -213,6 +220,7 @@ def run_bot() -> None:
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
             CommandHandler("echo", echo),
+            MessageHandler(filters=chat_filter, callback=summarize_document),
             MessageHandler(filters=chat_filter, callback=log_update),
         ]
     )
