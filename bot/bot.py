@@ -233,7 +233,7 @@ def run_bot() -> None:
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
-            CommandHandler("prompt", generate_prompt, filters=chat_filter),
+            # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
             MessageHandler(filters=chat_filter, callback=summarize_document),
             MessageHandler(filters=chat_filter, callback=log_update),
