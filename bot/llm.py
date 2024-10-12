@@ -1,6 +1,7 @@
 import functools
 import os
 from pathlib import Path
+from typing import TypedDict
 
 from langchain.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
@@ -9,6 +10,13 @@ from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
 from langchain_openai.chat_models import ChatOpenAI
 from loguru import logger
 from openai import OpenAI
+
+MAX_CONTENT_LENGTH = 1_048_576
+
+
+class Message(TypedDict):
+    role: str
+    content: str
 
 
 @functools.cache
@@ -25,24 +33,28 @@ def get_openai_model() -> str:
     return model
 
 
-def complete(messages: list[dict[str, str]]) -> str:
+def complete(messages: list[Message]) -> str:
     client = get_openai_client()
     model = get_openai_model()
+
+    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    for message in messages:
+        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
 
     completion = client.chat.completions.create(
         model=model,
         messages=messages,
-        temperature=0.0,
+        temperature=temperature,
     )
 
     if not completion.choices:
         raise ValueError("No completion choices returned")
 
-    message = completion.choices[0].message
-    if not message.content:
+    content = completion.choices[0].message.content
+    if not content:
         raise ValueError("No completion message content")
 
-    return message.content
+    return content
 
 
 @functools.cache
