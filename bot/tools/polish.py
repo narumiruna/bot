@@ -1,5 +1,4 @@
-from ..llm import get_openai_client
-from ..llm import get_openai_model
+from ..llm import complete
 
 SYSTEM_PROMPT = """Polish the following text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
 
@@ -34,12 +33,8 @@ The output should be a polished version of the provided text in the same languag
 
 
 def polish(text: str) -> str:
-    client = get_openai_client()
-    model = get_openai_model()
-
-    completion = client.chat.completions.create(
-        model=model,
-        messages=[
+    return complete(
+        [
             {
                 "role": "system",
                 "content": SYSTEM_PROMPT,
@@ -48,14 +43,5 @@ def polish(text: str) -> str:
                 "role": "user",
                 "content": text,
             },
-        ],
+        ]
     )
-
-    if not completion.choices:
-        raise ValueError("No completion choices returned")
-
-    message = completion.choices[0].message
-    if not message.content:
-        raise ValueError("No completion message content")
-
-    return message.content

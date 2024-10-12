@@ -18,9 +18,31 @@ def get_openai_client() -> OpenAI:
 
 @functools.cache
 def get_openai_model() -> str:
-    model = os.getenv("MODEL", "gpt-4o-mini")
-    logger.info("language model: {}", model)
+    model = os.getenv("OPENAI_MODEL")
+    if not model:
+        logger.warning("OPENAI_MODEL not set, using gpt-4o-mini")
+        return "gpt-4o-mini"
     return model
+
+
+def complete(messages: list[dict[str, str]]) -> str:
+    client = get_openai_client()
+    model = get_openai_model()
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=0.0,
+    )
+
+    if not completion.choices:
+        raise ValueError("No completion choices returned")
+
+    message = completion.choices[0].message
+    if not message.content:
+        raise ValueError("No completion message content")
+
+    return message.content
 
 
 @functools.cache

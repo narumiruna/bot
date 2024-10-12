@@ -1,5 +1,4 @@
-from ..llm import get_openai_client
-from ..llm import get_openai_model
+from ..llm import complete
 
 SYSTEM_PROMPT = """用台灣用語的繁體中文，簡潔地以條列式總結文章重點。在摘要後直接加入相關的英文 hashtag，以空格分隔。內容來源可以是網頁、文章、論文、影片字幕或逐字稿。
 
@@ -31,12 +30,8 @@ SYSTEM_PROMPT = """用台灣用語的繁體中文，簡潔地以條列式總結�
 
 
 def summarize(text: str) -> str:
-    client = get_openai_client()
-    model = get_openai_model()
-
-    completion = client.chat.completions.create(
-        model=model,
-        messages=[
+    return complete(
+        [
             {
                 "role": "system",
                 "content": SYSTEM_PROMPT,
@@ -45,14 +40,5 @@ def summarize(text: str) -> str:
                 "role": "user",
                 "content": text,
             },
-        ],
+        ]
     )
-
-    if not completion.choices:
-        raise ValueError("No completion choices returned")
-
-    message = completion.choices[0].message
-    if not message.content:
-        raise ValueError("No completion message content")
-
-    return message.content
