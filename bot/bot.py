@@ -154,6 +154,20 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(text)
 
 
+async def generate_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message:
+        return
+
+    message_text = get_message_text(update)
+    if not message_text:
+        return
+
+    text = tools.generate_prompt(message_text)
+    logger.info("Prompt: {}", text)
+
+    await update.message.reply_text(text)
+
+
 async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
@@ -219,6 +233,7 @@ def run_bot() -> None:
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
+            CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
             MessageHandler(filters=chat_filter, callback=summarize_document),
             MessageHandler(filters=chat_filter, callback=log_update),
