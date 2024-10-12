@@ -8,6 +8,19 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
 from langchain_openai.chat_models import ChatOpenAI
 from loguru import logger
+from openai import OpenAI
+
+
+@functools.cache
+def get_openai_client() -> OpenAI:
+    return OpenAI()
+
+
+@functools.cache
+def get_openai_model() -> str:
+    model = os.getenv("MODEL", "gpt-4o-mini")
+    logger.info("language model: {}", model)
+    return model
 
 
 @functools.cache
