@@ -1,11 +1,6 @@
-"""https://platform.openai.com/docs/guides/prompt-generation"""
+from ..llm import complete
 
-import functools
-import os
-
-from loguru import logger
-from openai import OpenAI
-
+# From https://platform.openai.com/docs/guides/prompt-generation
 META_PROMPT = """
 Given a task description or existing prompt, produce a detailed system prompt to guide a language model in completing the task effectively.
 
@@ -53,28 +48,9 @@ The final prompt you output should adhere to the following structure below. Do n
 """.strip()  # noqa
 
 
-@functools.cache
-def get_openai_client() -> OpenAI:
-    return OpenAI()
-
-
-@functools.cache
-def get_openai_model() -> str:
-    model_name = os.getenv("OPENAI_MODEL")
-    if not model_name:
-        logger.warning("OPENAI_MODEL not set, using gpt-4o-mini")
-        return "gpt-4o-mini"
-
-    return model_name
-
-
 def generate_prompt(task_or_prompt: str) -> str:
-    client = get_openai_client()
-    model = get_openai_model()
-
-    completion = client.chat.completions.create(
-        model=model,
-        messages=[
+    return complete(
+        [
             {
                 "role": "system",
                 "content": META_PROMPT,
@@ -85,12 +61,3 @@ def generate_prompt(task_or_prompt: str) -> str:
             },
         ],
     )
-
-    if not completion.choices:
-        raise ValueError("No completion choices returned")
-
-    message = completion.choices[0].message
-    if not message.content:
-        raise ValueError("No completion message content")
-
-    return message.content
