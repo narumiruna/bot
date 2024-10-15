@@ -45,7 +45,7 @@ def complete(messages: list[Message]) -> str:
         model=model,
         messages=messages,
         temperature=temperature,
-        max_tokens=128000,
+        # max_tokens=128000,
         # max_completion_tokens=128000,
     )
 
