@@ -1,4 +1,5 @@
 from ..llm import complete
+from ..utils import save_text
 
 SYSTEM_PROMPT = """用台灣用語的繁體中文，簡潔地以條列式總結文章重點。在摘要後直接加入相關的英文 hashtag，以空格分隔。內容來源可以是網頁、文章、論文、影片字幕或逐字稿。
 
@@ -30,15 +31,19 @@ SYSTEM_PROMPT = """用台灣用語的繁體中文，簡潔地以條列式總結�
 
 
 def summarize(text: str) -> str:
-    return complete(
-        [
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": text,
-            },
-        ]
-    )
+    try:
+        return complete(
+            [
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT,
+                },
+                {
+                    "role": "user",
+                    "content": text,
+                },
+            ]
+        )
+    except Exception as e:
+        save_text(text, "message_text.txt")
+        raise e
