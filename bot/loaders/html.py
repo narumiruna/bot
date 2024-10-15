@@ -22,7 +22,7 @@ def parse_html(html: str | bytes, markdown: bool = True, encoding: str = "utf-8"
         html = html.decode(encoding)
 
     if markdown:
-        text = markdownify(html)
+        text = markdownify(html, strip=["a", "img"])
         text = remove_base64_image(text)
         return text
 
