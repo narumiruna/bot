@@ -46,7 +46,7 @@ def complete(messages: list[Message]) -> str:
         messages=messages,
         temperature=temperature,
         max_tokens=128000,
-        max_completion_tokens=128000,
+        # max_completion_tokens=128000,
     )
 
     if not completion.choices:
