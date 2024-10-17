@@ -19,6 +19,7 @@ from . import tools
 from .loaders import load_html_file
 from .loaders import load_pdf_file
 from .loaders import load_url
+from .qdrant import search_qdrant
 from .qdrant import upsert_to_qdrant
 from .utils import create_page
 from .utils import parse_url
@@ -44,6 +45,10 @@ async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message.text:
         return
 
+    if "/search" in update.message.text:
+        return
+
+    logger.info("Upserting to Qdrant: {}", update.message.text)
     upsert_to_qdrant(
         update.message.text,
         update=update.to_dict(),
@@ -224,6 +229,18 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
     #     await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
 
 
+async def search(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message:
+        return
+
+    message_text = get_message_text(update)
+    if not message_text:
+        return
+
+    text = search_qdrant(message_text)
+    await update.message.reply_text(text)
+
+
 def run_bot() -> None:
     token = os.getenv("BOT_TOKEN")
     if not token:
@@ -245,6 +262,7 @@ def run_bot() -> None:
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
+            CommandHandler("search", search, filters=chat_filter),
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
             MessageHandler(filters=chat_filter, callback=summarize_document),
