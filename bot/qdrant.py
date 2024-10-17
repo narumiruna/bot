@@ -106,7 +106,7 @@ def search_qdrant(text: str, chat_id: int) -> str:
         message_id = int(payload.get("message_id"))
 
         if chat_id < 0:
-            chat_id += 1000000000000
+            chat_id += 1_000_000_000_000
 
         telegram_url = f"https://t.me/c/{chat_id}/{message_id}"
 
