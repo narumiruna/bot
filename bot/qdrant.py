@@ -70,10 +70,7 @@ def add_to_qdrant(text: str, chat_id: int, message_id: int) -> None:
     )
 
 
-def build_url(metadata: dict) -> str:
-    chat_id = int(metadata.get("chat_id", 0))
-    message_id = int(metadata.get("message_id", 0))
-
+def build_url(chat_id: int, message_id: int) -> str:
     if chat_id < 0:
         chat_id += 1_000_000_000_000
         chat_id *= -1
@@ -82,6 +79,33 @@ def build_url(metadata: dict) -> str:
         return ""
 
     return f"https://t.me/c/{chat_id}/{message_id}"
+
+
+def build_points_str(points: list[QueryResponse]) -> str:
+    s = ""
+
+    for i, point in enumerate(points):
+        metadata = point.metadata
+        text = metadata.get("document")
+        if not text:
+            continue
+
+        chat_id = metadata.get("chat_id")
+        if not chat_id:
+            continue
+
+        message_id = metadata.get("message_id")
+        if not message_id:
+            continue
+
+        s += f"{i+1}. "
+        url = build_url(chat_id=chat_id, message_id=message_id)
+        if url:
+            s += url + "\n"
+
+        s += text + "\n\n"
+
+    return s
 
 
 def query_qdrant(text: str, chat_id: int) -> str:
@@ -105,19 +129,7 @@ def query_qdrant(text: str, chat_id: int) -> str:
         ),
     )
 
-    s = ""
-    for i, point in enumerate(points):
-        metadata = point.metadata
-        text = metadata.get("document")
-        if not text:
-            continue
-        s += f"{i+1}. "
-        url = build_url(metadata)
-        if url:
-            s += url + "\n"
-        s += text + "\n\n"
-
-    return s
+    return build_points_str(points)
 
 
 # def upsert_to_qdrant(text: str | list[str], **kwargs) -> None:
