@@ -240,6 +240,8 @@ async def search(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     text = search_qdrant(message_text, chat_id=update.message.chat.id)
+    if not text:
+        text = "No results found"
     await update.message.reply_text(text)
 
 
