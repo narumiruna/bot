@@ -52,6 +52,8 @@ async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     upsert_to_qdrant(
         update.message.text,
         update=update.to_dict(),
+        chat_id=update.message.chat.id,
+        message_id=update.message.message_id,
     )
 
 
@@ -237,7 +239,7 @@ async def search(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not message_text:
         return
 
-    text = search_qdrant(message_text)
+    text = search_qdrant(message_text, chat_id=update.message.chat.id)
     await update.message.reply_text(text)
 
 
