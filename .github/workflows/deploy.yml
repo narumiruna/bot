@@ -31,6 +31,7 @@ jobs:
           echo BOT_WHITELIST=${{ vars.BOT_WHITELIST }} >> .env
           echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
           echo DEVELOPER_CHAT_ID=${{ vars.DEVELOPER_CHAT_ID }} >> .env
+          echo QDRANT_URL=${{ secrets.QDRANT_URL }} >> .env
       - name: Stop and disable service
         continue-on-error: true
         working-directory: ${{ env.PLIST_DIR }}
