@@ -110,6 +110,6 @@ def search_qdrant(text: str, chat_id: int) -> str:
 
         telegram_url = f"https://t.me/c/{chat_id}/{message_id}"
 
-        s += f"{text} {telegram_url}\n"
+        s += f"{telegram_url}\n{text}\n"
 
     return s
