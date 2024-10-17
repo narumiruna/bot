@@ -4,6 +4,9 @@ import os
 from loguru import logger
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance
+from qdrant_client.models import FieldCondition
+from qdrant_client.models import Filter
+from qdrant_client.models import MatchValue
 from qdrant_client.models import PointStruct
 from qdrant_client.models import VectorParams
 
@@ -59,25 +62,17 @@ def create_points(texts: str | list[str], **kwargs) -> list[PointStruct]:
 
 
 def upsert_to_qdrant(text: str | list[str], **kwargs) -> None:
+    logger.info("upsert text: {} to qdrant", text)
+
     collection_name = get_collection_name()
     client = get_qdrant_client()
     points = create_points(text, **kwargs)
     client.upsert(collection_name, points)
 
 
-def build_telegram_url(update: dict) -> str:
-    message = update.get("message")
-    if not message:
-        return ""
+def search_qdrant(text: str, chat_id: int) -> str:
+    logger.info("searching qdrant for text: {}", text)
 
-    chat_id = int(message["chat"]["id"])
-    if chat_id < 0:
-        chat_id += 10**12
-    message_id = message["message_id"]
-    return f"https://t.me/c/{chat_id}/{message_id}"
-
-
-def search_qdrant(text: str) -> str:
     client = get_qdrant_client()
     collection_name = get_collection_name()
 
@@ -86,7 +81,19 @@ def search_qdrant(text: str) -> str:
     points = client.search(
         collection_name=collection_name,
         query_vector=response.data[0].embedding,
+        query_filter=Filter(
+            must=[
+                FieldCondition(
+                    key="chat_id",
+                    match=MatchValue(
+                        value=chat_id,
+                    ),
+                ),
+            ],
+        ),
     )
+
+    logger.info("search result: {}", points)
 
     s = ""
     for point in points:
@@ -95,13 +102,10 @@ def search_qdrant(text: str) -> str:
         if not text:
             continue
 
-        update = payload.get("update")
-        if not update:
-            continue
+        chat_id = payload.get("chat_id")
+        message_id = payload.get("message_id")
 
-        telegram_url = build_telegram_url(update)
-        if not telegram_url:
-            continue
+        telegram_url = f"https://t.me/c/{chat_id}/{message_id}"
 
         s += f"{text} {telegram_url}\n"
 
