@@ -24,6 +24,7 @@ yt-dlp = "^2024.10.7"
 markdownify = "^0.13.1"
 cloudscraper = "^1.2.71"
 openai = "^1.51.2"
+qdrant-client = {extras = ["fastembed"], version = "^1.12.0"}
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.12.0"

@@ -19,6 +19,7 @@ from . import tools
 from .loaders import load_html_file
 from .loaders import load_pdf_file
 from .loaders import load_url
+from .qdrant import upsert_to_qdrant
 from .utils import create_page
 from .utils import parse_url
 
@@ -36,6 +37,17 @@ def get_message_text(update: Update) -> str:
 
 async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Message Update: {}", update)
+
+    if not update.message:
+        return
+
+    if not update.message.text:
+        return
+
+    upsert_to_qdrant(
+        update.message.text,
+        update=update.to_dict(),
+    )
 
 
 async def echo(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
@@ -236,9 +248,9 @@ def run_bot() -> None:
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
             MessageHandler(filters=chat_filter, callback=summarize_document),
-            MessageHandler(filters=chat_filter, callback=log_update),
         ]
     )
+    app.add_handler(MessageHandler(filters=chat_filter, callback=log_update), group=1)
 
     app.add_error_handler(error_callback)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
