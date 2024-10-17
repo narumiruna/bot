@@ -10,6 +10,7 @@ from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
 from langchain_openai.chat_models import ChatOpenAI
 from loguru import logger
 from openai import OpenAI
+from openai.types import CreateEmbeddingResponse
 
 MAX_CONTENT_LENGTH = 1_048_576
 
@@ -78,3 +79,23 @@ def set_sqlite_llm_cache() -> None:
     cache = SQLiteCache(database_path.as_posix())
 
     set_llm_cache(cache)
+
+
+@functools.cache
+def get_openai_embedding_model() -> str:
+    model = os.getenv("OPENAI_EMBEDDING_MODEL")
+    if not model:
+        logger.warning("OPENAI_EMBEDDING_MODEL not set, using text-embedding-3-small")
+        return "text-embedding-3-small"
+    return model
+
+
+def create_embeddings(texts: str | list[str]) -> CreateEmbeddingResponse:
+    if isinstance(texts, str):
+        texts = [texts]
+
+    client = get_openai_client()
+    model = get_openai_embedding_model()
+
+    response = client.embeddings.create(input=texts, model=model)
+    return response
