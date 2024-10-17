@@ -102,8 +102,8 @@ def search_qdrant(text: str, chat_id: int) -> str:
         if not text:
             continue
 
-        chat_id = payload.get("chat_id")
-        message_id = payload.get("message_id")
+        chat_id = int(payload.get("chat_id"))
+        message_id = int(payload.get("message_id"))
 
         if chat_id < 0:
             chat_id += 1000000000000
