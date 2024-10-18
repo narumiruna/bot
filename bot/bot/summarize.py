@@ -57,13 +57,18 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     logger.info("Parsed URL: {}", url)
 
+    # remove the URL from the message text
+    question = None
+    if context.args:
+        question = " ".join(context.args).replace(url, "").strip()
+
     text = await load_url(url)
     if not text:
         await update.message.reply_text(f"Unable to load content from: {url}")
         return
     logger.info("Text length: {}", len(text))
 
-    summarized = tools.summarize(text)
+    summarized = tools.summarize(text, question)
     logger.info("Summarized text: {}", summarized)
 
     await update.message.reply_text(summarized)

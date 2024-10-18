@@ -1,3 +1,4 @@
+from ..llm import Message
 from ..llm import complete
 from ..utils import save_text
 
@@ -22,20 +23,27 @@ SYSTEM_PROMPT = """
 """.strip()  # noqa
 
 
-def summarize(text: str) -> str:
+def summarize(text: str, question: str | None = None) -> str:
+    messages: list[Message] = [
+        {
+            "role": "system",
+            "content": SYSTEM_PROMPT,
+        },
+        {
+            "role": "user",
+            "content": f"輸入：\n{text}",
+        },
+    ]
+
+    if question:
+        messages += [
+            {
+                "role": "user",
+                "content": f"問題：\n{question}",
+            }
+        ]
     try:
-        return complete(
-            [
-                {
-                    "role": "system",
-                    "content": SYSTEM_PROMPT,
-                },
-                {
-                    "role": "user",
-                    "content": text,
-                },
-            ]
-        )
+        return complete(messages)
     except Exception as e:
         save_text(text, "message_text.txt")
         raise e
