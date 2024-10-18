@@ -1,10 +1,9 @@
 import tempfile
+from pathlib import Path
 
 import httpx
-from langchain_community.document_loaders.pdf import PyPDFLoader
 from loguru import logger
-
-from .utils import docs_to_str
+from pypdf import PdfReader
 
 
 def load_pdf(url: str) -> str:
@@ -22,9 +21,11 @@ def load_pdf(url: str) -> str:
     suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
         fp.write(resp.content)
+        return load_pdf_file(fp.name)
 
-    return docs_to_str(PyPDFLoader(fp.name).load())
 
-
-def load_pdf_file(f: str) -> str:
-    return docs_to_str(PyPDFLoader(f).load())
+def load_pdf_file(f: str | Path) -> str:
+    texts = []
+    with PdfReader(f) as reader:
+        texts = [page.extract_text(extraction_mode="plain") for page in reader.pages]
+    return "\n".join(texts)
