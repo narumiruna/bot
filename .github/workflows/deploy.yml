@@ -29,9 +29,7 @@ jobs:
         run: pip install pipx
       - name: Install dependencies
         run: |
-          if pipx list | grep -q bot; then
-            pipx uninstall bot
-          fi
+          pipx uninstall bot
           pipx install .
       - name: Create dotenv
         run: |
