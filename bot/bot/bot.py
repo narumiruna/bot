@@ -10,7 +10,7 @@ from telegram.ext import ContextTypes
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
-from ..qdrant import add_to_qdrant
+# from ..qdrant import add_to_qdrant
 from ..qdrant import query_qdrant
 from .echo import echo
 from .error import error_callback
@@ -35,12 +35,12 @@ async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if "/query" in update.message.text:
         return
 
-    logger.info("Upserting to Qdrant: {}", update.message.text)
-    add_to_qdrant(
-        update.message.text,
-        chat_id=update.message.chat.id,
-        message_id=update.message.message_id,
-    )
+    # logger.info("Upserting to Qdrant: {}", update.message.text)
+    # add_to_qdrant(
+    #     update.message.text,
+    #     chat_id=update.message.chat.id,
+    #     message_id=update.message.message_id,
+    # )
 
 
 async def query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -78,7 +78,7 @@ def run_bot() -> None:
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
-            CommandHandler("query", query, filters=chat_filter),
+            # CommandHandler("query", query, filters=chat_filter),
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
             MessageHandler(filters=chat_filter, callback=summarize_document),

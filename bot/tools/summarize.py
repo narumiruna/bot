@@ -1,5 +1,5 @@
 from ..llm import Message
-from ..llm import complete
+from ..llm import acomplete
 from ..utils import save_text
 
 SYSTEM_PROMPT = """
@@ -23,7 +23,7 @@ SYSTEM_PROMPT = """
 """.strip()  # noqa
 
 
-def summarize(text: str, question: str | None = None) -> str:
+async def summarize(text: str, question: str | None = None) -> str:
     messages: list[Message] = [
         {
             "role": "system",
@@ -43,7 +43,7 @@ def summarize(text: str, question: str | None = None) -> str:
             }
         ]
     try:
-        return complete(messages)
+        return await acomplete(messages)
     except Exception as e:
         save_text(text, "message_text.txt")
         raise e

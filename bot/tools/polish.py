@@ -1,4 +1,4 @@
-from ..llm import complete
+from ..llm import acomplete
 
 SYSTEM_PROMPT = """Polish the following text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
 
@@ -32,8 +32,8 @@ The output should be a polished version of the provided text in the same languag
 """  # noqa
 
 
-def polish(text: str) -> str:
-    return complete(
+async def polish(text: str) -> str:
+    return await acomplete(
         [
             {
                 "role": "system",

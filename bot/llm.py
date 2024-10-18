@@ -3,6 +3,7 @@ import os
 from typing import TypedDict
 
 from loguru import logger
+from openai import AsyncOpenAI
 from openai import OpenAI
 from openai.types import CreateEmbeddingResponse
 
@@ -17,6 +18,11 @@ class Message(TypedDict):
 @functools.cache
 def get_openai_client() -> OpenAI:
     return OpenAI()
+
+
+@functools.cache
+def get_async_openai_client() -> AsyncOpenAI:
+    return AsyncOpenAI()
 
 
 @functools.cache
@@ -37,6 +43,30 @@ def complete(messages: list[Message]) -> str:
         message["content"] = message["content"][:MAX_CONTENT_LENGTH]
 
     completion = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+    )
+
+    if not completion.choices:
+        raise ValueError("No completion choices returned")
+
+    content = completion.choices[0].message.content
+    if not content:
+        raise ValueError("No completion message content")
+
+    return content
+
+
+async def acomplete(messages: list[Message]) -> str:
+    client = get_async_openai_client()
+    model = get_openai_model()
+
+    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    for message in messages:
+        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
+
+    completion = await client.chat.completions.create(
         model=model,
         messages=messages,
         temperature=temperature,
