@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["narumi <toucans-cutouts0f@icloud.com>"]
 
-
 [[tool.poetry.source]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
@@ -13,25 +12,24 @@ priority = "supplemental"
 [tool.poetry.dependencies]
 python = "^3.11"
 beautifulsoup4 = "^4.12.3"
-langchain-community = "^0.3.2"
+cloudscraper = "^1.2.71"
 loguru = "^0.7.2"
 lxml = "^5.3.0"
+markdownify = "^0.13.1"
+openai = "^1.51.2"
 openai-whisper = "^20240930"
 pypdf = "^5.0.1"
 python-dotenv = "^1.0.1"
 python-telegram-bot = "^21.6"
-telegraph = "^2.2.0"
-yfinance = "^0.2.43"
-youtube-transcript-api = "^0.6.2"
-yt-dlp = "^2024.10.7"
-markdownify = "^0.13.1"
-cloudscraper = "^1.2.71"
-openai = "^1.51.2"
 qdrant-client = { extras = ["fastembed"], version = "^1.12.0" }
+telegraph = "^2.2.0"
 torch = [
     { platform = "darwin", version = "2.5.0", source = "pypi" },
     { platform = "linux", version = "2.5.0+cpu", source = "pytorch-cpu" },
 ]
+yfinance = "^0.2.43"
+youtube-transcript-api = "^0.6.2"
+yt-dlp = "^2024.10.7"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.12.0"
@@ -52,7 +50,6 @@ types-tabulate = "^0.9.0.20240106"
 
 [tool.poetry.scripts]
 bot = "bot.cli:main"
-
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
