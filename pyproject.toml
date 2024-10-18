@@ -5,6 +5,11 @@ description = ""
 authors = ["narumi <toucans-cutouts0f@icloud.com>"]
 
 
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "supplemental"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 beautifulsoup4 = "^4.12.3"
@@ -22,7 +27,8 @@ yt-dlp = "^2024.10.7"
 markdownify = "^0.13.1"
 cloudscraper = "^1.2.71"
 openai = "^1.51.2"
-qdrant-client = {extras = ["fastembed"], version = "^1.12.0"}
+qdrant-client = { extras = ["fastembed"], version = "^1.12.0" }
+torch = { version = "^2.5.0+cpu", source = "pytorch-cpu" }
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.12.0"
@@ -43,6 +49,7 @@ types-tabulate = "^0.9.0.20240106"
 
 [tool.poetry.scripts]
 bot = "bot.cli:main"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
