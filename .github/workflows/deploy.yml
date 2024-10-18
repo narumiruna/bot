@@ -19,11 +19,19 @@ jobs:
         python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
-      - name: Install
-        run: pipx install .
-      - name: Install package
+      - name: Stop and disable service
+        continue-on-error: true
+        working-directory: ${{ env.PLIST_DIR }}
         run: |
-          pipx uninstall bot
+          launchctl stop ${{ env.UNIT }}
+          launchctl unload bot.plist
+      - name: Install pipx
+        run: pip install pipx
+      - name: Install dependencies
+        run: |
+          if pipx list | grep -q bot; then
+            pipx uninstall bot
+          fi
           pipx install .
       - name: Create dotenv
         run: |
@@ -32,12 +40,6 @@ jobs:
           echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
           echo DEVELOPER_CHAT_ID=${{ vars.DEVELOPER_CHAT_ID }} >> .env
           echo QDRANT_URL=${{ secrets.QDRANT_URL }} >> .env
-      - name: Stop and disable service
-        continue-on-error: true
-        working-directory: ${{ env.PLIST_DIR }}
-        run: |
-          launchctl stop ${{ env.UNIT }}
-          launchctl unload bot.plist
       - name: Copy files
         run: |
           mkdir -p ${{ env.WORKDIR }}

@@ -29,8 +29,8 @@ cloudscraper = "^1.2.71"
 openai = "^1.51.2"
 qdrant-client = { extras = ["fastembed"], version = "^1.12.0" }
 torch = [
-    { platform = "darwin", version = "^2.5.0", source = "pypi" },
-    { platform = "linux", version = "^2.5.0+cpu", source = "pytorch-cpu" },
+    { platform = "darwin", version = "2.5.0", source = "pypi" },
+    { platform = "linux", version = "2.5.0+cpu", source = "pytorch-cpu" },
 ]
 
 [tool.poetry.group.dev.dependencies]
