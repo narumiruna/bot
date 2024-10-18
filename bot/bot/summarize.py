@@ -45,6 +45,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message_text = get_message_text(update)
     if not message_text:
         return
+    logger.info("message_text: {}", message_text)
 
     url = parse_url(message_text)
     if not url:
