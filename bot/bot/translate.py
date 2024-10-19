@@ -20,10 +20,10 @@ def create_translate_callback(lang: str) -> Callable:
             return
 
         if context.args and context.args[0] == "explain":
-            text = tools.translate_and_explain(message_text, lang=lang)
+            text = await tools.translate_and_explain(message_text, lang=lang)
             logger.info("Translated and explained text to {}: {}", lang, text)
         else:
-            text = tools.translate(message_text, lang=lang)
+            text = await tools.translate(message_text, lang=lang)
             logger.info("Translated text to {}: {}", lang, text)
 
         await update.message.reply_text(text)

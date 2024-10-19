@@ -32,7 +32,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
         text = load_html_file(file_path)
 
     if text:
-        summarized = tools.summarize(text)
+        summarized = await tools.summarize(text)
         await update.message.reply_text(summarized)
 
     os.remove(file_path)
