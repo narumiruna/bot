@@ -51,7 +51,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not url:
         # if no URL is found, summarize the message text
         # TODO: simplify this logic
-        summarized = tools.summarize(message_text)
+        summarized = await tools.summarize(message_text)
         logger.info("Summarized text: {}", summarized)
         await update.message.reply_text(summarized)
         return
@@ -68,7 +68,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     logger.info("Text length: {}", len(text))
 
-    summarized = tools.summarize(text, question)
+    summarized = await tools.summarize(text, question)
     logger.info("Summarized text: {}", summarized)
 
     await update.message.reply_text(summarized)
