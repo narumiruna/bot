@@ -45,7 +45,7 @@ types-pytz = "^2024.2.0.20241003"
 types-pyyaml = "^6.0.12.20240917"
 types-redis = "^4.6.0.20241004"
 types-requests = "^2.32.0.20241016"
-types-setuptools = "^75.1.0.20241014"
+types-setuptools = "^75.2.0.20241019"
 types-tabulate = "^0.9.0.20240106"
 
 [tool.poetry.scripts]
