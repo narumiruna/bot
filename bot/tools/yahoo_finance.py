@@ -1,4 +1,9 @@
-import yfinance as yf  # type: ignore
+from loguru import logger
+
+try:
+    import yfinance as yf  # type: ignore
+except ImportError as e:
+    logger.error("{}. Please install yfinance by running 'pip install yfinance'", e)
 
 
 def query_tickers(s: str | list[str]) -> str:
