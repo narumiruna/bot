@@ -6,6 +6,7 @@ from loguru import logger
 from openai import AsyncOpenAI
 from openai import OpenAI
 from openai.types import CreateEmbeddingResponse
+from pydantic import BaseModel
 
 MAX_CONTENT_LENGTH = 1_048_576
 
@@ -80,6 +81,56 @@ async def acomplete(messages: list[Message]) -> str:
         raise ValueError("No completion message content")
 
     return content
+
+
+def parse(messages: list[Message], response_format) -> BaseModel:
+    client = get_openai_client()
+    model = get_openai_model()
+
+    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    for message in messages:
+        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
+
+    completion = client.beta.chat.completions.parse(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+        response_format=response_format,
+    )
+
+    if not completion.choices:
+        raise ValueError("No completion choices returned")
+
+    parsed = completion.choices[0].message.parsed
+    if not parsed:
+        raise ValueError("No completion message parsed")
+
+    return parsed
+
+
+async def aparse(messages: list[Message], response_format) -> BaseModel:
+    client = get_async_openai_client()
+    model = get_openai_model()
+
+    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    for message in messages:
+        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
+
+    completion = await client.beta.chat.completions.parse(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+        response_format=response_format,
+    )
+
+    if not completion.choices:
+        raise ValueError("No completion choices returned")
+
+    parsed = completion.choices[0].message.parsed
+    if not parsed:
+        raise ValueError("No completion message parsed")
+
+    return parsed
 
 
 @functools.cache

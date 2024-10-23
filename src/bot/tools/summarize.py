@@ -1,5 +1,7 @@
+from pydantic import BaseModel
+
 from ..llm import Message
-from ..llm import acomplete
+from ..llm import aparse
 from ..utils import save_text
 
 SYSTEM_PROMPT = """
@@ -23,6 +25,19 @@ SYSTEM_PROMPT = """
 """.strip()  # noqa
 
 
+class Summary(BaseModel):
+    lines: list[str]
+    hashtags: list[str]
+
+    def __str__(self) -> str:
+        lines = []
+
+        for line in self.lines:
+            lines += [f"- {line}"]
+
+        return "\n".join(lines) + f"\n{' '.join(self.hashtags)}"
+
+
 async def summarize(text: str, question: str | None = None) -> str:
     messages: list[Message] = [
         {
@@ -43,7 +58,8 @@ async def summarize(text: str, question: str | None = None) -> str:
             }
         ]
     try:
-        return await acomplete(messages)
+        summary = await aparse(messages, response_format=Summary)
+        return str(summary)
     except Exception as e:
         save_text(text, "message_text.txt")
         raise e
