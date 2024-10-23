@@ -1,59 +1,44 @@
-[tool.poetry]
+[project]
 name = "bot"
 version = "0.1.0"
-description = ""
-authors = ["narumi <toucans-cutouts0f@icloud.com>"]
-
-[[tool.poetry.source]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-priority = "supplemental"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-beautifulsoup4 = "^4.12.3"
-cloudscraper = "^1.2.71"
-loguru = "^0.7.2"
-lxml = "^5.3.0"
-markdownify = "^0.13.1"
-openai = "^1.51.2"
-openai-whisper = "^20240930"
-pypdf = "^5.0.1"
-python-dotenv = "^1.0.1"
-python-telegram-bot = "^21.6"
-qdrant-client = { extras = ["fastembed"], version = "^1.12.0" }
-telegraph = "^2.2.0"
-torch = [
-    { platform = "darwin", version = "2.5.0", source = "pypi" },
-    { platform = "linux", version = "2.5.0+cpu", source = "pytorch-cpu" },
+description = "Add your description here"
+readme = "README.md"
+authors = [{ name = "narumi", email = "toucans-cutouts0f@icloud.com" }]
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.12.3",
+    "cloudscraper>=1.2.71",
+    "loguru>=0.7.2",
+    "lxml>=5.3.0",
+    "markdownify>=0.13.1",
+    "openai>=1.52.0",
+    "openai-whisper>=20240930",
+    "pypdf>=5.0.1",
+    "python-dotenv>=1.0.1",
+    "python-telegram-bot>=21.6",
+    "qdrant-client[fastembed]>=1.12.0",
+    "telegraph>=2.2.0",
+    "torch>=2.5.0",
+    "yfinance>=0.2.46",
+    "youtube-transcript-api>=0.6.2",
+    "yt-dlp>=2024.10.22",
 ]
-yfinance = "0.2.46"
-youtube-transcript-api = "^0.6.2"
-yt-dlp = "^2024.10.7"
-
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.12.1"
-pytest = "^8.3.1"
-pytest-cov = "^5.0.0"
-ruff = "^0.7.0"
-toml = "^0.10.2"
-types-cachetools = "^5.5.0.20240820"
-types-protobuf = "^5.28.0.20240924"
-types-pymysql = "^1.1.0.20240524"
-types-pyopenssl = "^24.1.0.20240722"
-types-pytz = "^2024.2.0.20241003"
-types-pyyaml = "^6.0.12.20240917"
-types-redis = "^4.6.0.20241004"
-types-requests = "^2.32.0.20241016"
-types-setuptools = "^75.2.0.20241019"
-types-tabulate = "^0.9.0.20240106"
-
-[tool.poetry.scripts]
-bot = "bot.cli:main"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "mypy>=1.13.0",
+    "pytest>=8.3.3",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.7.0",
+    "toml>=0.10.2",
+]
+
+[project.scripts]
+bot = "bot.cli:main"
 
 [tool.ruff]
 exclude = ["build"]
