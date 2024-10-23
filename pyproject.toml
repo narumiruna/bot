@@ -29,7 +29,7 @@ torch = [
 ]
 yfinance = "0.2.46"
 youtube-transcript-api = "^0.6.2"
-yt-dlp = "^2024.10.7"
+yt-dlp = "^2024.10.22"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.12.1"
