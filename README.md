@@ -1,6 +1,6 @@
 # Narumi's Telegram Bot
 
-A sophisticated Telegram bot powered by advanced language models (GPT-4 or Gemini) that provides intelligent text processing, content analysis, and information retrieval capabilities. The bot supports multiple features including text polishing, summarization, translation, and financial data retrieval.
+A sophisticated Telegram bot powered by advanced language models that provides intelligent text processing, content analysis, and information retrieval capabilities. The bot supports multiple features including text polishing, summarization, translation, and financial data retrieval.
 
 ## Features
 
@@ -31,7 +31,6 @@ Create a `.env` file in the root directory of your project and add the following
 BOT_TOKEN=your_telegram_bot_token
 BOT_WHITELIST=comma_separated_user_ids
 
-# Choose one of the models
 MODEL=gpt-4o-mini
 OPENAI_API_KEY=your_openai_api_key
 ```
@@ -88,19 +87,16 @@ tests/               # Test suite
 ## Development
 
 1. Install pre-commit hooks:
-
 ```bash
 pre-commit install
 ```
 
 2. Follow code style guidelines:
-
 - Use type hints
 - Write docstrings for functions and classes
 - Follow PEP 8 guidelines
 
 3. Create feature branches for new development:
-
 ```bash
 git checkout -b feature/your-feature-name
 ```
