@@ -7,7 +7,22 @@ from pypdf import PdfReader
 
 
 def load_pdf(url: str) -> str:
-    logger.info("Loading PDF: {}", url)
+    """Load and extract text from a PDF at the given URL.
+
+    Args:
+        url: The URL of the PDF file to load.
+
+    Returns:
+        str: The extracted text content from the PDF.
+
+    Raises:
+        httpx.HTTPError: If the HTTP request fails.
+        ValueError: If the URL is empty or invalid.
+    """
+    if not url or not url.strip():
+        raise ValueError("URL cannot be empty")
+
+    logger.info("Loading PDF from URL: {}", url)
 
     headers = {
         "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
@@ -15,17 +30,50 @@ def load_pdf(url: str) -> str:
         "Cookie": "over18=1",  # ptt
     }
 
-    resp = httpx.get(url=url, headers=headers, follow_redirects=True)
-    resp.raise_for_status()
+    try:
+        resp = httpx.get(url=url, headers=headers, follow_redirects=True)
+        resp.raise_for_status()
+    except httpx.HTTPError as e:
+        logger.error("Failed to download PDF from {}: {}", url, str(e))
+        raise
 
-    suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
-        fp.write(resp.content)
-        return load_pdf_file(fp.name)
+    # Determine file suffix based on content type
+    suffix = ".pdf" if resp.headers.get("content-type", "").lower() == "application/pdf" else None
+
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
+            fp.write(resp.content)
+            return load_pdf_file(fp.name)
+    except Exception as e:
+        logger.error("Failed to process PDF content: {}", str(e))
+        raise
 
 
 def load_pdf_file(f: str | Path) -> str:
-    texts = []
-    with PdfReader(f) as reader:
-        texts = [page.extract_text(extraction_mode="plain") for page in reader.pages]
-    return "\n".join(texts)
+    """Extract text from a local PDF file.
+
+    Args:
+        f: Path to the PDF file, can be string or Path object.
+
+    Returns:
+        str: The extracted text content from the PDF.
+
+    Raises:
+        FileNotFoundError: If the PDF file doesn't exist.
+        ValueError: If the file is not a valid PDF.
+    """
+    if isinstance(f, str):
+        f = Path(f)
+
+    if not f.exists():
+        raise FileNotFoundError(f"PDF file not found: {f}")
+
+    try:
+        texts = []
+        with PdfReader(f) as reader:
+            texts = [page.extract_text(extraction_mode="plain") or "" for page in reader.pages]
+        # Filter out empty pages and join with newlines
+        return "\n".join(text for text in texts if text.strip())
+    except Exception as e:
+        logger.error("Failed to read PDF file {}: {}", f, str(e))
+        raise ValueError(f"Invalid or corrupted PDF file: {f}") from e
