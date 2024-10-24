@@ -29,7 +29,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if file_path.suffix == ".pdf":
         text = load_pdf_file(file_path)
     elif file_path.suffix == ".html":
-        text = load_html_file(file_path)
+        text = load_html_file(str(file_path))  # Convert Path to str
 
     if text:
         summarized = await tools.summarize(text)

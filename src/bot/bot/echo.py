@@ -9,6 +9,9 @@ from telegram.ext import ContextTypes
 
 
 async def echo(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    if update.message is None:
+        return
+
     text = html.escape(
         json.dumps(
             update.to_dict(),
