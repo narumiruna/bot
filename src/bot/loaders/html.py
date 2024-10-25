@@ -3,32 +3,26 @@ import os
 import re
 import tempfile
 from pathlib import Path
+from textwrap import dedent
 
+import charset_normalizer
 import cloudscraper
 import httpx
-from bs4 import BeautifulSoup
 from loguru import logger
 from markdownify import markdownify
 
 
-def remove_base64_image(markdown_text: str) -> str:
+def strip_base64_images(markdown_text: str) -> str:
     pattern = r"!\[.*?\]\(data:image\/.*?;base64,.*?\)"
     cleaned_text = re.sub(pattern, "", markdown_text)
     return cleaned_text
 
 
-def parse_html(html: str | bytes, markdown: bool = True, encoding: str = "utf-8") -> str:
-    if isinstance(html, bytes):
-        html = html.decode(encoding)
+def convert_to_markdown(text: str | bytes) -> str:
+    if isinstance(text, bytes):
+        text = str(charset_normalizer.from_bytes(text).best())
 
-    if markdown:
-        text = markdownify(html, strip=["a", "img"])
-        text = remove_base64_image(text)
-        return text
-
-    soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text(strip=True)
-    return text
+    return dedent(markdownify(text, strip=["a", "img"]))
 
 
 async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -> str:
@@ -65,8 +59,7 @@ async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -
 async def load_html_with_singlefile(url: str, markdown: bool = True) -> str:
     f = await save_html_with_singlefile(url)
 
-    with open(f, encoding="utf-8") as fp:
-        return parse_html(fp.read(), markdown=markdown)
+    return load_html_file(f)
 
 
 def load_html_with_httpx(url: str, markdown: bool = True) -> str:
@@ -81,7 +74,7 @@ def load_html_with_httpx(url: str, markdown: bool = True) -> str:
     resp = httpx.get(url=url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
-    return parse_html(resp.text, markdown=markdown)
+    return convert_to_markdown(resp.content)
 
 
 def load_html_with_cloudscraper(url: str, markdown: bool = True) -> str:
@@ -91,9 +84,9 @@ def load_html_with_cloudscraper(url: str, markdown: bool = True) -> str:
     resp = scraper.get(url)
     resp.raise_for_status()
 
-    return parse_html(resp.text, markdown=markdown)
+    return convert_to_markdown(resp.content)
 
 
 def load_html_file(f: str) -> str:
-    with open(f, encoding="utf-8") as fp:
-        return parse_html(fp.read())
+    text = str(charset_normalizer.from_path(f).best())
+    return dedent(markdownify(text, strip=["a", "img"]))
