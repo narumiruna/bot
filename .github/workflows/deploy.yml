@@ -28,9 +28,7 @@ jobs:
       - name: Install uv
         run: pip install uv
       - name: Install dependencies
-        run: |
-          uv tool uninstall bot
-          uv tool install --force .
+        run: uv tool install --reinstall --force .
       - name: Create dotenv
         run: |
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
