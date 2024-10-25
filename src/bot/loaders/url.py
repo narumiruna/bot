@@ -83,6 +83,7 @@ async def load_url(url: str) -> str:
         "https://www.bnext.com.tw",
         "https://github.com",
         "https://www.twreporter.org",
+        "https://telegra.ph",
     ]
     for domain in httpx_domains:
         if url.startswith(domain):
