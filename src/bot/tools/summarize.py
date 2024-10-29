@@ -3,7 +3,7 @@ from openai.types.chat import ChatCompletionSystemMessageParam
 from openai.types.chat import ChatCompletionUserMessageParam
 from pydantic import BaseModel
 
-from ..llm import aparse
+from ..openai import aparse
 from ..utils import save_text
 
 SYSTEM_PROMPT = """

@@ -3,40 +3,46 @@ import os
 from collections.abc import Iterable
 from typing import Final
 
-from loguru import logger
 from openai import AsyncOpenAI
 from openai import OpenAI
 from openai.types import CreateEmbeddingResponse
 from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-MAX_CONTENT_LENGTH: Final[int] = 1_048_576
+DEFAULT_MODEL: Final[str] = "gpt-4o-mini"
+DEFAULT_EMBEDDING_MODEL: Final[str] = "text-embedding-3-small"
+DEFAULT_TEMPERATURE: Final[float] = 0.0
 
 
 @functools.cache
-def get_openai_client() -> OpenAI:
+def get_client() -> OpenAI:
     return OpenAI()
 
 
 @functools.cache
-def get_async_openai_client() -> AsyncOpenAI:
+def get_async_client() -> AsyncOpenAI:
     return AsyncOpenAI()
 
 
 @functools.cache
-def get_openai_model() -> str:
-    model = os.getenv("OPENAI_MODEL")
-    if not model:
-        logger.warning("OPENAI_MODEL not set, using gpt-4o-mini")
-        return "gpt-4o-mini"
-    return model
+def get_model() -> str:
+    return os.getenv("OPENAI_MODEL", DEFAULT_MODEL)
+
+
+@functools.cache
+def get_temperature() -> float:
+    return float(os.getenv("OPENAI_TEMPERATURE", DEFAULT_TEMPERATURE))
+
+
+@functools.cache
+def get_embedding_model() -> str:
+    return os.getenv("OPENAI_EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL)
 
 
 def complete(messages: Iterable[ChatCompletionMessageParam]) -> str:
-    client = get_openai_client()
-    model = get_openai_model()
-
-    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    client = get_client()
+    model = get_model()
+    temperature = get_temperature()
 
     completion = client.chat.completions.create(
         model=model,
@@ -55,10 +61,9 @@ def complete(messages: Iterable[ChatCompletionMessageParam]) -> str:
 
 
 async def acomplete(messages: Iterable[ChatCompletionMessageParam]) -> str:
-    client = get_async_openai_client()
-    model = get_openai_model()
-
-    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    client = get_async_client()
+    model = get_model()
+    temperature = get_temperature()
 
     completion = await client.chat.completions.create(
         model=model,
@@ -77,10 +82,9 @@ async def acomplete(messages: Iterable[ChatCompletionMessageParam]) -> str:
 
 
 def parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
-    client = get_openai_client()
-    model = get_openai_model()
-
-    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    client = get_client()
+    model = get_model()
+    temperature = get_temperature()
 
     completion = client.beta.chat.completions.parse(
         model=model,
@@ -100,10 +104,9 @@ def parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> Ba
 
 
 async def aparse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
-    client = get_async_openai_client()
-    model = get_openai_model()
-
-    temperature = float(os.getenv("TEMPERATURE", 0.0))
+    client = get_async_client()
+    model = get_model()
+    temperature = get_temperature()
 
     completion = await client.beta.chat.completions.parse(
         model=model,
@@ -122,21 +125,12 @@ async def aparse(messages: Iterable[ChatCompletionMessageParam], response_format
     return parsed
 
 
-@functools.cache
-def get_openai_embedding_model() -> str:
-    model = os.getenv("OPENAI_EMBEDDING_MODEL")
-    if not model:
-        logger.warning("OPENAI_EMBEDDING_MODEL not set, using text-embedding-3-small")
-        return "text-embedding-3-small"
-    return model
-
-
 def create_embeddings(texts: str | list[str]) -> CreateEmbeddingResponse:
     if isinstance(texts, str):
         texts = [texts]
 
-    client = get_openai_client()
-    model = get_openai_embedding_model()
+    client = get_client()
+    model = get_embedding_model()
 
     response = client.embeddings.create(input=texts, model=model)
     return response

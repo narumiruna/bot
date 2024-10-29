@@ -1,4 +1,4 @@
-from ..llm import acomplete
+from ..openai import acomplete
 
 TRANSLATE_SYSTEM_PROMPT = """翻譯文字為{lang}。"""
 

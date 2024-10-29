@@ -1,4 +1,4 @@
-from ..llm import acomplete
+from ..openai import acomplete
 
 SYSTEM_PROMPT = """Polish the following text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
 
