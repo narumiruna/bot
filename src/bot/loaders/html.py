@@ -155,7 +155,7 @@ def load_html_with_cloudscraper(url: str) -> str:
     return convert_to_markdown(resp.content)
 
 
-def load_html_file(filepath: str) -> str:
+def load_html_file(filepath: str | Path) -> str:
     """Load HTML content from a local file and convert to markdown.
 
     Args:

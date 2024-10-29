@@ -1,4 +1,4 @@
-from ..llm import complete
+from ..openai import complete
 
 # From https://platform.openai.com/docs/guides/prompt-generation
 META_PROMPT = """
