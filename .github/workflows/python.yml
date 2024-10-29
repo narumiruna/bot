@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.11"]
-        poetry-version: ["1.8.3"]
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
@@ -27,8 +26,8 @@ jobs:
         run: uv sync
       - name: Lint
         run: uv run ruff check .
-      # - name: Type check
-      #   run: uv run mypy --install-types --non-interactive .
+      - name: Type check
+        run: uv run mypy --install-types --non-interactive .
       - name: Test
         run: uv run pytest -v -s --cov=src --cov-report=xml tests
       - name: Upload coverage reports to Codecov

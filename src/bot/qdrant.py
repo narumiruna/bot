@@ -3,10 +3,10 @@ import os
 
 from loguru import logger
 from qdrant_client import QdrantClient
+from qdrant_client.fastembed_common import QueryResponse
 from qdrant_client.models import FieldCondition
 from qdrant_client.models import Filter
 from qdrant_client.models import MatchValue
-from qdrant_client.models import QueryResponse
 
 
 @functools.cache

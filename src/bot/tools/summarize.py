@@ -1,6 +1,8 @@
+from openai.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionSystemMessageParam
+from openai.types.chat import ChatCompletionUserMessageParam
 from pydantic import BaseModel
 
-from ..llm import Message
 from ..llm import aparse
 from ..utils import save_text
 
@@ -29,24 +31,14 @@ class Summary(BaseModel):
 
 
 async def summarize(text: str, question: str | None = None) -> str:
-    messages: list[Message] = [
-        {
-            "role": "system",
-            "content": SYSTEM_PROMPT,
-        },
-        {
-            "role": "user",
-            "content": f"輸入：\n{text}",
-        },
+    messages: list[ChatCompletionMessageParam] = [
+        ChatCompletionSystemMessageParam(role="system", content=SYSTEM_PROMPT),
+        ChatCompletionUserMessageParam(role="user", content=f"輸入：\n{text}"),
     ]
 
     if question:
-        messages += [
-            {
-                "role": "user",
-                "content": f"問題：\n{question}",
-            }
-        ]
+        messages += [ChatCompletionUserMessageParam(role="user", content=f"問題：\n{question}")]
+
     try:
         summary = await aparse(messages, response_format=Summary)
         return str(summary)

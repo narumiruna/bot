@@ -1,19 +1,16 @@
 import functools
 import os
-from typing import TypedDict
+from collections.abc import Iterable
+from typing import Final
 
 from loguru import logger
 from openai import AsyncOpenAI
 from openai import OpenAI
 from openai.types import CreateEmbeddingResponse
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-MAX_CONTENT_LENGTH = 1_048_576
-
-
-class Message(TypedDict):
-    role: str
-    content: str
+MAX_CONTENT_LENGTH: Final[int] = 1_048_576
 
 
 @functools.cache
@@ -35,13 +32,11 @@ def get_openai_model() -> str:
     return model
 
 
-def complete(messages: list[Message]) -> str:
+def complete(messages: Iterable[ChatCompletionMessageParam]) -> str:
     client = get_openai_client()
     model = get_openai_model()
 
     temperature = float(os.getenv("TEMPERATURE", 0.0))
-    for message in messages:
-        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
 
     completion = client.chat.completions.create(
         model=model,
@@ -59,13 +54,11 @@ def complete(messages: list[Message]) -> str:
     return content
 
 
-async def acomplete(messages: list[Message]) -> str:
+async def acomplete(messages: Iterable[ChatCompletionMessageParam]) -> str:
     client = get_async_openai_client()
     model = get_openai_model()
 
     temperature = float(os.getenv("TEMPERATURE", 0.0))
-    for message in messages:
-        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
 
     completion = await client.chat.completions.create(
         model=model,
@@ -83,13 +76,11 @@ async def acomplete(messages: list[Message]) -> str:
     return content
 
 
-def parse(messages: list[Message], response_format) -> BaseModel:
+def parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
     client = get_openai_client()
     model = get_openai_model()
 
     temperature = float(os.getenv("TEMPERATURE", 0.0))
-    for message in messages:
-        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
 
     completion = client.beta.chat.completions.parse(
         model=model,
@@ -108,13 +99,11 @@ def parse(messages: list[Message], response_format) -> BaseModel:
     return parsed
 
 
-async def aparse(messages: list[Message], response_format) -> BaseModel:
+async def aparse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
     client = get_async_openai_client()
     model = get_openai_model()
 
     temperature = float(os.getenv("TEMPERATURE", 0.0))
-    for message in messages:
-        message["content"] = message["content"][:MAX_CONTENT_LENGTH]
 
     completion = await client.beta.chat.completions.parse(
         model=model,
