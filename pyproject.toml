@@ -23,6 +23,7 @@ dependencies = [
     "youtube-transcript-api>=0.6.2",
     "yt-dlp>=2024.10.22",
     "charset-normalizer>=3.4.0",
+    "twse>=0.1.1",
 ]
 
 [build-system]
