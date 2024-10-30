@@ -20,6 +20,7 @@ from .summarize import summarize
 from .summarize import summarize_document
 from .ticker import query_ticker
 from .translate import create_translate_callback
+from .twse import query_twse_ticker
 from .utils import get_message_text
 
 
@@ -78,6 +79,7 @@ def run_bot() -> None:
             CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
+            CommandHandler("twse", query_twse_ticker, filters=chat_filter),
             # CommandHandler("query", query, filters=chat_filter),
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
