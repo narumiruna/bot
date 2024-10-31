@@ -15,7 +15,7 @@ async def search_youtube(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if not update.message:
         return
 
-    if not update.message.text:
+    if not context.args:
         return
 
     result = YoutubeSearch(search_terms="_".join(context.args), max_results=MAX_RESULTS).to_dict()
