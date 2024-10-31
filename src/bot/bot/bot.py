@@ -22,6 +22,7 @@ from .ticker import query_ticker
 from .translate import create_translate_callback
 from .twse import query_twse_ticker
 from .utils import get_message_text
+from .youtube_search import search_youtube
 
 
 async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
@@ -80,6 +81,7 @@ def run_bot() -> None:
             CommandHandler("polish", polish, filters=chat_filter),
             CommandHandler("yf", query_ticker, filters=chat_filter),
             CommandHandler("twse", query_twse_ticker, filters=chat_filter),
+            CommandHandler("yt", search_youtube, filters=chat_filter),
             # CommandHandler("query", query, filters=chat_filter),
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
