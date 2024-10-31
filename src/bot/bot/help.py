@@ -17,6 +17,7 @@ async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         "/en - Translate text to English\n"
         "/polish - Polish text\n"
         "/echo - Echo the message\n"
+        "/yt - Search YouTube\n"
     )
 
     await update.message.reply_text(help_text)
