@@ -25,7 +25,7 @@ def run_bot() -> None:
     app = Application.builder().token(token).build()
     app.add_handlers(
         [
-            CommandHandler("help", help, filters=chat_filter),
+            CommandHandler("help", cb.help, filters=chat_filter),
             CommandHandler("sum", cb.summarize, filters=chat_filter),
             CommandHandler("jp", cb.create_translate_callback("日文"), filters=chat_filter),
             CommandHandler("tc", cb.create_translate_callback("繁體中文"), filters=chat_filter),
