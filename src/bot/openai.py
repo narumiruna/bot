@@ -39,7 +39,7 @@ def get_embedding_model() -> str:
     return os.getenv("OPENAI_EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL)
 
 
-def complete(messages: Iterable[ChatCompletionMessageParam]) -> str:
+def create(messages: Iterable[ChatCompletionMessageParam]) -> str:
     client = get_client()
     model = get_model()
     temperature = get_temperature()
@@ -60,7 +60,7 @@ def complete(messages: Iterable[ChatCompletionMessageParam]) -> str:
     return content
 
 
-async def acomplete(messages: Iterable[ChatCompletionMessageParam]) -> str:
+async def async_create(messages: Iterable[ChatCompletionMessageParam]) -> str:
     client = get_async_client()
     model = get_model()
     temperature = get_temperature()
@@ -103,7 +103,7 @@ def parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> Ba
     return parsed
 
 
-async def aparse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
+async def async_parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
     client = get_async_client()
     model = get_model()
     temperature = get_temperature()

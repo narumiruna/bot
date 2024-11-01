@@ -3,7 +3,7 @@ from openai.types.chat import ChatCompletionSystemMessageParam
 from openai.types.chat import ChatCompletionUserMessageParam
 from pydantic import BaseModel
 
-from ..openai import aparse
+from ..openai import async_parse
 from ..utils import save_text
 
 SYSTEM_PROMPT = """
@@ -40,7 +40,7 @@ async def summarize(text: str, question: str | None = None) -> str:
         messages += [ChatCompletionUserMessageParam(role="user", content=f"問題：\n{question}")]
 
     try:
-        summary = await aparse(messages, response_format=Summary)
+        summary = await async_parse(messages, response_format=Summary)
         return str(summary)
     except Exception as e:
         save_text(text, "message_text.txt")

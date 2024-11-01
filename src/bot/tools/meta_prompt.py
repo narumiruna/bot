@@ -1,4 +1,4 @@
-from ..openai import complete
+from ..openai import create
 
 # From https://platform.openai.com/docs/guides/prompt-generation
 META_PROMPT = """
@@ -49,7 +49,7 @@ The final prompt you output should adhere to the following structure below. Do n
 
 
 def generate_prompt(task_or_prompt: str) -> str:
-    return complete(
+    return create(
         [
             {
                 "role": "system",
