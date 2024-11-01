@@ -1,6 +1,7 @@
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
 
+from loguru import logger
 from youtube_transcript_api import NoTranscriptFound
 from youtube_transcript_api import Transcript
 from youtube_transcript_api import TranscriptList
@@ -54,16 +55,19 @@ def load_youtube_transcript(url: str, languages: list[str] | None = None) -> str
 
     video_id = parse_video_id(url)
     if not video_id:
+        logger.warning("unable to parse video ID from URL: {}", url)
         return None
 
     try:
         transcript_list: TranscriptList = YouTubeTranscriptApi.list_transcripts(video_id)
     except TranscriptsDisabled:
+        logger.warning("transcripts are disabled for video: {}", url)
         return None
 
     try:
         transcript: Transcript = transcript_list.find_transcript(languages)
     except NoTranscriptFound:
+        logger.warning("no transcript found for video: {}", url)
         return None
 
     transcript_pieces: list[dict[str, str | float]] = transcript.fetch()
