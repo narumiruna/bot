@@ -1,4 +1,4 @@
-from ..openai import acomplete
+from ..openai import async_create
 
 TRANSLATE_SYSTEM_PROMPT = """翻譯文字為{lang}。"""
 
@@ -6,7 +6,7 @@ EXPLAIN_SYSTEM_PROMPT = """翻譯文字為{lang}，並提供簡潔的文法和�
 
 
 async def translate(text: str, lang: str) -> str:
-    return await acomplete(
+    return await async_create(
         [
             {
                 "role": "system",
@@ -21,7 +21,7 @@ async def translate(text: str, lang: str) -> str:
 
 
 async def translate_and_explain(text: str, lang: str) -> str:
-    return await acomplete(
+    return await async_create(
         [
             {
                 "role": "system",

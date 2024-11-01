@@ -1,4 +1,4 @@
-from ..openai import acomplete
+from ..openai import async_create
 
 SYSTEM_PROMPT = """Polish the following text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
 
@@ -33,7 +33,7 @@ The output should be a polished version of the provided text in the same languag
 
 
 async def polish(text: str) -> str:
-    return await acomplete(
+    return await async_create(
         [
             {
                 "role": "system",
