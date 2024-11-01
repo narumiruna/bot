@@ -2,6 +2,7 @@ import functools
 import os
 from collections.abc import Iterable
 from typing import Final
+from typing import TypeVar
 
 from openai import AsyncOpenAI
 from openai import OpenAI
@@ -12,6 +13,8 @@ from pydantic import BaseModel
 DEFAULT_MODEL: Final[str] = "gpt-4o-mini"
 DEFAULT_EMBEDDING_MODEL: Final[str] = "text-embedding-3-small"
 DEFAULT_TEMPERATURE: Final[float] = 0.0
+
+T = TypeVar("T", bound=BaseModel)
 
 
 @functools.cache
@@ -81,7 +84,7 @@ async def async_create(messages: Iterable[ChatCompletionMessageParam]) -> str:
     return content
 
 
-def parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
+def parse(messages: Iterable[ChatCompletionMessageParam], response_format: type[T]) -> T:
     client = get_client()
     model = get_model()
     temperature = get_temperature()
@@ -103,7 +106,7 @@ def parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> Ba
     return parsed
 
 
-async def async_parse(messages: Iterable[ChatCompletionMessageParam], response_format) -> BaseModel:
+async def async_parse(messages: Iterable[ChatCompletionMessageParam], response_format: type[T]) -> T:
     client = get_async_client()
     model = get_model()
     temperature = get_temperature()
