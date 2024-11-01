@@ -14,6 +14,7 @@ from telegram.ext import filters
 from ..qdrant import query_qdrant
 from .echo import echo
 from .error import error_callback
+from .google_search import search_google
 from .help import help
 from .polish import polish
 from .summarize import summarize
@@ -82,6 +83,7 @@ def run_bot() -> None:
             CommandHandler("yf", query_ticker, filters=chat_filter),
             CommandHandler("twse", query_twse_ticker, filters=chat_filter),
             CommandHandler("yt", search_youtube, filters=chat_filter),
+            CommandHandler("g", search_google, filters=chat_filter),
             # CommandHandler("query", query, filters=chat_filter),
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
             CommandHandler("echo", echo),
