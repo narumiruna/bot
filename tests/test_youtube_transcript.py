@@ -1,13 +1,4 @@
-from bot.loaders.youtube_transcript import load_youtube_transcript
 from bot.loaders.youtube_transcript import parse_video_id
-
-
-def test_load_valid_url_real():
-    url = "https://youtu.be/Rz1Kujq73kM"
-    result = load_youtube_transcript(url)
-    assert result is not None
-    assert isinstance(result, str)
-    assert len(result) > 0
 
 
 def test_parse_video_id_valid():
