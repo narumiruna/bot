@@ -10,20 +10,10 @@ from telegram.ext import ContextTypes
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
+from . import cb
+
 # from ..qdrant import add_to_qdrant
-from ..qdrant import query_qdrant
-from .echo import echo
-from .error import error_callback
-from .google_search import search_google
-from .help import help
-from .polish import polish
-from .summarize import summarize
-from .summarize import summarize_document
-from .ticker import query_ticker
-from .translate import create_translate_callback
-from .twse import query_twse_ticker
-from .utils import get_message_text
-from .youtube_search import search_youtube
+from .qdrant import query_qdrant
 
 
 async def log_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
@@ -50,7 +40,7 @@ async def query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
-    message_text = get_message_text(update)
+    message_text = cb.get_message_text(update)
     if not message_text:
         return
 
@@ -75,22 +65,22 @@ def run_bot() -> None:
     app.add_handlers(
         [
             CommandHandler("help", help, filters=chat_filter),
-            CommandHandler("sum", summarize, filters=chat_filter),
-            CommandHandler("jp", create_translate_callback("日文"), filters=chat_filter),
-            CommandHandler("tc", create_translate_callback("繁體中文"), filters=chat_filter),
-            CommandHandler("en", create_translate_callback("英文"), filters=chat_filter),
-            CommandHandler("polish", polish, filters=chat_filter),
-            CommandHandler("yf", query_ticker, filters=chat_filter),
-            CommandHandler("twse", query_twse_ticker, filters=chat_filter),
-            CommandHandler("yt", search_youtube, filters=chat_filter),
-            CommandHandler("g", search_google, filters=chat_filter),
+            CommandHandler("sum", cb.summarize, filters=chat_filter),
+            CommandHandler("jp", cb.create_translate_callback("日文"), filters=chat_filter),
+            CommandHandler("tc", cb.create_translate_callback("繁體中文"), filters=chat_filter),
+            CommandHandler("en", cb.create_translate_callback("英文"), filters=chat_filter),
+            CommandHandler("polish", cb.polish, filters=chat_filter),
+            CommandHandler("yf", cb.query_ticker, filters=chat_filter),
+            CommandHandler("twse", cb.query_twse_ticker, filters=chat_filter),
+            CommandHandler("yt", cb.search_youtube, filters=chat_filter),
+            CommandHandler("g", cb.search_google, filters=chat_filter),
             # CommandHandler("query", query, filters=chat_filter),
             # CommandHandler("prompt", generate_prompt, filters=chat_filter),
-            CommandHandler("echo", echo),
-            MessageHandler(filters=chat_filter, callback=summarize_document),
+            CommandHandler("echo", cb.echo),
+            MessageHandler(filters=chat_filter, callback=cb.summarize_document),
         ]
     )
     app.add_handler(MessageHandler(filters=chat_filter, callback=log_update), group=1)
 
-    app.add_error_handler(error_callback)
+    app.add_error_handler(cb.error_callback)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
