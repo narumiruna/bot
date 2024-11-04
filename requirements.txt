@@ -849,6 +849,6 @@ youtube-search==2.1.2 \
 youtube-transcript-api==0.6.2 \
     --hash=sha256:cad223d7620633cec44f657646bffc8bbc5598bd8e70b1ad2fa8277dec305eb7 \
     --hash=sha256:019dbf265c6a68a0591c513fff25ed5a116ce6525832aefdfb34d4df5567121c
-yt-dlp==2024.10.22 \
-    --hash=sha256:47b82a1fd22411b5c95ef2f0a1ae1af4e6dfd736ea99fdb2a0ea41445abc62ba \
-    --hash=sha256:ba166602ebe22a220e4dc1ead45bf00eb469ed812b22f4fb8bb54734f9b02084
+yt-dlp==2024.11.4 \
+    --hash=sha256:589d51ed9f154624a45c1f0ceb3d68d0d1e2031460e8dbc62139be631c20b388 \
+    --hash=sha256:ed204c1b61bc563e134447766d1ab343173540799e13ebb953e887ce7dcf6865
