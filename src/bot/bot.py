@@ -7,6 +7,7 @@ from telegram.ext import Application
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import filters
+from loguru import logger
 
 from . import cb
 
@@ -18,9 +19,11 @@ def run_bot() -> None:
 
     whitelist = os.getenv("BOT_WHITELIST")
     if not whitelist:
-        raise ValueError("BOT_WHITELIST is not set")
-    chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]
-    chat_filter = filters.Chat(chat_ids)
+        logger.warning("No whitelist specified, allowing all chats")
+        chat_filter = filters.ALL
+    else:
+        chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]
+        chat_filter = filters.Chat(chat_ids)
 
     app = Application.builder().token(token).build()
     app.add_handlers(
