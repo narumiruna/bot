@@ -12,18 +12,22 @@ from telegram.ext import filters
 from . import cb
 
 
+def get_chat_filter() -> filters.BaseFilter:
+    whitelist = os.getenv("BOT_WHITELIST")
+    if not whitelist:
+        logger.warning("No whitelist specified, allowing all chats")
+        return filters.ALL
+    else:
+        chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]
+        return filters.Chat(chat_ids)
+
+
 def run_bot() -> None:
     token = os.getenv("BOT_TOKEN")
     if not token:
         raise ValueError("BOT_TOKEN is not set")
 
-    whitelist = os.getenv("BOT_WHITELIST")
-    if not whitelist:
-        logger.warning("No whitelist specified, allowing all chats")
-        chat_filter = filters.ALL
-    else:
-        chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]
-        chat_filter = filters.Chat(chat_ids)
+    chat_filter = get_chat_filter()
 
     app = Application.builder().token(token).build()
     app.add_handlers(
