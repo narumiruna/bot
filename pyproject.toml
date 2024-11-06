@@ -17,7 +17,6 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "python-telegram-bot>=21.6",
     "telegraph>=2.2.0",
-    "torch>=2.5.0",
     "yfinance>=0.2.46",
     "youtube-transcript-api>=0.6.2",
     "yt-dlp>=2024.10.22",
