@@ -38,28 +38,19 @@ OPENAI_API_KEY=your_openai_api_key
 ## Installation
 
 ```bash
-# Install pipx if not already installed
-pip install pipx
-
-# Use pipx to install poetry
-pipx install poetry
+# Install uv
+pip install uv
 
 # Install project dependencies
-poetry install
+uv sync
 ```
 
 ## Usage
 
-Start the bot using Poetry:
+Start the bot using uv:
 
 ```bash
-poetry run bot
-```
-
-For development with auto-reload:
-
-```bash
-make dev
+uv run bot
 ```
 
 ## Commands
@@ -87,16 +78,19 @@ tests/               # Test suite
 ## Development
 
 1. Install pre-commit hooks:
+
 ```bash
 pre-commit install
 ```
 
 2. Follow code style guidelines:
+
 - Use type hints
 - Write docstrings for functions and classes
 - Follow PEP 8 guidelines
 
 3. Create feature branches for new development:
+
 ```bash
 git checkout -b feature/your-feature-name
 ```
@@ -106,13 +100,13 @@ git checkout -b feature/your-feature-name
 Run the test suite:
 
 ```bash
-poetry run pytest
+uv run pytest -v -s tests
 ```
 
 Run tests with coverage:
 
 ```bash
-poetry run pytest --cov
+uv run pytest -v -s --cov=src tests
 ```
 
 ## License
