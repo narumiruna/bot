@@ -28,7 +28,7 @@ jobs:
       - name: Install uv
         run: pip install uv
       - name: Install dependencies
-        run: uv tool install --reinstall --force .
+        run: uv tool install --reinstall --force --python=${{ matrix.python-version }} .
       - name: Create dotenv
         run: |
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
