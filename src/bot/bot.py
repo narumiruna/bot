@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import os
 
+from loguru import logger
 from telegram import Update
 from telegram.ext import Application
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import filters
-from loguru import logger
 
 from . import cb
 
