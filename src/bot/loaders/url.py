@@ -57,16 +57,20 @@ def replace_domain(url: str) -> str:
 async def load_url(url: str) -> str:
     url = replace_domain(url)
 
+    res = []
+
     transcript = await load_transcript(url)
     if transcript:
-        return transcript
+        res += [transcript]
 
     pdf_content = await load_pdf_content(url)
     if pdf_content:
         return pdf_content
 
     html_content = await load_html_content(url)
-    return html_content
+    res += [html_content]
+
+    return "\n\n".join(res)
 
 
 async def load_transcript(url: str) -> str | None:
