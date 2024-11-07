@@ -31,6 +31,10 @@ def is_youtube_url(url: str) -> bool:
     )
 
 
+def is_instagram_reel_url(url: str) -> bool:
+    return url.startswith("https://www.instagram.com/reel/")
+
+
 def replace_domain(url: str) -> str:
     replacements = {
         # "twitter.com": "vxtwitter.com",
@@ -51,10 +55,30 @@ def replace_domain(url: str) -> str:
 
 
 async def load_url(url: str) -> str:
-    # https://python.langchain.com/docs/integrations/document_loaders/
-
-    # replace domain
     url = replace_domain(url)
+
+    res = []
+
+    transcript = await load_transcript(url)
+    if transcript:
+        res += [transcript]
+
+    pdf_content = await load_pdf_content(url)
+    if pdf_content:
+        return pdf_content
+
+    html_content = await load_html_content(url)
+    res += [html_content]
+
+    return "\n\n".join(res)
+
+
+async def load_transcript(url: str) -> str | None:
+    if is_instagram_reel_url(url):
+        transcript = load_video_transcript(url)
+        if transcript:
+            return transcript
+        logger.info("No transcript found for Instagram reel: {}", url)
 
     if is_youtube_url(url):
         transcript = load_youtube_transcript(url)
@@ -62,20 +86,24 @@ async def load_url(url: str) -> str:
             return transcript
         logger.info("No transcript found for YouTube video: {}", url)
 
-        # if the video has no transcripts
-        # download the video and transcribe it by whisper
         transcript = load_video_transcript(url)
         if transcript:
             return transcript
         logger.info("Unable to load video transcript for YouTube video: {}", url)
 
-    # check and load PDF
+    return None
+
+
+async def load_pdf_content(url: str) -> str | None:
     try:
         if is_pdf_url(url):
             return load_pdf(url)
     except httpx.HTTPStatusError as e:
         logger.error("Unable to load PDF: {} ({})", url, e)
+    return None
 
+
+async def load_html_content(url: str) -> str:
     httpx_domains = [
         "https://www.ptt.cc/bbs",
         "https://ncode.syosetu.com",
@@ -97,6 +125,5 @@ async def load_url(url: str) -> str:
         if url.startswith(domain):
             return load_html_with_cloudscraper(url)
 
-    # download the page by singlefile and convert it to text
     text = await load_html_with_singlefile(url)
     return text
