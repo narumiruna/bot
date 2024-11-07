@@ -1,6 +1,7 @@
 import pytest
 
 from bot.loaders.url import is_instagram_reel_url
+from bot.loaders.url import is_youtube_url
 from bot.loaders.url import replace_domain
 
 
@@ -34,3 +35,18 @@ def test_fix_twitter(url, expected):
 )
 def test_is_instagram_reel_url(url, expected):
     assert is_instagram_reel_url(url) == expected
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        ("https://www.youtube.com/watch?v=xyz", True),
+        ("https://youtu.be/xyz", True),
+        ("https://m.youtube.com/watch?v=xyz", True),
+        ("https://youtube.com/watch?v=xyz", False),
+        ("https://www.youtu.be/xyz", False),
+        ("https://www.example.com/watch?v=xyz", False),
+    ],
+)
+def test_is_youtube_url(url, expected):
+    assert is_youtube_url(url) == expected
