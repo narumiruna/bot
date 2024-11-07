@@ -33,11 +33,13 @@ BOT_WHITELIST=comma_separated_user_ids
 
 MODEL=gpt-4o-mini
 OPENAI_API_KEY=your_openai_api_key
+
+SINGLEFILE_PATH=your_singlefile_path
 ```
 
 ## Installation
 
-```bash
+```sh
 # Install uv
 pip install uv
 
@@ -45,11 +47,17 @@ pip install uv
 uv sync
 ```
 
+[Install SingleFile CLI](https://github.com/gildas-lormeau/single-file-cli?tab=readme-ov-file#manual-installation)
+
+```sh
+npm install "single-file-cli"
+```
+
 ## Usage
 
 Start the bot using uv:
 
-```bash
+```sh
 uv run bot
 ```
 
@@ -79,7 +87,7 @@ tests/               # Test suite
 
 1. Install pre-commit hooks:
 
-```bash
+```sh
 pre-commit install
 ```
 
@@ -91,7 +99,7 @@ pre-commit install
 
 3. Create feature branches for new development:
 
-```bash
+```sh
 git checkout -b feature/your-feature-name
 ```
 
@@ -99,13 +107,13 @@ git checkout -b feature/your-feature-name
 
 Run the test suite:
 
-```bash
+```sh
 uv run pytest -v -s tests
 ```
 
 Run tests with coverage:
 
-```bash
+```sh
 uv run pytest -v -s --cov=src tests
 ```
 
