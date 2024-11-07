@@ -35,6 +35,7 @@ jobs:
           echo BOT_WHITELIST=${{ vars.BOT_WHITELIST }} >> .env
           echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
           echo DEVELOPER_CHAT_ID=${{ vars.DEVELOPER_CHAT_ID }} >> .env
+          echo SINGLEFILE_PATH=${{ vars.SINGLEFILE_PATH }} >> .env
       - name: Copy files
         run: |
           mkdir -p ${{ env.WORKDIR }}

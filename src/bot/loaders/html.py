@@ -26,7 +26,7 @@ DEFAULT_HEADERS = {
 }
 
 # Default path for SingleFile executable
-DEFAULT_SINGLEFILE_PATH = "/Users/narumi/.local/bin/single-file"
+DEFAULT_SINGLEFILE_PATH = "single-file"
 
 
 def strip_base64_images(markdown_text: str) -> str:
