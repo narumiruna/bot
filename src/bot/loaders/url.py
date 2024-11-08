@@ -35,6 +35,19 @@ def is_instagram_reel_url(url: str) -> bool:
     return url.startswith("https://www.instagram.com/reel/")
 
 
+def is_x_url(url: str) -> bool:
+    x_domains = {
+        "https://x.com",
+        "https://twitter.com",
+        "https://fxtwitter.com",
+        "https://vxtwitter.com",
+        "https://fixvx.com",
+        "https://twittpr.com",
+        "https://fixupx.com",
+    }
+    return any(url.startswith(domain) for domain in x_domains)
+
+
 def replace_domain(url: str) -> str:
     replacements = {
         # "twitter.com": "vxtwitter.com",
@@ -55,8 +68,6 @@ def replace_domain(url: str) -> str:
 
 
 async def load_url(url: str) -> str:
-    url = replace_domain(url)
-
     res = []
 
     transcript = await load_transcript(url)
@@ -67,6 +78,7 @@ async def load_url(url: str) -> str:
     if pdf_content:
         return pdf_content
 
+    url = replace_domain(url)
     html_content = await load_html_content(url)
     res += [html_content]
 
@@ -74,6 +86,12 @@ async def load_url(url: str) -> str:
 
 
 async def load_transcript(url: str) -> str | None:
+    if is_x_url(url):
+        transcript = load_video_transcript(url)
+        if transcript:
+            return transcript
+        logger.info("No transcript found for X: {}", url)
+
     if is_instagram_reel_url(url):
         transcript = load_video_transcript(url)
         if transcript:
