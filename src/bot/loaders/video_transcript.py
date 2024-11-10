@@ -3,9 +3,16 @@ import os
 import subprocess
 import tempfile
 
-import mlx_whisper
 import numpy as np
+import whisper
 import yt_dlp
+
+try:
+    import mlx_whisper  # noqa: F401
+
+    _mlx_whisper_installed = True
+except ImportError:
+    _mlx_whisper_installed = False
 
 
 def get_ffmpeg_path_from_env() -> str:
@@ -78,14 +85,20 @@ def load_audio(file: str, sr: int = 16000):
 
 
 @functools.cache
-def _load_whisper_model():
-    import whisper
-
+def _load_whisper_model() -> whisper.Whisper:
     return whisper.load_model("tiny")
+
+
+def _transcribe(audio: np.ndarray) -> dict:
+    if _mlx_whisper_installed:
+        return mlx_whisper.transcribe(audio, path_or_hf_repo="mlx-community/whisper-tiny")
+
+    model = _load_whisper_model()
+    return model.transcribe(audio)
 
 
 def load_video_transcript(url: str) -> str | None:
     f = ytdlp_download(url)
     audio = load_audio(f)
-    result = mlx_whisper.transcribe(audio, path_or_hf_repo="mlx-community/whisper-tiny")
+    result = _transcribe(audio)
     return result.get("text", "")
