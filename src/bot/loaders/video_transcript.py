@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 
 import numpy as np
-import whisper
+import mlx_whisper
 import yt_dlp
 
 
@@ -78,13 +78,13 @@ def load_audio(file: str, sr: int = 16000):
 
 
 @functools.cache
-def _load_whisper_model() -> whisper.Whisper:
+def _load_whisper_model():
+    import whisper
     return whisper.load_model("tiny")
 
 
 def load_video_transcript(url: str) -> str | None:
-    model = _load_whisper_model()
     f = ytdlp_download(url)
     audio = load_audio(f)
-    result = model.transcribe(audio)
+    result = mlx_whisper.transcribe(audio, path_or_hf_repo="mlx-community/whisper-tiny")
     return result.get("text", "")
