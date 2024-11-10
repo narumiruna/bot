@@ -3,8 +3,8 @@ import os
 import subprocess
 import tempfile
 
-import numpy as np
 import mlx_whisper
+import numpy as np
 import yt_dlp
 
 
