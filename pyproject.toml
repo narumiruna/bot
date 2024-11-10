@@ -23,6 +23,7 @@ dependencies = [
     "twse>=0.1.1",
     "youtube-search>=2.1.2",
     "openai-whisper>=20240930",
+    "numba>=0.60.0",
 ]
 
 [build-system]
@@ -48,7 +49,6 @@ bot = "bot.cli:main"
 [project.optional-dependencies]
 mlx = [
     "mlx-whisper>=0.4.1",
-    "numba>=0.60.0",
 ]
 
 [tool.ruff]
