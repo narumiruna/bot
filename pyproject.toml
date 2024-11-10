@@ -22,6 +22,7 @@ dependencies = [
     "charset-normalizer>=3.4.0",
     "twse>=0.1.1",
     "youtube-search>=2.1.2",
+    "openai-whisper>=20240930",
 ]
 
 [build-system]

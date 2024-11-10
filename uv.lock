@@ -51,6 +51,7 @@ dependencies = [
     { name = "lxml" },
     { name = "markdownify" },
     { name = "openai" },
+    { name = "openai-whisper" },
     { name = "pypdf" },
     { name = "python-dotenv" },
     { name = "python-telegram-bot" },
@@ -92,6 +93,7 @@ requires-dist = [
     { name = "mlx-whisper", marker = "extra == 'mlx'", specifier = ">=0.4.1" },
     { name = "numba", marker = "extra == 'mlx'", specifier = ">=0.60.0" },
     { name = "openai", specifier = ">=1.52.0" },
+    { name = "openai-whisper", specifier = ">=20240930" },
     { name = "pypdf", specifier = ">=5.0.1" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-telegram-bot", specifier = ">=21.6" },
@@ -916,6 +918,21 @@ sdist = { url = "https://files.pythonhosted.org/packages/83/fc/77552f9ddd40ac32f
 wheels = [
     { url = "https://files.pythonhosted.org/packages/85/6f/b32b84d031c7f31b3f32c95c2a9b5ca441b254131a6c982a3dac73d3fffd/openai-1.53.0-py3-none-any.whl", hash = "sha256:20f408c32fc5cb66e60c6882c994cdca580a5648e10045cd840734194f033418", size = 387077 },
 ]
+
+[[package]]
+name = "openai-whisper"
+version = "20240930"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "more-itertools" },
+    { name = "numba" },
+    { name = "numpy" },
+    { name = "tiktoken" },
+    { name = "torch" },
+    { name = "tqdm" },
+    { name = "triton", marker = "(platform_machine == 'x86_64' and sys_platform == 'linux') or sys_platform == 'linux2'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/77/952ca71515f81919bd8a6a4a3f89a27b09e73880cebf90957eda8f2f8545/openai-whisper-20240930.tar.gz", hash = "sha256:b7178e9c1615576807a300024f4daa6353f7e1a815dac5e38c33f1ef055dd2d2", size = 800544 }
 
 [[package]]
 name = "packaging"
