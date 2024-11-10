@@ -80,6 +80,7 @@ def load_audio(file: str, sr: int = 16000):
 @functools.cache
 def _load_whisper_model():
     import whisper
+
     return whisper.load_model("tiny")
 
 
