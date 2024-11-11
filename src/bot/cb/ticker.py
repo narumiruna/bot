@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from loguru import logger
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import tools
@@ -17,4 +18,4 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     text = tools.query_tickers(context.args)
     logger.info("Tickers: {}", text)
 
-    await update.message.reply_text(text)
+    await update.message.reply_text(text, parse_mode=ParseMode.MARKDOWN_V2)
