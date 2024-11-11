@@ -22,7 +22,7 @@ dependencies = [
     "charset-normalizer>=3.4.0",
     "twse>=0.1.1",
     "youtube-search>=2.1.2",
-    "mlx-whisper>=0.4.1",
+    "openai-whisper>=20240930",
     "numba>=0.60.0",
 ]
 
@@ -45,6 +45,11 @@ dev-dependencies = [
 
 [project.scripts]
 bot = "bot.cli:main"
+
+[project.optional-dependencies]
+mlx = [
+    "mlx-whisper>=0.4.1",
+]
 
 [tool.ruff]
 exclude = ["build"]
