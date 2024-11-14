@@ -6,6 +6,7 @@ import tempfile
 import numpy as np
 import whisper
 import yt_dlp
+from loguru import logger
 
 try:
     import mlx_whisper  # noqa: F401
@@ -98,7 +99,12 @@ def _transcribe(audio: np.ndarray) -> dict:
 
 
 def load_video_transcript(url: str) -> str | None:
-    f = ytdlp_download(url)
+    try:
+        f = ytdlp_download(url)
+    except yt_dlp.utils.DownloadError as e:
+        logger.info("Unable to download video from URL: {}, got error: {}", url, e)
+        return None
+
     audio = load_audio(f)
     result = _transcribe(audio)
     return result.get("text", "")
