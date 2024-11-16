@@ -42,6 +42,7 @@ def run_bot() -> None:
             CommandHandler("twse", cb.query_twse_ticker, filters=chat_filter),
             CommandHandler("yt", cb.search_youtube, filters=chat_filter),
             CommandHandler("g", cb.search_google, filters=chat_filter),
+            CommandHandler("recipe", cb.generate_recipe, filters=chat_filter),
             CommandHandler("echo", cb.echo),
             MessageHandler(filters=chat_filter, callback=cb.summarize_document),
         ]
