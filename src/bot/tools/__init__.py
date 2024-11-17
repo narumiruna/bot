@@ -1,4 +1,4 @@
-from .meta_prompt import generate_prompt
+from .generate_prompt import generate_prompt
 from .polish import polish
 from .recipe import generate_recipe
 from .summarize import summarize
