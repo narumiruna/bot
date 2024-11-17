@@ -1,4 +1,4 @@
-from ..openai import create
+from lazyopenai import generate
 
 # From https://platform.openai.com/docs/guides/prompt-generation
 META_PROMPT = """
@@ -49,15 +49,4 @@ The final prompt you output should adhere to the following structure below. Do n
 
 
 def generate_prompt(task_or_prompt: str) -> str:
-    return create(
-        [
-            {
-                "role": "system",
-                "content": META_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": "Task, Goal, or Current Prompt:\n" + task_or_prompt,
-            },
-        ],
-    )
+    return generate("Task, Goal, or Current Prompt:\n" + task_or_prompt, system=META_PROMPT)

@@ -1,10 +1,5 @@
-from openai.types.chat import ChatCompletionMessageParam
-from openai.types.chat import ChatCompletionSystemMessageParam
-from openai.types.chat import ChatCompletionUserMessageParam
+from lazyopenai import generate
 from pydantic import BaseModel
-
-from ..openai import async_parse
-from ..utils import save_text
 
 # SYSTEM_PROMPT = """
 # 請以台灣繁體中文簡潔地總結以下內容的重點。內容來源可包括網頁、文章、論文、影片字幕或逐字稿。
@@ -41,18 +36,14 @@ class Summary(BaseModel):
         return "\n".join(lines) + f"\n{' '.join(self.hashtags)}"
 
 
-async def summarize(text: str, question: str | None = None) -> str:
-    messages: list[ChatCompletionMessageParam] = [
-        ChatCompletionSystemMessageParam(role="system", content=SYSTEM_PROMPT),
-        ChatCompletionUserMessageParam(role="user", content=f"輸入：\n{text}"),
-    ]
-
+def summarize(text: str, question: str | None = None) -> str:
+    prompt = f"輸入：\n{text}"
     if question:
-        messages += [ChatCompletionUserMessageParam(role="user", content=f"問題：\n{question}")]
+        prompt += f"\n問題：\n{question}"
 
-    try:
-        summary = await async_parse(messages, response_format=Summary)
-        return str(summary)
-    except Exception as e:
-        save_text(text, "message_text.txt")
-        raise e
+    summary = generate(
+        prompt,
+        system=SYSTEM_PROMPT,
+        response_format=Summary,
+    )
+    return str(summary)

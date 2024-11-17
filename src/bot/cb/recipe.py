@@ -16,6 +16,6 @@ async def generate_recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     text = get_message_text(update)
 
-    recipe = await tools.generate_recipe(text=text)
+    recipe = tools.generate_recipe(text=text)
 
     await update.message.reply_text(recipe)

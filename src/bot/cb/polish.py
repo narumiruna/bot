@@ -16,7 +16,7 @@ async def polish(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not message_text:
         return
 
-    text = await tools.polish(message_text)
+    text = tools.polish(message_text)
     logger.info("Polished text: {}", text)
 
     await update.message.reply_text(text)

@@ -1,4 +1,4 @@
-from ..openai import async_create
+from lazyopenai import generate
 
 SYSTEM_PROMPT = """Polish the following text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
 
@@ -32,16 +32,5 @@ The output should be a polished version of the provided text in the same languag
 """  # noqa
 
 
-async def polish(text: str) -> str:
-    return await async_create(
-        [
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": text,
-            },
-        ]
-    )
+def polish(text: str) -> str:
+    return generate(text, system=SYSTEM_PROMPT)

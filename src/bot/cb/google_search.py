@@ -19,6 +19,6 @@ async def search_google(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         resp = await client.get(url="https://www.google.com/search", params={"q": " ".join(context.args)})
         resp.raise_for_status()
 
-    summarized = await summarize(text=markdownify(resp.text, strip=["a", "img"]).strip())
+    summarized = summarize(text=markdownify(resp.text, strip=["a", "img"]).strip())
 
     await update.message.reply_text(summarized)
