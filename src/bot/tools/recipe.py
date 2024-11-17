@@ -1,10 +1,5 @@
-from openai.types.chat import ChatCompletionMessageParam
-from openai.types.chat import ChatCompletionSystemMessageParam
-from openai.types.chat import ChatCompletionUserMessageParam
+from lazyopenai import generate
 from pydantic import BaseModel
-
-from ..openai import async_parse
-from ..utils import save_text
 
 SYSTEM_PROMPT = """
 你是位專業的廚師，精通各式料理，熟悉各種食材的搭配。
@@ -43,15 +38,10 @@ class Recipe(BaseModel):
         return s
 
 
-async def generate_recipe(text: str) -> str:
-    messages: list[ChatCompletionMessageParam] = [
-        ChatCompletionSystemMessageParam(role="system", content=SYSTEM_PROMPT),
-        ChatCompletionUserMessageParam(role="user", content=f"輸入：\n{text}"),
-    ]
-
-    try:
-        recipe = await async_parse(messages, response_format=Recipe)
-        return str(recipe)
-    except Exception as e:
-        save_text(text, "message_text.txt")
-        raise e
+def generate_recipe(text: str) -> str:
+    recipe = generate(
+        text,
+        system=SYSTEM_PROMPT,
+        response_format=Recipe,
+    )
+    return str(recipe)

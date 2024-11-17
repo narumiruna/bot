@@ -32,7 +32,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
         text = load_html_file(file_path)
 
     if text:
-        summarized = await tools.summarize(text)
+        summarized = tools.summarize(text)
         await update.message.reply_text(summarized)
 
     os.remove(file_path)
@@ -51,7 +51,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not url:
         # if no URL is found, summarize the message text
         # TODO: simplify this logic
-        summarized = await tools.summarize(message_text)
+        summarized = tools.summarize(message_text)
         logger.info("Summarized text: {}", summarized)
         await update.message.reply_text(summarized)
         return
@@ -68,7 +68,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     logger.info("Text length: {}", len(text))
 
-    summarized = await tools.summarize(text, question)
+    summarized = tools.summarize(text, question)
     logger.info("Summarized text: {}", summarized)
 
     await update.message.reply_text(summarized)
