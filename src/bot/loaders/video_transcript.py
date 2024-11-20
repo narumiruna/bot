@@ -1,3 +1,4 @@
+import asyncio
 import functools
 import os
 import subprocess
@@ -20,7 +21,7 @@ def get_ffmpeg_path_from_env() -> str:
     return os.getenv("FFMPEG_PATH", "/opt/homebrew/bin/ffmpeg")
 
 
-def ytdlp_download(url: str) -> str:
+async def ytdlp_download(url: str) -> str:
     ffmpeg_path = get_ffmpeg_path_from_env()
 
     filename = tempfile.mktemp()
@@ -39,7 +40,7 @@ def ytdlp_download(url: str) -> str:
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        await asyncio.to_thread(ydl.download, [url])
 
     return filename + ".mp3"
 
@@ -98,9 +99,9 @@ def _transcribe(audio: np.ndarray) -> dict:
     return model.transcribe(audio)
 
 
-def load_video_transcript(url: str) -> str | None:
+async def load_video_transcript(url: str) -> str | None:
     try:
-        f = ytdlp_download(url)
+        f = await ytdlp_download(url)
     except yt_dlp.utils.DownloadError as e:
         logger.info("Unable to download video from URL: {}, got error: {}", url, e)
         return None

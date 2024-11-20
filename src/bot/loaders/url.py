@@ -87,13 +87,13 @@ async def load_url(url: str) -> str:
 
 async def load_transcript(url: str) -> str | None:
     if is_x_url(url):
-        transcript = load_video_transcript(url)
+        transcript = await load_video_transcript(url)
         if transcript:
             return transcript
         logger.info("No transcript found for X: {}", url)
 
     if is_instagram_reel_url(url):
-        transcript = load_video_transcript(url)
+        transcript = await load_video_transcript(url)
         if transcript:
             return transcript
         logger.info("No transcript found for Instagram reel: {}", url)
@@ -104,7 +104,7 @@ async def load_transcript(url: str) -> str | None:
             return transcript
         logger.info("No transcript found for YouTube video: {}", url)
 
-        transcript = load_video_transcript(url)
+        transcript = await load_video_transcript(url)
         if transcript:
             return transcript
         logger.info("Unable to load video transcript for YouTube video: {}", url)
