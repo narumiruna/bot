@@ -57,6 +57,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "python-telegram-bot" },
     { name = "telegraph" },
+    { name = "tripplus" },
     { name = "twse" },
     { name = "yfinance" },
     { name = "youtube-search" },
@@ -96,6 +97,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-telegram-bot", specifier = ">=21.6" },
     { name = "telegraph", specifier = ">=2.2.0" },
+    { name = "tripplus", git = "https://github.com/narumiruna/tripplus.git" },
     { name = "twse", specifier = ">=0.1.6" },
     { name = "yfinance", specifier = ">=0.2.46" },
     { name = "youtube-search", specifier = ">=2.1.2" },
@@ -1416,6 +1418,16 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e8/4f/0153c21dc5779a49a0598c445b1978126b1344bab9ee71e53e44877e14e0/tqdm-4.67.0.tar.gz", hash = "sha256:fe5a6f95e6fe0b9755e9469b77b9c3cf850048224ecaa8293d7d2d31f97d869a", size = 169739 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2b/78/57043611a16c655c8350b4c01b8d6abfb38cc2acb475238b62c2146186d7/tqdm-4.67.0-py3-none-any.whl", hash = "sha256:0cd8af9d56911acab92182e88d763100d4788bdf421d251616040cc4d44863be", size = 78590 },
+]
+
+[[package]]
+name = "tripplus"
+version = "0.1.0"
+source = { git = "https://github.com/narumiruna/tripplus.git#e752916f3fb80714b3e46ecd7e1262b181c89a07" }
+dependencies = [
+    { name = "cloudscraper" },
+    { name = "httpx" },
+    { name = "pydantic" },
 ]
 
 [[package]]
