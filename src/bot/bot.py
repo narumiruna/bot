@@ -43,6 +43,7 @@ def run_bot() -> None:
             CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
             CommandHandler("g", callbacks.search_google, filters=chat_filter),
             CommandHandler("recipe", callbacks.generate_recipe, filters=chat_filter),
+            CommandHandler("trip", callbacks.trip, filters=chat_filter),
             CommandHandler("echo", callbacks.echo),
             MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
         ]

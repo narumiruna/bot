@@ -24,7 +24,11 @@ dependencies = [
     "openai-whisper>=20240930",
     "numba>=0.60.0",
     "lazyopenai>=0.1.2",
+    "tripplus",
 ]
+
+[project.scripts]
+bot = "bot.cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -45,8 +49,8 @@ dev = [
 ]
 mlx = ["mlx-whisper>=0.4.1"]
 
-[project.scripts]
-bot = "bot.cli:main"
+[tool.uv.sources]
+tripplus = { git = "https://github.com/narumiruna/tripplus.git" }
 
 [tool.ruff]
 exclude = ["build"]
