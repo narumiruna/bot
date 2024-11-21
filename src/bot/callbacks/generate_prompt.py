@@ -4,7 +4,7 @@ from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from .. import tools
+from .. import chains
 from .utils import get_message_text
 
 
@@ -16,7 +16,7 @@ async def generate_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not message_text:
         return
 
-    text = tools.generate_prompt(message_text)
+    text = chains.generate_prompt(message_text)
     logger.info("Prompt: {}", text)
 
     await update.message.reply_text(text)
