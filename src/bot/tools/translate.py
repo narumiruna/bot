@@ -3,12 +3,11 @@ from lazyopenai import generate
 
 def translate(text: str, lang: str) -> str:
     user_prompt = f"""
-    Text:
     {text}
     """.strip()
 
     system_prompt = f"""
-    Translate the following text to {lang}.
+   Translate all messages into {lang}.
     """.strip()
     return generate(user_prompt, system=system_prompt)
 
