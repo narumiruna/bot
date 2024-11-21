@@ -12,6 +12,14 @@ from tripplus import RedemptionRequest
 
 from .utils import get_message_text
 
+SYSTEM_PROMPT = """
+你是一位專業的哩程旅遊顧問，擅長協助規劃機票兌換。請使用台灣用語習慣的繁體中文回覆。
+- 當提到城市或機場時，自動轉換成對應的機場代碼(IATA代碼)進行查詢
+- 回答時請條列重點，並標明各航空公司所需哩程數
+- 如果使用者沒有明確指定艙等，優先提供經濟艙資訊，再提供商務艙參考
+- 給出建議時，考慮轉點效率、所需哩程數，並說明理由
+"""
+
 
 class AwardSearch(BaseTool):
     """
@@ -47,7 +55,7 @@ async def trip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     reply_text = generate(
         message_text,
-        system="你是旅遊助手，使用台灣用語習慣的繁體中文，會使用哩程查詢工具(如果需要)。你會把地點轉換成最近的機場代號來查詢。",
+        system=SYSTEM_PROMPT,
         tools=[AwardSearch],
     )
     await update.message.reply_text(reply_text)
