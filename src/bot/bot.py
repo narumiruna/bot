@@ -34,9 +34,9 @@ def run_bot() -> None:
         [
             CommandHandler("help", callbacks.help, filters=chat_filter),
             CommandHandler("sum", callbacks.summarize, filters=chat_filter),
-            CommandHandler("jp", callbacks.create_translate_callback("日文"), filters=chat_filter),
-            CommandHandler("tc", callbacks.create_translate_callback("繁體中文"), filters=chat_filter),
-            CommandHandler("en", callbacks.create_translate_callback("英文"), filters=chat_filter),
+            CommandHandler("jp", callbacks.create_translate_callback("Japanese"), filters=chat_filter),
+            CommandHandler("tc", callbacks.create_translate_callback("Traditional Chinese"), filters=chat_filter),
+            CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),
             CommandHandler("polish", callbacks.polish, filters=chat_filter),
             CommandHandler("yf", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("twse", callbacks.query_twse_ticker, filters=chat_filter),
