@@ -5,7 +5,7 @@ from markdownify import markdownify
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from ..tools import summarize
+from ..chains import summarize
 
 
 async def search_google(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

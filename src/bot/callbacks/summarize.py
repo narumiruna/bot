@@ -6,7 +6,7 @@ from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from .. import tools
+from .. import chains
 from ..loaders import load_html_file
 from ..loaders import load_pdf_file
 from ..loaders import load_url
@@ -32,7 +32,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
         text = load_html_file(file_path)
 
     if text:
-        summarized = tools.summarize(text)
+        summarized = chains.summarize(text)
         await update.message.reply_text(summarized)
 
     os.remove(file_path)
@@ -51,7 +51,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not url:
         # if no URL is found, summarize the message text
         # TODO: simplify this logic
-        summarized = tools.summarize(message_text)
+        summarized = chains.summarize(message_text)
         logger.info("Summarized text: {}", summarized)
         await update.message.reply_text(summarized)
         return
@@ -68,7 +68,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     logger.info("Text length: {}", len(text))
 
-    summarized = tools.summarize(text, question)
+    summarized = chains.summarize(text, question)
     logger.info("Summarized text: {}", summarized)
 
     await update.message.reply_text(summarized)

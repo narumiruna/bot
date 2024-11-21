@@ -6,7 +6,7 @@ from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from .. import tools
+from .. import chains
 from .utils import get_message_text
 
 
@@ -20,10 +20,10 @@ def create_translate_callback(lang: str) -> Callable:
             return
 
         if context.args and context.args[0] == "explain":
-            text = tools.translate_and_explain(message_text, lang=lang)
+            text = chains.translate_and_explain(message_text, lang=lang)
             logger.info("Translated and explained text to {}: {}", lang, text)
         else:
-            text = tools.translate(message_text, lang=lang)
+            text = chains.translate(message_text, lang=lang)
             logger.info("Translated text to {}: {}", lang, text)
 
         await update.message.reply_text(text)
