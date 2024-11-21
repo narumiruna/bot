@@ -45,5 +45,9 @@ async def trip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     message_text = get_message_text(update)
 
-    reply_text = generate(message_text, tools=[AwardSearch])
+    reply_text = generate(
+        message_text,
+        system="你是旅遊助手，使用台灣用語習慣的繁體中文，會使用哩程查詢工具(如果需要)。",
+        tools=[AwardSearch],
+    )
     await update.message.reply_text(reply_text)
