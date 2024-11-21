@@ -7,7 +7,7 @@ def translate(text: str, lang: str) -> str:
     """.strip()
 
     system_prompt = f"""
-   Translate all messages into {lang}.
+    Translate the following text into {lang}:
     """.strip()
     return generate(user_prompt, system=system_prompt)
 
