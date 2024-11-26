@@ -1,4 +1,5 @@
 from .generate_prompt import generate_prompt
+from .keyword import extract_keywords
 from .polish import polish
 from .recipe import generate_recipe
 from .summarize import summarize
