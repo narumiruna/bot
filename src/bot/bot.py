@@ -22,14 +22,17 @@ def get_chat_filter() -> filters.BaseFilter:
         return filters.Chat(chat_ids)
 
 
-def run_bot() -> None:
+def get_bot_token() -> str:
     token = os.getenv("BOT_TOKEN")
     if not token:
         raise ValueError("BOT_TOKEN is not set")
+    return token
 
+
+def run_bot() -> None:
     chat_filter = get_chat_filter()
 
-    app = Application.builder().token(token).build()
+    app = Application.builder().token(get_bot_token()).build()
     app.add_handlers(
         [
             CommandHandler("help", callbacks.help, filters=chat_filter),
