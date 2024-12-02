@@ -24,6 +24,8 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not reply_to_message:
         return
 
+    assert context.chat_data is not None
+
     chat = create_chat()
     key = get_key(reply_to_message)
     if key in context.chat_data:
