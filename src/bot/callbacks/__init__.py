@@ -2,7 +2,7 @@ from .echo import echo
 from .error import error_callback
 from .google_search import search_google
 from .help import help
-from .jlpt import learn_japanese
+from .learn_japanese import learn_japanese
 from .log import log
 from .polish import polish
 from .recipe import generate_recipe
