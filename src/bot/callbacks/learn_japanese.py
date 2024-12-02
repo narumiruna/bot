@@ -18,7 +18,6 @@ async def learn_japanese(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     url = parse_url(text)
-
     if url:
         text += "\n" + await load_url(url)
 
