@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import Final
 
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
 from .. import chains
+from ..loaders.url import load_url
+from ..utils import create_page
+from ..utils import parse_url
 from .utils import get_message_text
+
+MAX_LENGTH: Final[int] = 4096
 
 
 def create_translate_callback(lang: str) -> Callable:
@@ -19,13 +25,19 @@ def create_translate_callback(lang: str) -> Callable:
         if not message_text:
             return
 
-        if context.args and context.args[0] == "explain":
-            text = chains.translate_and_explain(message_text, lang=lang)
-            logger.info("Translated and explained text to {}: {}", lang, text)
-        else:
-            text = chains.translate(message_text, lang=lang)
-            logger.info("Translated text to {}: {}", lang, text)
+        url = parse_url(message_text)
+        if url:
+            message_text += "\n" + await load_url(url)
 
-        await update.message.reply_text(text)
+        if context.args and context.args[0] == "explain":
+            reply_text = chains.translate_and_explain(message_text, lang=lang)
+            logger.info("Translated and explained text to {}: {}", lang, reply_text)
+        else:
+            reply_text = chains.translate(message_text, lang=lang)
+            logger.info("Translated text to {}: {}", lang, reply_text)
+
+        if len(reply_text) > MAX_LENGTH:
+            reply_text = create_page(reply_text)
+        await update.message.reply_text(reply_text)
 
     return translate
