@@ -1,3 +1,4 @@
+from telegram import Message
 from telegram import Update
 
 
@@ -29,3 +30,7 @@ def strip_command(text: str) -> str:
         command, *args = text.split(" ", 1)
         return args[0] if args else ""
     return text
+
+
+def get_message_key(message: Message) -> str:
+    return f"{message.message_id}:{message.chat.id}"
