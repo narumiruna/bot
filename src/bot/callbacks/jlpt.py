@@ -218,5 +218,5 @@ async def jlpt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if url:
         text += "\n" + await load_url(url)
 
-    res = generate(text, SYSTEM_PROMPT_V2, response_format=JLPTResponse)
+    res = generate(text, SYSTEM_PROMPT)
     await update.message.reply_text(str(res))
