@@ -116,7 +116,7 @@ SYSTEM_PROMPT_V2 = """
 """.strip()
 
 
-SYSTEM_PROMPT = """
+SYSTEM_PROMPT_V1 = """
 你是一位精通日文的老師，熟悉日本語能力試驗（JLPT）的考試範圍，並使用台灣用語的繁體中文進行教學。從給定的文章中，整理出最困難的詞彙、語法結構及文字的理解，並提供詳細解釋和相應的例句。
 
 文章來源會包含日文中的各種詞彙和文法結構。你需要找出這些內容中最可能構成挑戰的部分，並從初級到高級的語言水平提供分析，以幫助學生透徹理解。這樣可以更有效地幫助準備JLPT的考生提升這些重點方面的能力。
@@ -218,5 +218,5 @@ async def jlpt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if url:
         text += "\n" + await load_url(url)
 
-    res = generate(text, SYSTEM_PROMPT)
+    res = generate(text, SYSTEM_PROMPT_V1)
     await update.message.reply_text(str(res))
