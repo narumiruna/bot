@@ -6,6 +6,7 @@ from .learn_japanese import learn_japanese
 from .log import log
 from .polish import polish
 from .recipe import generate_recipe
+from .reply import reply
 from .search_youtube import search_youtube
 from .summarize import summarize
 from .summarize import summarize_document

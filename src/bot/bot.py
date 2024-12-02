@@ -46,6 +46,7 @@ def run_bot() -> None:
             CommandHandler("trip", callbacks.trip, filters=chat_filter),
             CommandHandler("ljp", callbacks.learn_japanese, filters=chat_filter),
             CommandHandler("echo", callbacks.echo),
+            # MessageHandler(filters=chat_filter & filters.REPLY, callback=callbacks.reply),
             MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
         ]
     )

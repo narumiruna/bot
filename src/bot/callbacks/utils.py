@@ -1,13 +1,15 @@
 from telegram import Update
 
 
-def get_message_text(update: Update) -> str:
+def get_message_text(update: Update, include_reply_to_message: bool = True) -> str:
     message = update.message
     if not message:
         return ""
 
     message_text = message.text or ""
     message_text = strip_command(message_text)
+    if not include_reply_to_message:
+        return message_text
 
     reply_text = message.reply_to_message.text if message.reply_to_message and message.reply_to_message.text else ""
 
