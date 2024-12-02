@@ -20,7 +20,7 @@ async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         "/yt - Search YouTube\n"
         "/g - Search Google\n"
         "/recipe - Generate a recipe\n"
-        "/jlpt - Analyze Japanese text for JLPT study\n"
+        "/ljp - Analyze Japanese text for JLPT study\n"
         "/ticker - Query stock ticker information\n"
         "/twse - Query Taiwan stock exchange ticker\n"
         "/trip - Get travel recommendations\n"
