@@ -6,6 +6,7 @@ from .jlpt import learn_japanese
 from .log import log
 from .polish import polish
 from .recipe import generate_recipe
+from .search_youtube import search_youtube
 from .summarize import summarize
 from .summarize import summarize_document
 from .ticker import query_ticker
@@ -13,4 +14,3 @@ from .translate import create_translate_callback
 from .trip import trip
 from .twse import query_twse_ticker
 from .utils import get_message_text
-from .youtube_search import search_youtube
