@@ -44,7 +44,7 @@ def run_bot() -> None:
             CommandHandler("g", callbacks.search_google, filters=chat_filter),
             CommandHandler("recipe", callbacks.generate_recipe, filters=chat_filter),
             CommandHandler("trip", callbacks.trip, filters=chat_filter),
-            CommandHandler("jlpt", callbacks.jlpt, filters=chat_filter),
+            CommandHandler("jlpt", callbacks.learn_japanese, filters=chat_filter),
             CommandHandler("echo", callbacks.echo),
             MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
         ]
