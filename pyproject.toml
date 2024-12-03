@@ -24,7 +24,7 @@ dependencies = [
     "openai-whisper>=20240930",
     "numba>=0.60.0",
     "tripplus",
-    "lazyopenai>=0.2.0",
+    "lazyopenai>=0.3.0",
 ]
 
 [project.scripts]
