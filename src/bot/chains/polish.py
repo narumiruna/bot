@@ -10,7 +10,7 @@ class PolishedText(BaseModel):
         return self.text
 
 
-SYSTEM_PROMPT = """Refine the input text in any language to improve clarity, fluency, and professionalism while preserving the original meaning.
+SYSTEM_PROMPT = """Your task is to **polish** the input text in any language to improve clarity, fluency, and professionalism while preserving the original meaning.
 
 ## Steps
 
