@@ -33,4 +33,4 @@ Provide a refined version of the text in the same language, maintaining the orig
 
 
 def polish(text: str) -> str:
-    return str(generate(text, system=SYSTEM_PROMPT, response_format=PolishedText))
+    return str(generate(f'"""{text}"""', system=SYSTEM_PROMPT, response_format=PolishedText))
