@@ -4,10 +4,11 @@ from pydantic import Field
 
 
 class PolishedText(BaseModel):
-    text: str = Field(..., description="The polished text.")
+    polished_text: str = Field(..., description="The polished text.")
+    detected_language: str = Field(..., description="The detected language of the input text.")
 
     def __str__(self) -> str:
-        return self.text
+        return self.polished_text
 
 
 SYSTEM_PROMPT = """Your task is to **polish** the input text in any language to improve clarity, fluency, and professionalism while preserving the original meaning.
@@ -33,4 +34,4 @@ Provide a refined version of the text in the same language, maintaining the orig
 
 
 def polish(text: str) -> str:
-    return str(generate(f'"""{text}"""', system=SYSTEM_PROMPT, response_format=PolishedText))
+    return str(generate(f"Polish the following text:\n{text}", system=SYSTEM_PROMPT, response_format=PolishedText))
