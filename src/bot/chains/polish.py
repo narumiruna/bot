@@ -33,4 +33,4 @@ The output should be a polished version of the provided text in the same languag
 
 
 def polish(text: str) -> str:
-    return generate(text, system=SYSTEM_PROMPT)
+    return generate(f"Input: ```{text}```", system=SYSTEM_PROMPT)
