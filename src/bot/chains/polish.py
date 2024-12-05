@@ -1,6 +1,6 @@
 from lazyopenai import generate
 
-SYSTEM_PROMPT = """Polish the following text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
+SYSTEM_PROMPT = """Polish the input text in any language to enhance clarity, fluency, and professionalism while maintaining the original meaning.
 
 # Steps
 
