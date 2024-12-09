@@ -96,7 +96,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12.3" },
     { name = "charset-normalizer", specifier = ">=3.4.0" },
     { name = "cloudscraper", specifier = ">=1.2.71" },
-    { name = "lazyopenai", extras = ["langfuse"], specifier = ">=0.4.0" },
+    { name = "lazyopenai", extras = ["langfuse"], specifier = ">=0.5.0" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "markdownify", specifier = ">=0.13.1" },
@@ -478,7 +478,7 @@ wheels = [
 
 [[package]]
 name = "langfuse"
-version = "2.55.0"
+version = "2.56.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -490,14 +490,14 @@ dependencies = [
     { name = "requests" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/c9/f57fd24629116ed862862e8b8c0e7f84bde1c629beb92027ec95684704fd/langfuse-2.55.0.tar.gz", hash = "sha256:fb671a8cf5252a7d1def3b41b6f70f8de50c53250e5832209649301c14453222", size = 137421 }
+sdist = { url = "https://files.pythonhosted.org/packages/ac/d2/15be9503d5da1e686b96a893fd65d9e09da769eb7741e72ca9d909fcbcfe/langfuse-2.56.0.tar.gz", hash = "sha256:23f5ab757ded08aeb57dc2ddfc01aa1d06376101dca44298e4d53d7d568abdfc", size = 137650 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6c/e8/b75c524078c8147eff841ab00ee8f0ea6890fe064d6a0503b07de1f4b02b/langfuse-2.55.0-py3-none-any.whl", hash = "sha256:c902894b50befdd8639e5b0d78ca79f8b5d391bae2c3f0889a1f47ea59d795ad", size = 249190 },
+    { url = "https://files.pythonhosted.org/packages/a6/96/54407217f744aafd826e45ff850da41b6033cf776eda02b4ef2ec7f21c5b/langfuse-2.56.0-py3-none-any.whl", hash = "sha256:272821dddc7fde0b213cdd6c89cdf27aeeccec07836bfe759da25a5440d80ab4", size = 249300 },
 ]
 
 [[package]]
 name = "lazyopenai"
-version = "0.4.1"
+version = "0.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "loguru" },
@@ -505,7 +505,7 @@ dependencies = [
     { name = "pydantic-settings" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/40/424ac855846dd79b486bde0099c3344126c759b4ab94c516d4c08caa831f/lazyopenai-0.4.1-py3-none-any.whl", hash = "sha256:2c229041044da9b6b640ce69a4ec704973a883882115e753802d52c00cb65c0d", size = 8932 },
+    { url = "https://files.pythonhosted.org/packages/3b/f8/2045b2ba19eeb7bc115cb611055620e11994b7d28ba789f91ef7069d734e/lazyopenai-0.5.0-py3-none-any.whl", hash = "sha256:c3ae585719321f3b9305ab83cee342866c19d7ee943887ec5ecb9500007010d0", size = 8969 },
 ]
 
 [package.optional-dependencies]
@@ -898,7 +898,7 @@ wheels = [
 
 [[package]]
 name = "openai"
-version = "1.56.2"
+version = "1.57.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -910,9 +910,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e1/97/302669f5888d1adf8ce0e93f1e5b2337b6c9db47d9877bd344a29db314be/openai-1.56.2.tar.gz", hash = "sha256:17312af69bc7670d4048f98ab5849f8784d98c39ac64fcde19406e3774a0c1e5", size = 315404 }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/64/4acd9331b3c0e1069f36692d4c29d2c8deea6649a1e150f45a096f91b339/openai-1.57.0.tar.gz", hash = "sha256:76f91971c4bdbd78380c9970581075e0337b5d497c2fbf7b5255078f4b31abf9", size = 315514 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/23/36/c60fffa518d82952335e2ef4a6b93b0427c57eb49469879dee1cbe59d551/openai-1.56.2-py3-none-any.whl", hash = "sha256:82d0c48f9504e04c7797e9b799dcf7f49a246d99b6cbfd90f3193ea80815b69e", size = 389854 },
+    { url = "https://files.pythonhosted.org/packages/ab/2d/eb8539a2d5809eb78508633a8faa8df7745960e99af0388310c43b2c0be1/openai-1.57.0-py3-none-any.whl", hash = "sha256:972e36960b821797952da3dc4532f486c28e28a2a332d7d0c5407f242e9d9c39", size = 389854 },
 ]
 
 [[package]]
