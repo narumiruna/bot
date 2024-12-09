@@ -36,6 +36,9 @@ async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     if not reply_to_message:
         return
 
+    if not reply_to_message.text:
+        return
+
     key = get_message_key(reply_to_message)
 
     messages = context.chat_data.get(key, [])  # type: ignore
