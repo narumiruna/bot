@@ -8,7 +8,7 @@ from .utils import get_message_key
 from .utils import get_message_text
 
 
-async def _reply(update: Update, context: ContextTypes.DEFAULT_TYPE, messages) -> None:
+async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE, messages) -> None:
     chat = create_chat()
 
     chat.load_messages(messages)
@@ -19,7 +19,7 @@ async def _reply(update: Update, context: ContextTypes.DEFAULT_TYPE, messages) -
     context.chat_data[new_key] = chat.dump_messages()
 
 
-async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
@@ -31,8 +31,6 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not reply_to_message:
         return
 
-    assert context.chat_data is not None
-
     key = get_message_key(reply_to_message)
 
     messages = context.chat_data.get(key, [])
@@ -43,4 +41,4 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         }
     ]
 
-    await _reply(update, context, messages)
+    await send_reply_to_user(update, context, messages)
