@@ -4,12 +4,13 @@ from lazyopenai import create_chat
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from ..tools import GoogleSearch
 from .utils import get_message_key
 from .utils import get_message_text
 
 
 async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE, messages) -> None:
-    chat = create_chat()
+    chat = create_chat(tools=[GoogleSearch])
 
     chat.load_messages(messages)
     resp = chat.create()
