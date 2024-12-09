@@ -6,11 +6,17 @@ from pydantic import Field
 
 
 class Weblio(BaseTool):
-    """您可以直接查看該詞彙的詳細解釋、用法和相關資訊。"""
+    """A tool to fetch detailed explanations, usage, and related information of a Japanese word from Weblio."""
 
-    query: str = Field(..., description="The word you want to search for in Weblio")
+    query: str = Field(..., description="The Japanese word you want to search for in Weblio")
 
     def __call__(self) -> str:
+        """
+        Fetches the definitions of the query Japanese word from Weblio.
+
+        Returns:
+            str: A string containing the definitions of the word, separated by newlines.
+        """
         logger.info(f"Querying Weblio for {self.query}")
 
         url = f"https://www.weblio.jp/content/{self.query}"
