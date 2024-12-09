@@ -15,7 +15,7 @@ class Weblio(BaseTool):
         Fetches the definitions of the query Japanese word from Weblio.
 
         Returns:
-            str: A string containing the definitions of the word, separated by newlines.
+            str: A string containing the definitions of the word.
         """
         logger.info(f"Querying Weblio for {self.query}")
 
