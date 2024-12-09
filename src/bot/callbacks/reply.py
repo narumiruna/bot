@@ -13,9 +13,6 @@ async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
     if not update.message:
         return
 
-    if not context.chat_data:
-        context.chat_data = {}
-
     chat = create_chat(tools=[GoogleSearch])
 
     chat.load_messages(messages)
@@ -23,7 +20,9 @@ async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
 
     reply_message = await update.message.reply_text(resp)
     new_key = get_message_key(reply_message)
-    context.chat_data[new_key] = chat.dump_messages()
+
+    if context.chat_data:
+        context.chat_data[new_key] = chat.dump_messages()
 
 
 async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -38,12 +37,11 @@ async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     if not reply_to_message:
         return
 
-    if not context.chat_data:
-        context.chat_data = {}
-
     key = get_message_key(reply_to_message)
 
-    messages = context.chat_data.get(key, [])
+    messages = []
+    if context.chat_data:
+        messages += context.chat_data.get(key, [])
     messages += [
         {
             "role": "user",
