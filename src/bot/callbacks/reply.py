@@ -21,8 +21,7 @@ async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
     reply_message = await update.message.reply_text(resp)
     new_key = get_message_key(reply_message)
 
-    if context.chat_data:
-        context.chat_data[new_key] = chat.dump_messages()
+    context.chat_data[new_key] = chat.dump_messages()  # type: ignore
 
 
 async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -39,9 +38,7 @@ async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
     key = get_message_key(reply_to_message)
 
-    messages = []
-    if context.chat_data:
-        messages += context.chat_data.get(key, [])
+    messages = context.chat_data.get(key, [])  # type: ignore
     messages += [
         {
             "role": "user",
