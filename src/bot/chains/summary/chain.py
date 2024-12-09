@@ -1,6 +1,7 @@
 from lazyopenai import generate
 from pydantic import BaseModel
 
+from .prompt import QA_PROMPT
 from .prompt import SUMMARY_PROMPT
 
 
@@ -18,13 +19,14 @@ class Summary(BaseModel):
 
 
 def summarize(text: str, question: str | None = None) -> str:
-    prompt = f"輸入：\n{text}"
-    if question:
-        prompt += f"\n問題：\n{question}"
-
     summary = generate(
-        prompt,
-        system=SUMMARY_PROMPT,
+        SUMMARY_PROMPT.format(text=text),
         response_format=Summary,
     )
-    return str(summary)
+
+    res = str(summary)
+
+    if question:
+        res += "\n\n" + str(generate(QA_PROMPT.format(text=text, question=question)))
+
+    return res
