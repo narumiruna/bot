@@ -23,7 +23,7 @@ class Keywords(BaseModel):
 
 def extract_keywords(text: str) -> str:
     keywords = generate(
-        user=f"Extract keywords from the following text:\n{text}",
+        f"Extract keywords from the following text:\n{text}",
         system=SYSTEM_PROMPT,
         response_format=Keywords,
     )
