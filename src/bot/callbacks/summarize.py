@@ -51,9 +51,9 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not url:
         # if no URL is found, summarize the message text
         # TODO: simplify this logic
-        summarized = chains.summarize(message_text)
-        logger.info("Summarized text: {}", summarized)
-        await update.message.reply_text(summarized)
+        result = chains.summarize(message_text)
+        logger.info("Summarized text: {}", result)
+        await update.message.reply_text(result)
         return
     logger.info("Parsed URL: {}", url)
 
@@ -68,7 +68,10 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     logger.info("Text length: {}", len(text))
 
-    summarized = chains.summarize(text, question)
-    logger.info("Summarized text: {}", summarized)
+    result = chains.summarize(text)
+    if question:
+        result += f"\n\n{chains.answer_question(text, question)}"
 
-    await update.message.reply_text(summarized)
+    logger.info("Summarized text: {}", result)
+
+    await update.message.reply_text(result)
