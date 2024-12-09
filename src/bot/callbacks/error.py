@@ -32,7 +32,9 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
 
     page_url = create_page(title="Error", html_content=html_content)
 
-    await context.bot.send_message(chat_id=os.getenv("DEVELOPER_CHAT_ID"), text=page_url)
+    chat_id = os.getenv("DEVELOPER_CHAT_ID")
+    if chat_id:
+        await context.bot.send_message(chat_id=chat_id, text=page_url)
 
 
 def add_error_handler(app: Application) -> None:

@@ -10,6 +10,12 @@ from .utils import get_message_text
 
 
 async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE, messages) -> None:
+    if not update.message:
+        return
+
+    if not context.chat_data:
+        context.chat_data = {}
+
     chat = create_chat(tools=[GoogleSearch])
 
     chat.load_messages(messages)
@@ -31,6 +37,9 @@ async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     reply_to_message = update.message.reply_to_message
     if not reply_to_message:
         return
+
+    if not context.chat_data:
+        context.chat_data = {}
 
     key = get_message_key(reply_to_message)
 
