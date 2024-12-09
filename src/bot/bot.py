@@ -55,5 +55,5 @@ def run_bot() -> None:
     )
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log), group=1)
 
-    app.add_error_handler(callbacks.error_callback)
+    callbacks.add_error_handler(app)
     app.run_polling(allowed_updates=Update.ALL_TYPES)

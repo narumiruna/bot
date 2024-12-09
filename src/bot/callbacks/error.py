@@ -7,6 +7,7 @@ import traceback
 
 from loguru import logger
 from telegram import Update
+from telegram.ext import Application
 from telegram.ext import ContextTypes
 
 from ..utils import create_page
@@ -30,9 +31,14 @@ async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> 
         html_content += f"<pre>Traceback (most recent call last):\n{html.escape(tb_string)}</pre>"
 
     page_url = create_page(title="Error", html_content=html_content)
-    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID", None)
-    if developer_chat_id:
-        await context.bot.send_message(chat_id=developer_chat_id, text=page_url)
 
-    # if isinstance(update, Update) and update.message:
-    #     await update.message.reply_text(text=message, parse_mode=ParseMode.HTML)
+    await context.bot.send_message(chat_id=os.getenv("DEVELOPER_CHAT_ID"), text=page_url)
+
+
+def add_error_handler(app: Application) -> None:
+    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID", None)
+    if not developer_chat_id:
+        logger.warning("No developer chat ID specified, error messages will not be sent to a developer")
+        return
+
+    app.add_error_handler(error_callback)

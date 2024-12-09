@@ -1,4 +1,5 @@
 from .echo import echo
+from .error import add_error_handler
 from .error import error_callback
 from .google_search import search_google
 from .help import help
