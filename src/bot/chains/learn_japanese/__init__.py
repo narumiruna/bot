@@ -1,1 +1,1 @@
-from .learn_japanese import learn_japanese
+from .chain import learn_japanese
