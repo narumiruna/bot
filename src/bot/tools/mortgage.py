@@ -16,7 +16,7 @@ class LoanTool(BaseTool):
         ...,
         description="The annual interest rate of the loan. Interest rate must be between zero and one.",
     )
-    term: float = Field(..., description="The duration of the loan.")
+    term: int = Field(..., description="The duration of the loan.")
     term_unit: Literal["days", "months", "years"] = Field(..., description="The unit of time for the loan term.")
     compounded: Literal["daily", "monthly", "annually"] = Field(
         ..., description="The frequency at which interest is compounded."
