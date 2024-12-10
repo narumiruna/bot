@@ -12,7 +12,10 @@ class LoanTool(BaseTool):
 
     keywords: list[str] = Field(..., description="List of keywords associated with the loan tool.")
     principal: float = Field(..., description="The original sum of money borrowed.")
-    interest: float = Field(..., description="The annual interest rate of the loan (as a percentage).")
+    interest: float = Field(
+        ...,
+        description="The annual interest rate of the loan. Interest rate must be between zero and one.",
+    )
     term: float = Field(..., description="The duration of the loan.")
     term_unit: Literal["days", "months", "years"] = Field(..., description="The unit of time for the loan term.")
     compounded: Literal["daily", "monthly", "annually"] = Field(
