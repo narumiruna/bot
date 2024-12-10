@@ -60,6 +60,7 @@ dependencies = [
     { name = "loguru" },
     { name = "lxml" },
     { name = "markdownify" },
+    { name = "mortgage" },
     { name = "numba" },
     { name = "openai-whisper" },
     { name = "pypdf" },
@@ -100,6 +101,7 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "markdownify", specifier = ">=0.13.1" },
+    { name = "mortgage", specifier = ">=1.0.5" },
     { name = "numba", specifier = ">=0.60.0" },
     { name = "openai-whisper", specifier = ">=20240930" },
     { name = "pypdf", specifier = ">=5.0.1" },
@@ -665,6 +667,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/51/78/65922308c4248e0eb08ebcbe67c95d48615cc6f27854b6f2e57143e9178f/more-itertools-10.5.0.tar.gz", hash = "sha256:5482bfef7849c25dc3c6dd53a6173ae4795da2a41a80faea6700d9f5846c5da6", size = 121020 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/48/7e/3a64597054a70f7c86eb0a7d4fc315b8c1ab932f64883a297bdffeb5f967/more_itertools-10.5.0-py3-none-any.whl", hash = "sha256:037b0d3203ce90cca8ab1defbbdac29d5f993fc20131f3664dc8d6acfa872aef", size = 60952 },
+]
+
+[[package]]
+name = "mortgage"
+version = "1.0.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9e/fa/e87a74a20ee6631b44507f8f757fa4c723f8f4dd467e39d947bc840b669b/mortgage-1.0.5.tar.gz", hash = "sha256:18fcb356c631e9cc27fa7019f6ff6021707e34b9ce3a3b7dc815661288709921", size = 5903 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/b9/e110eb77f30bf2b85639b726c299e5d1950ec6c4d8872c2f958636884f88/mortgage-1.0.5-py3-none-any.whl", hash = "sha256:d1af39b28d722b06e98087535ef466d9f3422726b268a477f7b4b80d349035e6", size = 6519 },
 ]
 
 [[package]]

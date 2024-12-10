@@ -3,6 +3,7 @@ from .error import add_error_handler
 from .error import error_callback
 from .fate import fate
 from .google_search import search_google
+from .gpt import gpt
 from .help import help
 from .learn_japanese import learn_japanese
 from .log import log
