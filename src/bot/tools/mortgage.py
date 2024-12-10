@@ -10,7 +10,6 @@ class LoanTool(BaseTool):
     A tool for calculating and summarizing loan details based on input parameters.
     """
 
-    keywords: list[str] = Field(..., description="List of keywords associated with the loan tool.")
     principal: float = Field(..., description="The original sum of money borrowed.")
     interest: float = Field(
         ...,
