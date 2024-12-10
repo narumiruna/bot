@@ -1,6 +1,7 @@
 from typing import Literal
 
 from lazyopenai.types import BaseTool
+from loguru import logger
 from mortgage import Loan
 from pydantic import Field
 
@@ -20,7 +21,6 @@ class LoanTool(BaseTool):
     compounded: Literal["daily", "monthly", "annually"] = Field(
         ..., description="The frequency at which interest is compounded."
     )
-    currency: str = Field(..., description="The currency symbol used in the loan summary.")
 
     def __call__(self) -> str:
         """
@@ -33,7 +33,6 @@ class LoanTool(BaseTool):
             term=self.term,
             term_unit=self.term_unit,
             compounded=self.compounded,
-            currency=self.currency,
         )
 
         lines = [
@@ -51,4 +50,7 @@ class LoanTool(BaseTool):
             f"Years to pay: {loan.years_to_pay:>11}",
         ]
 
-        return "\n".join(lines)
+        res = "\n".join(lines)
+
+        logger.info("Loan summary: {}", res)
+        return res
