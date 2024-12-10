@@ -37,7 +37,6 @@ async def handle_user_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     if not reply_to_message:
         return
 
-    # if context.bot.id != reply_to_message.from_user.id:
     if reply_to_message.from_user and context.bot.id != reply_to_message.from_user.id:
         return
 
