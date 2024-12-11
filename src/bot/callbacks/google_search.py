@@ -30,9 +30,9 @@ async def search_google(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     summarized = summarize(text=text + "\n" + markdownify(resp.text, strip=["a", "img"]).strip())
 
     res = [
-        "📝\n" + summarized,
+        summarized,
         f"🔗 <a href='https://www.google.com/search?q={keywords}'>Google Search</a>",
         "🔍 Keywords: " + keywords,
     ]
 
-    await update.message.reply_text("\n\n".join(res), parse_mode=ParseMode.HTML)
+    await update.message.reply_text("\n\n".join(res), parse_mode=ParseMode.HTML, disable_web_page_preview=True)
