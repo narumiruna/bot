@@ -4,6 +4,7 @@ import os
 
 from loguru import logger
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import chains
@@ -33,7 +34,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     if text:
         summarized = chains.summarize(text)
-        await update.message.reply_text(summarized, disable_web_page_preview=True)
+        await update.message.reply_text(summarized, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
     os.remove(file_path)
 
@@ -53,7 +54,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         # TODO: simplify this logic
         result = chains.summarize(message_text)
         logger.info("Summarized text: {}", result)
-        await update.message.reply_text(result, disable_web_page_preview=True)
+        await update.message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
         return
     logger.info("Parsed URL: {}", url)
 
@@ -74,4 +75,4 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     logger.info("Summarized text: {}", result)
 
-    await update.message.reply_text(result, disable_web_page_preview=True)
+    await update.message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)

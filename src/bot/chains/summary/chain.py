@@ -58,7 +58,6 @@ class Summary(BaseModel):
         hashtags = " ".join(self.hashtags)
 
         url = create_page(title="Chain of Thought", html_content=markdown2.markdown(str(self.chain_of_thought)))
-
         return "\n\n".join(
             [
                 "📝 Summary",
@@ -67,8 +66,8 @@ class Summary(BaseModel):
                 key_points,
                 "💫 Takeaways",
                 takeaways,
-                f"🏷️ Tags: {hashtags}",
-                f"🔗 Chain of Thought: {url}",
+                f"🏷️ Hashtags: {hashtags}",
+                f"🔗 <a href='{url}'>Chain of Thought</a>",
             ]
         )
 
