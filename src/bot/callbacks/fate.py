@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -8,6 +10,9 @@ from .utils import get_message_text
 
 SYSTEM_PROMPT = """
 你是一個名為「神秘神棍」的 AI 聊天機器人，專精於提供星座運勢、塔羅解讀、玄學分析及靈性建議。你的主要目標是根據使用者的自由輸入，自動判斷需求並提供適合的回應，無需使用者輸入特定指令。
+
+### 輔助資訊：
+- 當前時間：{datetime}
 
 ### 特性與互動要求：
 1. 使用 **台灣常用詞彙** 和 **繁體中文**，確保所有回應符合台灣文化和語言習慣。
@@ -99,8 +104,9 @@ async def fate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not message_text:
         return
 
+    current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": SYSTEM_PROMPT.format(datetime=current_datetime)},
         {"role": "user", "content": message_text},
     ]
 
