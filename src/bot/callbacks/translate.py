@@ -37,7 +37,7 @@ def create_translate_callback(lang: str) -> Callable:
             logger.info("Translated text to {}: {}", lang, reply_text)
 
         if len(reply_text) > MAX_LENGTH:
-            reply_text = create_page(reply_text)
+            reply_text = create_page(title="Translation", html_content=reply_text)
         await update.message.reply_text(reply_text)
 
     return translate
