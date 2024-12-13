@@ -13,7 +13,7 @@ from ..utils import create_page
 from ..utils import parse_url
 from .utils import get_message_text
 
-MAX_LENGTH: Final[int] = 4096
+MAX_LENGTH: Final[int] = 200
 
 
 def create_translate_callback(lang: str) -> Callable:
