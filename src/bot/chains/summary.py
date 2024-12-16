@@ -57,10 +57,12 @@ class ChainOfThought(BaseModel):
 
 
 class Summary(BaseModel):
-    chain_of_thought: ChainOfThought = Field(..., description="通往摘要、關鍵重點和重要啟示的推理過程。")
-    summary: str = Field(..., description="對文本的簡要總結。")
-    key_points: list[str] = Field(..., description="從文本中提取的關鍵重點。")
-    takeaways: list[str] = Field(..., description="從文本中獲得的重要啟示。")
+    chain_of_thought: ChainOfThought = Field(
+        ..., description="通往摘要、關鍵重點和重要啟示的推理過程，翻譯成台灣繁體中文。"
+    )
+    summary: str = Field(..., description="對文本的簡要總結，翻譯成台灣繁體中文。")
+    key_points: list[str] = Field(..., description="從文本中提取的關鍵重點，翻譯成台灣繁體中文。")
+    takeaways: list[str] = Field(..., description="從文本中獲得的重要啟示，翻譯成台灣繁體中文。")
     hashtags: list[str] = Field(..., description="與文本相關的 Hashtags。")
 
     def __str__(self) -> str:
