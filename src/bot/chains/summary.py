@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from pydantic import Field
 
 from ..utils import create_page
+from .translate import translate
 
 SUMMARY_PROMPT = """
 請以台灣繁體中文為以下內容生成：
@@ -68,6 +69,7 @@ class Summary(BaseModel):
     key_points: list[str] = Field(..., description="Key points extracted from the text.")
     takeaways: list[str] = Field(..., description="Important takeaways from the text.")
     hashtags: list[str] = Field(..., description="Relevant hashtags related to the text.")
+    is_chinese: bool = Field(..., description="Whether the summary text is in Traditional Chinese or not.")
 
     def __str__(self) -> str:
         """Return a formatted string representation of the summary."""
@@ -99,9 +101,12 @@ def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    return str(
-        generate(
-            SUMMARY_PROMPT.format(text=text),
-            response_format=Summary,
-        )
+    summary = generate(
+        SUMMARY_PROMPT.format(text=text),
+        response_format=Summary,
     )
+
+    if summary.is_chinese:
+        return str(summary)
+
+    return translate(str(summary), "zh-TW")
