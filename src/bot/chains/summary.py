@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from pydantic import Field
 
 from ..utils import create_page
-from .translate import translate
 
 SUMMARY_PROMPT = """
 請以台灣繁體中文為以下內容生成：
@@ -27,9 +26,9 @@ SUMMARY_PROMPT = """
 
 
 class ThoughtStep(BaseModel):
-    context: str = Field(..., description="The specific context or condition considered in this step.")
-    reasoning: str = Field(..., description="An explanation of the reasoning process at this step.")
-    conclusion: str = Field(..., description="The intermediate conclusion reached at this step.")
+    context: str = Field(..., description="此步驟考慮的具體情境或條件。")
+    reasoning: str = Field(..., description="此步驟推理過程的解釋。")
+    conclusion: str = Field(..., description="此步驟得出的中間結論。")
 
     def __str__(self) -> str:
         """Return a formatted string representation of the thought step."""
@@ -43,8 +42,8 @@ class ThoughtStep(BaseModel):
 
 
 class ChainOfThought(BaseModel):
-    steps: list[ThoughtStep] = Field(..., description="A list of reasoning steps leading to the final conclusion.")
-    final_conclusion: str = Field(..., description="The final conclusion after all reasoning steps.")
+    steps: list[ThoughtStep] = Field(..., description="通往最終結論的一系列推理步驟。")
+    final_conclusion: str = Field(..., description="所有推理步驟後的最終結論。")
 
     def __str__(self) -> str:
         """Return a formatted string representation of the chain of thought."""
@@ -60,18 +59,13 @@ class ChainOfThought(BaseModel):
 
 
 class Summary(BaseModel):
-    """Represents a summary of the text, including key points, takeaways, and hashtags."""
-
-    chain_of_thought: ChainOfThought = Field(
-        ..., description="The chain of thought leading to the summary, key points, and takeaways."
-    )
-    summary: str = Field(..., description="A concise summary of the text.")
-    key_points: list[str] = Field(..., description="Key points extracted from the text.")
-    takeaways: list[str] = Field(..., description="Important takeaways from the text.")
-    hashtags: list[str] = Field(..., description="Relevant hashtags related to the text.")
+    chain_of_thought: ChainOfThought = Field(..., description="通往摘要、關鍵重點和重要啟示的推理過程。")
+    summary: str = Field(..., description="對文本的簡要總結。")
+    key_points: list[str] = Field(..., description="從文本中提取的關鍵重點。")
+    takeaways: list[str] = Field(..., description="從文本中獲得的重要啟示。")
+    hashtags: list[str] = Field(..., description="與文本相關的 Hashtags。")
 
     def __str__(self) -> str:
-        """Return a formatted string representation of the summary."""
         key_points = "\n".join([f"  • {point}" for point in self.key_points])
         takeaways = "\n".join([f"  💡 {takeaway}" for takeaway in self.takeaways])
         hashtags = " ".join(self.hashtags)
@@ -100,12 +94,13 @@ def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    return translate(
-        str(
-            generate(
-                SUMMARY_PROMPT.format(text=text),
-                response_format=Summary,
-            )
-        ),
-        "zh-TW",
-    ).strip('"')
+    # return translate(
+    #     str(
+    #         generate(
+    #             SUMMARY_PROMPT.format(text=text),
+    #             response_format=Summary,
+    #         )
+    #     ),
+    #     "zh-TW",
+    # ).strip('"')
+    return str(generate(SUMMARY_PROMPT.format(text=text), response_format=Summary))
