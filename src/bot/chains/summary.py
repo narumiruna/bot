@@ -69,7 +69,6 @@ class Summary(BaseModel):
     key_points: list[str] = Field(..., description="Key points extracted from the text.")
     takeaways: list[str] = Field(..., description="Important takeaways from the text.")
     hashtags: list[str] = Field(..., description="Relevant hashtags related to the text.")
-    is_chinese: bool = Field(..., description="Whether the summary text is in Traditional Chinese or not.")
 
     def __str__(self) -> str:
         """Return a formatted string representation of the summary."""
@@ -101,12 +100,12 @@ def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    summary = generate(
-        SUMMARY_PROMPT.format(text=text),
-        response_format=Summary,
+    return translate(
+        str(
+            generate(
+                SUMMARY_PROMPT.format(text=text),
+                response_format=Summary,
+            )
+        ),
+        "zh-TW",
     )
-
-    if summary.is_chinese:
-        return str(summary)
-
-    return translate(str(summary), "zh-TW")
