@@ -31,7 +31,6 @@ class ThoughtStep(BaseModel):
     conclusion: str = Field(..., description="此步驟得出的中間結論。")
 
     def __str__(self) -> str:
-        """Return a formatted string representation of the thought step."""
         return "\n\n".join(
             [
                 f"  • Context: {self.context}",
@@ -46,7 +45,6 @@ class ChainOfThought(BaseModel):
     final_conclusion: str = Field(..., description="所有推理步驟後的最終結論。")
 
     def __str__(self) -> str:
-        """Return a formatted string representation of the chain of thought."""
         steps = "\n\n".join([f"🔍 Step {i + 1}\n\n{step}" for i, step in enumerate(self.steps)])
         return "\n\n".join(
             [
