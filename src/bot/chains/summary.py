@@ -108,4 +108,4 @@ def summarize(text: str) -> str:
             )
         ),
         "zh-TW",
-    )
+    ).strip('"')
