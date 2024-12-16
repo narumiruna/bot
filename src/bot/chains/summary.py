@@ -58,12 +58,26 @@ class ChainOfThought(BaseModel):
 
 class Summary(BaseModel):
     chain_of_thought: ChainOfThought = Field(
-        ..., description="通往摘要、關鍵重點和重要啟示的推理過程，翻譯成台灣繁體中文。"
+        ...,
+        description=(
+            "通往摘要、關鍵重點和重要啟示的推理過程，翻譯成台灣繁體中文。"
+            "提供一系列推理步驟，說明如何得出摘要、關鍵重點和重要啟示。"
+        ),
     )
-    summary: str = Field(..., description="對文本的簡要總結，翻譯成台灣繁體中文。")
-    key_points: list[str] = Field(..., description="從文本中提取的關鍵重點，翻譯成台灣繁體中文。")
-    takeaways: list[str] = Field(..., description="從文本中獲得的重要啟示，翻譯成台灣繁體中文。")
-    hashtags: list[str] = Field(..., description="與文本相關的 Hashtags。")
+    summary: str = Field(
+        ...,
+        description="對文本的簡要總結，翻譯成台灣繁體中文。保留核心訊息，確保每條重點表達清晰且準確，避免加入任何虛構或未經證實的資訊。",
+    )
+    key_points: list[str] = Field(
+        ..., description="從文本中提取的關鍵重點，翻譯成台灣繁體中文。使用項目符號列出內容中的主要重點。"
+    )
+    takeaways: list[str] = Field(
+        ..., description="從文本中獲得的重要啟示，翻譯成台灣繁體中文。使用引言格式列出從內容中獲得的重要啟示。"
+    )
+    hashtags: list[str] = Field(
+        ...,
+        description="與文本相關的 Hashtags。",
+    )
 
     def __str__(self) -> str:
         key_points = "\n".join([f"  • {point}" for point in self.key_points])
@@ -74,7 +88,7 @@ class Summary(BaseModel):
         return "\n\n".join(
             [
                 "📝 Summary",
-                self.summary,
+                self.summary.strip(),
                 "🎯 Key Points",
                 key_points,
                 "💫 Takeaways",
@@ -94,13 +108,4 @@ def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    # return translate(
-    #     str(
-    #         generate(
-    #             SUMMARY_PROMPT.format(text=text),
-    #             response_format=Summary,
-    #         )
-    #     ),
-    #     "zh-TW",
-    # ).strip('"')
     return str(generate(SUMMARY_PROMPT.format(text=text), response_format=Summary))
