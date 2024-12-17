@@ -1,10 +1,8 @@
-from textwrap import dedent
-
 import charset_normalizer
 from markdownify import markdownify
 
 
-def convert_to_markdown(content: str | bytes) -> str:
+def html_to_markdown(content: str | bytes) -> str:
     """Convert HTML content to markdown format.
 
     Args:
@@ -16,4 +14,6 @@ def convert_to_markdown(content: str | bytes) -> str:
     if isinstance(content, bytes):
         content = str(charset_normalizer.from_bytes(content).best())
 
-    return dedent(markdownify(content, strip=["a", "img"]))
+    md = markdownify(content, strip=["a", "img"])
+    lines = [line.strip() for line in md.splitlines() if line.strip()]
+    return "\n".join(lines)

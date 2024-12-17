@@ -3,13 +3,12 @@ import subprocess
 import tempfile
 from functools import cache
 from pathlib import Path
-from textwrap import dedent
 
 import charset_normalizer
 from loguru import logger
-from markdownify import markdownify
 
 from .loader import Loader
+from .utils import html_to_markdown
 
 
 @cache
@@ -24,7 +23,7 @@ class SinglefileLoader(Loader):
     def load(self, url: str) -> str:
         filename = self.download(url)
         content = str(charset_normalizer.from_path(filename).best())
-        return dedent(markdownify(content, strip=["a", "img"]))
+        return html_to_markdown(content)
 
     def download(self, url: str) -> str:
         logger.info("Downloading HTML using SingleFile: {}", url)
