@@ -10,6 +10,7 @@ from .loader import LoaderError
 from .pdf import PDFLoader
 from .singlefile import SinglefileLoader
 from .youtube import YoutubeTranscriptLoader
+from .ytdlp import YtdlpLoader
 
 REPLACEMENTS = {
     "api.fxtwitter.com": [
@@ -37,6 +38,7 @@ class URLLoader(Loader):
     def __init__(self):
         self.loaders: list[Loader] = [
             YoutubeTranscriptLoader(),
+            YtdlpLoader(),
             PDFLoader(),
             CloudscraperLoader(),
             HttpxLoader(),
