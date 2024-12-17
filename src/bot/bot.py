@@ -37,7 +37,7 @@ def run_bot() -> None:
         [
             CommandHandler("help", callbacks.help, filters=chat_filter),
             CommandHandler("sum", callbacks.summarize, filters=chat_filter),
-            CommandHandler("sumv2", callbacks.summarize_v2, filters=chat_filter),
+            CommandHandler("s", callbacks.summarize_v2, filters=chat_filter),
             CommandHandler("jp", callbacks.create_translate_callback("Japanese"), filters=chat_filter),
             CommandHandler("tc", callbacks.create_translate_callback("Traditional Chinese"), filters=chat_filter),
             CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),

@@ -12,6 +12,7 @@ async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         "code: https://github.com/narumiruna/bot\n"
         "/help - Show this help message\n"
         "/sum - Summarize a document or URL content\n"
+        "/s - Summarize a document or URL content (v2)\n"
         "/jp - Translate text to Japanese\n"
         "/tc - Translate text to Traditional Chinese\n"
         "/en - Translate text to English\n"
