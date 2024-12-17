@@ -1,14 +1,12 @@
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
 
-from youtube_transcript_api import Transcript
-from youtube_transcript_api import TranscriptList
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from .loader import Loader
 from .loader import LoaderError
 
-DEFAULT_LANGUAGES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en"]
+DEFAULT_LANGUAGES = ["zh-TW", "zh-Hant", "zh", "zh-Hans", "ja", "en", "ko"]
 ALLOWED_SCHEMES = {
     "http",
     "https",
@@ -80,11 +78,9 @@ class YoutubeTranscriptLoader(Loader):
     def load(self, url: str) -> str:
         video_id = parse_video_id(url)
 
-        transcript_list: TranscriptList = YouTubeTranscriptApi.list_transcripts(video_id)
-
-        transcript: Transcript = transcript_list.find_transcript(self.languages)
-
-        transcript_pieces: list[dict[str, str | float]] = transcript.fetch()
+        transcript_pieces: list[dict[str, str | float]] = YouTubeTranscriptApi().get_transcript(
+            video_id, self.languages
+        )
 
         lines = []
         for transcript_piece in transcript_pieces:
