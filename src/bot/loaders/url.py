@@ -138,6 +138,7 @@ async def load_html_content(url: str) -> str:
     cloudscraper_domains = [
         "https://blog.tripplus.cc",
         "https://www.reddit.com",
+        "https://crossing.cw.com.tw",
         # "https://cloudflare.net",
     ]
     for domain in cloudscraper_domains:
