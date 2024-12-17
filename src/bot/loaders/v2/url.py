@@ -8,6 +8,7 @@ from .httpx import HttpxLoader
 from .loader import Loader
 from .loader import LoaderError
 from .pdf import PDFLoader
+from .reel import ReelLoader
 from .singlefile import SinglefileLoader
 from .youtube import YoutubeTranscriptLoader
 from .ytdlp import YtdlpLoader
@@ -38,6 +39,7 @@ class URLLoader(Loader):
     def __init__(self):
         self.loaders: list[Loader] = [
             YoutubeTranscriptLoader(),
+            ReelLoader(),
             YtdlpLoader(),
             PDFLoader(),
             CloudscraperLoader(),
