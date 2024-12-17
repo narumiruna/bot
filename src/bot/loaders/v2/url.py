@@ -4,6 +4,7 @@ from .cloudscraper import CloudscraperLoader
 from .httpx import HttpxLoader
 from .loader import Loader
 from .loader import LoaderError
+from .pdf import PDFLoader
 from .singlefile import SinglefileLoader
 from .youtube import YoutubeTranscriptLoader
 
@@ -12,6 +13,7 @@ class URLLoader:
     def __init__(self):
         self.loaders: list[Loader] = [
             YoutubeTranscriptLoader(),
+            PDFLoader(),
             CloudscraperLoader(),
             HttpxLoader(),
             SinglefileLoader(),
