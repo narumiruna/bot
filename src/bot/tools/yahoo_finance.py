@@ -8,6 +8,11 @@ except ImportError as e:
     logger.error("{}. Please install yfinance by running 'pip install yfinance'", e)
 
 
+class TickerError(Exception):
+    def __init__(self, symbol: str) -> None:
+        super().__init__(f"Failed to get ticker for {symbol}")
+
+
 def escape_markdown(text: str | None) -> str:
     """Escape special characters for Telegram MarkdownV2 format.
 
@@ -24,19 +29,24 @@ def escape_markdown(text: str | None) -> str:
     return re.sub(pattern, r"\\\1", text)
 
 
-def query_tickers(s: str | list[str]) -> str:
-    if isinstance(s, str):
-        s = [s]
-    s = [t.upper().strip() for t in s]
+def query_tickers(symbols: str | list[str]) -> str:
+    if isinstance(symbols, str):
+        symbols = [symbols]
+    symbols = [s.upper().strip() for s in symbols]
 
-    return "\n".join([ticker_repr(yf.Ticker(t)) for t in s])
+    results = []
+    for symbol in symbols:
+        try:
+            results += [ticker_repr(yf.Ticker(symbol))]
+        except TickerError as e:
+            logger.info("Failed to get ticker for {}, got error: {}", symbol, e)
+            continue
+
+    return "\n".join(results).strip()
 
 
 def ticker_repr(t: yf.Ticker) -> str:
     symbol = t.info.get("symbol")
-    if symbol is None:
-        return f"{t.ticker} not found."
-
     short_name = t.info.get("shortName")
     open_price = t.info.get("open")
     high_price = t.info.get("dayHigh")
@@ -48,6 +58,9 @@ def ticker_repr(t: yf.Ticker) -> str:
     ask_price = t.info.get("ask")
     bid_price = t.info.get("bid")
     volume = t.info.get("volume")
+
+    if open_price is None and high_price is None and low_price is None:
+        raise TickerError(symbol)
 
     mid_price = (ask_price + bid_price) / 2 if ask_price and bid_price else None
 
@@ -68,4 +81,4 @@ def ticker_repr(t: yf.Ticker) -> str:
         f"Volume: `{escape_markdown(f'{volume}')}`\n"
         f"52 Week Low: `{escape_markdown(f'{fifty_two_week_low}')}`\n"
         f"52 Week High: `{escape_markdown(f'{fifty_two_week_high}')}`\n"
-    )
+    ).strip()

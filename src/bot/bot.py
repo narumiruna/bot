@@ -43,6 +43,7 @@ def run_bot() -> None:
             CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),
             CommandHandler("polish", callbacks.polish, filters=chat_filter),
             CommandHandler("yf", callbacks.query_ticker, filters=chat_filter),
+            CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("twse", callbacks.query_twse_ticker, filters=chat_filter),
             CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
             CommandHandler("g", callbacks.search_google, filters=chat_filter),

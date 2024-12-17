@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import json
+
 from loguru import logger
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
+from twse.stock_info import query_stock_info
 
 from .. import tools
 
@@ -15,7 +18,27 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     if not context.args:
         return
 
-    text = tools.query_tickers(context.args)
-    logger.info("Tickers: {}", text)
+    # Query Yahoo Finance
+    yf_result = tools.query_tickers(context.args)
 
-    await update.message.reply_text(text, parse_mode=ParseMode.MARKDOWN_V2)
+    # Query TWSE
+    twse_results = []
+    for symbol in context.args:
+        try:
+            twse_results += [query_stock_info(symbol.strip()).pretty_repr()]
+        except json.JSONDecodeError as e:
+            logger.error("Failed to get ticker for {}, got error: {}", symbol, e)
+            continue
+
+    # Combine results
+    results = []
+    if yf_result:
+        results += [yf_result]
+
+    for twse_result in twse_results:
+        if twse_result:
+            results += [twse_result]
+
+    result = "\n".join(results).strip()
+
+    await update.message.reply_text(result, parse_mode=ParseMode.MARKDOWN_V2)
