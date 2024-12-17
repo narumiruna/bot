@@ -2,10 +2,14 @@ import tempfile
 from pathlib import Path
 
 import httpx
-from loguru import logger
 from pypdf import PdfReader
 
 from .loader import Loader
+
+DEFAULT_HEADERS = {
+    "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",  # noqa
+}
 
 
 class PDFLoader(Loader):
@@ -14,25 +18,22 @@ class PDFLoader(Loader):
 
 
 def load_pdf(url: str) -> str:
-    logger.info("Loading PDF: {}", url)
+    response = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
+    response.raise_for_status()
 
-    headers = {
-        "Accept-Language": "zh-TW,zh;q=0.9,ja;q=0.8,en-US;q=0.7,en;q=0.6",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",  # noqa
-        "Cookie": "over18=1",  # ptt
-    }
-
-    resp = httpx.get(url=url, headers=headers, follow_redirects=True)
-    resp.raise_for_status()
-
-    suffix = ".pdf" if resp.headers.get("content-type") == "application/pdf" else None
+    suffix = ".pdf" if response.headers.get("content-type") == "application/pdf" else None
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
-        fp.write(resp.content)
+        fp.write(response.content)
         return load_pdf_file(fp.name)
 
 
 def load_pdf_file(f: str | Path) -> str:
-    texts = []
+    lines = []
     with PdfReader(f) as reader:
-        texts = [page.extract_text(extraction_mode="plain") for page in reader.pages]
-    return "\n".join(texts)
+        for page in reader.pages:
+            text = page.extract_text(extraction_mode="plain")
+            for line in text.splitlines():
+                if not line.strip():
+                    continue
+                lines.append(line.strip())
+    return "\n".join(lines)
