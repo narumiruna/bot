@@ -71,7 +71,7 @@ def parse_video_id(url: str) -> str:
     return video_id
 
 
-class YoutubeTranscriptLoader(Loader):
+class YoutubeLoader(Loader):
     def __init__(self, languages: list[str] | None = None) -> None:
         self.languages = languages or DEFAULT_LANGUAGES
 

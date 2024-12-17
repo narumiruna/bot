@@ -10,7 +10,7 @@ from .loader import LoaderError
 from .pdf import PDFLoader
 from .reel import ReelLoader
 from .singlefile import SinglefileLoader
-from .youtube import YoutubeTranscriptLoader
+from .youtube import YoutubeLoader
 from .ytdlp import YtdlpLoader
 
 REPLACEMENTS = {
@@ -38,7 +38,7 @@ def replace_domain(url: str) -> str:
 class URLLoader(Loader):
     def __init__(self):
         self.loaders: list[Loader] = [
-            YoutubeTranscriptLoader(),
+            YoutubeLoader(),
             ReelLoader(),
             YtdlpLoader(),
             PDFLoader(),
