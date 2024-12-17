@@ -9,7 +9,7 @@ from .singlefile import SinglefileLoader
 from .youtube import YoutubeTranscriptLoader
 
 
-class URLLoader:
+class URLLoader(Loader):
     def __init__(self):
         self.loaders: list[Loader] = [
             YoutubeTranscriptLoader(),

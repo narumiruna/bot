@@ -13,21 +13,23 @@ DEFAULT_HEADERS = {
 
 
 class PDFLoader(Loader):
-    def load(self, url: str) -> str:
-        return load_pdf(url)
+    def load(self, url_or_file: str) -> str:
+        if url_or_file.startswith("http"):
+            url_or_file = download_pdf_from_url(url_or_file)
+        return read_pdf_content(url_or_file)
 
 
-def load_pdf(url: str) -> str:
+def download_pdf_from_url(url: str) -> str:
     response = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     response.raise_for_status()
 
     suffix = ".pdf" if response.headers.get("content-type") == "application/pdf" else None
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
         fp.write(response.content)
-        return load_pdf_file(fp.name)
+        return fp.name
 
 
-def load_pdf_file(f: str | Path) -> str:
+def read_pdf_content(f: str | Path) -> str:
     lines = []
     with PdfReader(f) as reader:
         for page in reader.pages:
