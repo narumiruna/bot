@@ -39,6 +39,6 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         if twse_result:
             results += [twse_result]
 
-    result = "\n".join(results).strip()
+    result = "\n\n".join(results).strip()
 
     await update.message.reply_text(result, parse_mode=ParseMode.MARKDOWN_V2)
