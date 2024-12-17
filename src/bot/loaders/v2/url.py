@@ -55,6 +55,6 @@ class URLLoader(Loader):
             try:
                 return loader.load(url)
             except Exception as e:
-                logger.error("Failed to load URL: {}", e)
+                logger.info("[{}] Failed to load URL: {}, got error: {}", loader.__class__.__name__, url, e)
 
         raise LoaderError(f"Failed to load URL: {url}")
