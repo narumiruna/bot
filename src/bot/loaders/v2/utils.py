@@ -2,6 +2,15 @@ import charset_normalizer
 from markdownify import markdownify
 
 
+def normalize_whitespace(text: str) -> str:
+    lines = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped:
+            lines += [stripped]
+    return "\n".join(lines)
+
+
 def html_to_markdown(content: str | bytes) -> str:
     """Convert HTML content to markdown format.
 
@@ -15,5 +24,4 @@ def html_to_markdown(content: str | bytes) -> str:
         content = str(charset_normalizer.from_bytes(content).best())
 
     md = markdownify(content, strip=["a", "img"])
-    lines = [line.strip() for line in md.splitlines() if line.strip()]
-    return "\n".join(lines)
+    return normalize_whitespace(md)
