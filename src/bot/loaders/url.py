@@ -3,10 +3,6 @@ from urllib.parse import urlunparse
 
 import httpx
 
-from .html import load_html_with_cloudscraper
-from .html import load_html_with_httpx
-from .html import load_html_with_singlefile
-
 
 def is_pdf_url(url: str) -> bool:
     headers = {
@@ -61,31 +57,3 @@ def replace_domain(url: str) -> str:
         return urlunparse(fixed_url)
 
     return url
-
-
-async def load_html_content(url: str) -> str:
-    httpx_domains = [
-        "https://www.ptt.cc/bbs",
-        "https://ncode.syosetu.com",
-        "https://pubmed.ncbi.nlm.nih.gov",
-        "https://www.bnext.com.tw",
-        "https://github.com",
-        "https://www.twreporter.org",
-        "https://telegra.ph",
-    ]
-    for domain in httpx_domains:
-        if url.startswith(domain):
-            return load_html_with_httpx(url)
-
-    cloudscraper_domains = [
-        "https://blog.tripplus.cc",
-        "https://www.reddit.com",
-        "https://crossing.cw.com.tw",
-        # "https://cloudflare.net",
-    ]
-    for domain in cloudscraper_domains:
-        if url.startswith(domain):
-            return load_html_with_cloudscraper(url)
-
-    text = await load_html_with_singlefile(url)
-    return text

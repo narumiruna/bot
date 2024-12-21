@@ -13,8 +13,6 @@ from pathlib import Path
 from textwrap import dedent
 
 import charset_normalizer
-import cloudscraper
-import httpx
 from loguru import logger
 from markdownify import markdownify
 
@@ -97,62 +95,6 @@ async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -
     await process.communicate()
 
     return filename
-
-
-async def load_html_with_singlefile(url: str) -> str:
-    """Load HTML content using SingleFile and convert to markdown.
-
-    Args:
-        url: The URL to load
-
-    Returns:
-        Markdown-formatted content
-    """
-    html_file = await save_html_with_singlefile(url)
-    return load_html_file(html_file)
-
-
-def load_html_with_httpx(url: str) -> str:
-    """Load HTML content using httpx and convert to markdown.
-
-    Args:
-        url: The URL to load
-
-    Returns:
-        Markdown-formatted content
-
-    Raises:
-        httpx.HTTPError: If request fails
-    """
-    logger.info("Loading HTML with httpx: {}", url)
-
-    resp = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
-    resp.raise_for_status()
-
-    return convert_to_markdown(resp.content)
-
-
-def load_html_with_cloudscraper(url: str) -> str:
-    """Load HTML content using cloudscraper and convert to markdown.
-
-    Useful for sites with anti-bot protection.
-
-    Args:
-        url: The URL to load
-
-    Returns:
-        Markdown-formatted content
-
-    Raises:
-        requests.exceptions.RequestException: If request fails
-    """
-    logger.info("Loading HTML with cloudscraper: {}", url)
-
-    scraper = cloudscraper.create_scraper()
-    resp = scraper.get(url)
-    resp.raise_for_status()
-
-    return convert_to_markdown(resp.content)
 
 
 def load_html_file(filepath: str | Path) -> str:
