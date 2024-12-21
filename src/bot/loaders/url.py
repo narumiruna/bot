@@ -2,12 +2,10 @@ from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
 import httpx
-from loguru import logger
 
 from .html import load_html_with_cloudscraper
 from .html import load_html_with_httpx
 from .html import load_html_with_singlefile
-from .pdf import load_pdf
 
 
 def is_pdf_url(url: str) -> bool:
@@ -63,15 +61,6 @@ def replace_domain(url: str) -> str:
         return urlunparse(fixed_url)
 
     return url
-
-
-async def load_pdf_content(url: str) -> str | None:
-    try:
-        if is_pdf_url(url):
-            return load_pdf(url)
-    except httpx.HTTPStatusError as e:
-        logger.error("Unable to load PDF: {} ({})", url, e)
-    return None
 
 
 async def load_html_content(url: str) -> str:
