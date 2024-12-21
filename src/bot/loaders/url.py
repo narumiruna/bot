@@ -2,14 +2,6 @@ from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
 
-def is_youtube_url(url: str) -> bool:
-    return (
-        url.startswith("https://www.youtube.com")
-        or url.startswith("https://youtu.be")
-        or url.startswith("https://m.youtube.com")
-    )
-
-
 def is_instagram_reel_url(url: str) -> bool:
     return url.startswith("https://www.instagram.com/reel/")
 
