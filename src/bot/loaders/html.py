@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 from textwrap import dedent
 
@@ -14,19 +13,6 @@ DEFAULT_HEADERS = {
 
 # Default path for SingleFile executable
 DEFAULT_SINGLEFILE_PATH = "single-file"
-
-
-def strip_base64_images(markdown_text: str) -> str:
-    """Remove base64-encoded images from markdown text.
-
-    Args:
-        markdown_text: The markdown text containing base64 images
-
-    Returns:
-        The markdown text with base64 images removed
-    """
-    pattern = r"!\[.*?\]\(data:image\/.*?;base64,.*?\)"
-    return re.sub(pattern, "", markdown_text)
 
 
 def load_html_file(filepath: str | Path) -> str:
