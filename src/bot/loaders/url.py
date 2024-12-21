@@ -67,24 +67,6 @@ def replace_domain(url: str) -> str:
     return url
 
 
-async def load_url(url: str) -> str:
-    res = []
-
-    transcript = await load_transcript(url)
-    if transcript:
-        res += [transcript]
-
-    pdf_content = await load_pdf_content(url)
-    if pdf_content:
-        return pdf_content
-
-    url = replace_domain(url)
-    html_content = await load_html_content(url)
-    res += [html_content]
-
-    return "\n\n".join(res)
-
-
 async def load_transcript(url: str) -> str | None:
     if is_x_url(url):
         transcript = await load_video_transcript(url)
