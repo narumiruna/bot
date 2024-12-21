@@ -1,19 +1,8 @@
-"""HTML content loading and conversion utilities.
-
-This module provides functions for loading HTML content from various sources
-and converting it to markdown format. It supports loading from URLs using different
-methods (SingleFile, httpx, cloudscraper) and from local files.
-"""
-
-import asyncio
-import os
 import re
-import tempfile
 from pathlib import Path
 from textwrap import dedent
 
 import charset_normalizer
-from loguru import logger
 from markdownify import markdownify
 
 # Default headers for HTTP requests
@@ -38,48 +27,6 @@ def strip_base64_images(markdown_text: str) -> str:
     """
     pattern = r"!\[.*?\]\(data:image\/.*?;base64,.*?\)"
     return re.sub(pattern, "", markdown_text)
-
-
-async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -> str:
-    """Download and save HTML content using SingleFile.
-
-    Args:
-        url: The URL to download
-        cookies_file: Optional path to cookies file for authentication
-
-    Returns:
-        Path to saved HTML file
-
-    Raises:
-        FileNotFoundError: If cookies file doesn't exist
-    """
-    logger.info("Downloading HTML using SingleFile: {}", url)
-
-    filename = tempfile.mktemp(suffix=".html")
-    singlefile_path = os.getenv("SINGLEFILE_PATH", DEFAULT_SINGLEFILE_PATH)
-
-    cmds = [singlefile_path]
-
-    if cookies_file is not None:
-        cookies_path = Path(cookies_file)
-        if not cookies_path.exists():
-            raise FileNotFoundError(f"Cookies file not found: {cookies_file}")
-
-        cmds.extend(["--browser-cookies-file", str(cookies_path)])
-
-    cmds.extend(
-        [
-            "--filename-conflict-action",
-            "overwrite",
-            url,
-            filename,
-        ]
-    )
-
-    process = await asyncio.create_subprocess_exec(*cmds)
-    await process.communicate()
-
-    return filename
 
 
 def load_html_file(filepath: str | Path) -> str:
