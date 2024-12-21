@@ -2,14 +2,6 @@ from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
 import httpx
-from loguru import logger
-
-from .html import load_html_with_cloudscraper
-from .html import load_html_with_httpx
-from .html import load_html_with_singlefile
-from .pdf import load_pdf
-from .video_transcript import load_video_transcript
-from .youtube_transcript import load_youtube_transcript
 
 
 def is_pdf_url(url: str) -> bool:
@@ -65,85 +57,3 @@ def replace_domain(url: str) -> str:
         return urlunparse(fixed_url)
 
     return url
-
-
-async def load_url(url: str) -> str:
-    res = []
-
-    transcript = await load_transcript(url)
-    if transcript:
-        res += [transcript]
-
-    pdf_content = await load_pdf_content(url)
-    if pdf_content:
-        return pdf_content
-
-    url = replace_domain(url)
-    html_content = await load_html_content(url)
-    res += [html_content]
-
-    return "\n\n".join(res)
-
-
-async def load_transcript(url: str) -> str | None:
-    if is_x_url(url):
-        transcript = await load_video_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("No transcript found for X: {}", url)
-
-    if is_instagram_reel_url(url):
-        transcript = await load_video_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("No transcript found for Instagram reel: {}", url)
-
-    if is_youtube_url(url):
-        transcript = load_youtube_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("No transcript found for YouTube video: {}", url)
-
-        transcript = await load_video_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("Unable to load video transcript for YouTube video: {}", url)
-
-    return None
-
-
-async def load_pdf_content(url: str) -> str | None:
-    try:
-        if is_pdf_url(url):
-            return load_pdf(url)
-    except httpx.HTTPStatusError as e:
-        logger.error("Unable to load PDF: {} ({})", url, e)
-    return None
-
-
-async def load_html_content(url: str) -> str:
-    httpx_domains = [
-        "https://www.ptt.cc/bbs",
-        "https://ncode.syosetu.com",
-        "https://pubmed.ncbi.nlm.nih.gov",
-        "https://www.bnext.com.tw",
-        "https://github.com",
-        "https://www.twreporter.org",
-        "https://telegra.ph",
-    ]
-    for domain in httpx_domains:
-        if url.startswith(domain):
-            return load_html_with_httpx(url)
-
-    cloudscraper_domains = [
-        "https://blog.tripplus.cc",
-        "https://www.reddit.com",
-        "https://crossing.cw.com.tw",
-        # "https://cloudflare.net",
-    ]
-    for domain in cloudscraper_domains:
-        if url.startswith(domain):
-            return load_html_with_cloudscraper(url)
-
-    text = await load_html_with_singlefile(url)
-    return text
