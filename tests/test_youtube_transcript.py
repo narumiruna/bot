@@ -1,4 +1,4 @@
-from bot.loaders.youtube_transcript import parse_video_id
+from bot.loaders.v2.youtube import parse_video_id
 
 
 def test_parse_video_id_valid():
