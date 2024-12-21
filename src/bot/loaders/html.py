@@ -40,21 +40,6 @@ def strip_base64_images(markdown_text: str) -> str:
     return re.sub(pattern, "", markdown_text)
 
 
-def convert_to_markdown(content: str | bytes) -> str:
-    """Convert HTML content to markdown format.
-
-    Args:
-        content: HTML content as string or bytes
-
-    Returns:
-        Converted markdown text with normalized whitespace
-    """
-    if isinstance(content, bytes):
-        content = str(charset_normalizer.from_bytes(content).best())
-
-    return dedent(markdownify(content, strip=["a", "img"]))
-
-
 async def save_html_with_singlefile(url: str, cookies_file: str | None = None) -> str:
     """Download and save HTML content using SingleFile.
 
