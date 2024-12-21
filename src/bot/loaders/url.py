@@ -8,8 +8,6 @@ from .html import load_html_with_cloudscraper
 from .html import load_html_with_httpx
 from .html import load_html_with_singlefile
 from .pdf import load_pdf
-from .video_transcript import load_video_transcript
-from .youtube_transcript import load_youtube_transcript
 
 
 def is_pdf_url(url: str) -> bool:
@@ -65,33 +63,6 @@ def replace_domain(url: str) -> str:
         return urlunparse(fixed_url)
 
     return url
-
-
-async def load_transcript(url: str) -> str | None:
-    if is_x_url(url):
-        transcript = await load_video_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("No transcript found for X: {}", url)
-
-    if is_instagram_reel_url(url):
-        transcript = await load_video_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("No transcript found for Instagram reel: {}", url)
-
-    if is_youtube_url(url):
-        transcript = load_youtube_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("No transcript found for YouTube video: {}", url)
-
-        transcript = await load_video_transcript(url)
-        if transcript:
-            return transcript
-        logger.info("Unable to load video transcript for YouTube video: {}", url)
-
-    return None
 
 
 async def load_pdf_content(url: str) -> str | None:
