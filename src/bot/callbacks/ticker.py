@@ -41,4 +41,7 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     result = "\n\n".join(results).strip()
 
+    if not result:
+        return
+
     await update.message.reply_text(result, parse_mode=ParseMode.MARKDOWN_V2)
