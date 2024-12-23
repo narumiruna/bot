@@ -21,6 +21,9 @@ async def summarize_v2(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     logger.info("message_text: {}", message_text)
 
     url = parse_url(message_text)
+    if not url:
+        await update.message.reply_text(f"Please provide a valid URL, got: {message_text}")
+        return
     logger.info("Parsed URL: {}", url)
 
     try:
