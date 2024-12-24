@@ -6,7 +6,7 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import chains
-from ..loaders.v2 import URLLoader
+from ..loaders import URLLoader
 from ..utils import parse_url
 from .utils import get_message_text
 

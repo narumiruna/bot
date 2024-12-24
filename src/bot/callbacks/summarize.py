@@ -7,8 +7,8 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import chains
-from ..loaders.v2.pdf import read_pdf_content
-from ..loaders.v2.utils import read_html_content
+from ..loaders.pdf import read_pdf_content
+from ..loaders.utils import read_html_content
 from .utils import get_message_text
 
 

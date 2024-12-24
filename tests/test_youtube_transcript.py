@@ -1,9 +1,9 @@
 import pytest
 
-from bot.loaders.v2.youtube import UnsupportedURLNetlocError
-from bot.loaders.v2.youtube import UnsupportedURLSchemeError
-from bot.loaders.v2.youtube import VideoIDError
-from bot.loaders.v2.youtube import parse_video_id
+from bot.loaders.youtube import UnsupportedURLNetlocError
+from bot.loaders.youtube import UnsupportedURLSchemeError
+from bot.loaders.youtube import VideoIDError
+from bot.loaders.youtube import parse_video_id
 
 
 def test_parse_video_id_valid():
