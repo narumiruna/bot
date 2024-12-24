@@ -1,1 +1,1 @@
-from .v2 import URLLoader
+from .url import URLLoader
