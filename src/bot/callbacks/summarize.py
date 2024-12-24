@@ -8,7 +8,7 @@ from telegram.ext import ContextTypes
 
 from .. import chains
 from ..loaders import load_html_file
-from ..loaders import load_pdf_file
+from ..loaders.v2.pdf import read_pdf_content
 from .utils import get_message_text
 
 
@@ -25,7 +25,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     text = None
     if file_path.suffix == ".pdf":
-        text = load_pdf_file(file_path)
+        text = read_pdf_content(file_path)
     elif file_path.suffix == ".html":
         text = load_html_file(file_path)
 
