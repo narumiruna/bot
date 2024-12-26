@@ -27,6 +27,7 @@ dependencies = [
     "mortgage>=1.0.5",
     "markdown2>=2.5.1",
     "twse>=0.2.0",
+    "playwright>=1.49.1",
 ]
 
 [project.scripts]
