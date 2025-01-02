@@ -1,3 +1,7 @@
+import json
+import os
+from functools import cache
+
 import httpx
 
 from .loader import Loader
@@ -10,8 +14,28 @@ DEFAULT_HEADERS = {
 }
 
 
+@cache
+def get_cookies() -> httpx.Cookies:
+    cookies = httpx.Cookies()
+
+    raw = os.getenv("HTTPX_COOKIES")
+    if not raw:
+        return cookies
+
+    items: list[dict[str, str]] = json.loads(raw)
+    for item in items:
+        cookies.set(
+            name=item.get("name", ""),
+            value=item.get("value", ""),
+            domain=item.get("domain", ""),
+            path=item.get("path", "/"),
+        )
+
+    return cookies
+
+
 class HttpxLoader(Loader):
     def load(self, url: str) -> str:
-        response = httpx.get(url, headers=DEFAULT_HEADERS, follow_redirects=True)
+        response = httpx.get(url, headers=DEFAULT_HEADERS, follow_redirects=True, cookies=get_cookies())
         response.raise_for_status()
         return html_to_markdown(response.content)

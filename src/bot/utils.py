@@ -1,5 +1,8 @@
 import functools
+import json
 import re
+from pathlib import Path
+from typing import Any
 
 import telegraph
 
@@ -7,6 +10,11 @@ import telegraph
 def save_text(text: str, f: str) -> None:
     with open(f, "w") as fp:
         fp.write(text)
+
+
+def load_json(f: str) -> Any:
+    with Path(f).open(encoding="utf-8") as fp:
+        return json.load(fp)
 
 
 def parse_url(s: str) -> str:
