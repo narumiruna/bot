@@ -13,7 +13,6 @@ from .reply import handle_user_reply
 from .search_youtube import search_youtube
 from .summarize import summarize
 from .summarize import summarize_document
-from .summarize_v2 import summarize_v2
 from .ticker import query_ticker
 from .translate import create_translate_callback
 from .trip import trip

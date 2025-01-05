@@ -36,7 +36,7 @@ def run_bot() -> None:
     app.add_handlers(
         [
             CommandHandler("help", callbacks.help, filters=chat_filter),
-            CommandHandler("s", callbacks.summarize_v2, filters=chat_filter),
+            CommandHandler("s", callbacks.summarize, filters=chat_filter),
             CommandHandler("jp", callbacks.create_translate_callback("Japanese"), filters=chat_filter),
             CommandHandler("tc", callbacks.create_translate_callback("Traditional Chinese"), filters=chat_filter),
             CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),
