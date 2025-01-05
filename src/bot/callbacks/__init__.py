@@ -6,7 +6,7 @@ from .google_search import search_google
 from .gpt import gpt
 from .help import help
 from .learn_japanese import learn_japanese
-from .log import log
+from .log import log_message_update
 from .polish import polish
 from .recipe import generate_recipe
 from .reply import handle_user_reply
