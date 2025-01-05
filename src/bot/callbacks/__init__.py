@@ -11,8 +11,8 @@ from .polish import polish
 from .recipe import generate_recipe
 from .reply import handle_user_reply
 from .search_youtube import search_youtube
-from .summarize import summarize
-from .summarize import summarize_document
+from .summary import summarize
+from .summary import summarize_document
 from .ticker import query_ticker
 from .translate import create_translate_callback
 from .trip import trip
