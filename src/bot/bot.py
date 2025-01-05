@@ -44,7 +44,7 @@ def run_bot() -> None:
             CommandHandler("yf", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("twse", callbacks.query_twse_ticker, filters=chat_filter),
-            CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
+            CommandHandler("yt", callbacks.youtube_search, filters=chat_filter),
             CommandHandler("g", callbacks.search_google, filters=chat_filter),
             CommandHandler("recipe", callbacks.generate_recipe, filters=chat_filter),
             CommandHandler("trip", callbacks.trip, filters=chat_filter),
