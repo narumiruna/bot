@@ -50,7 +50,7 @@ class AwardSearch(BaseTool):
         return resp
 
 
-async def trip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_trip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 

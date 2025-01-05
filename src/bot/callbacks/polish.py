@@ -8,7 +8,7 @@ from .. import chains
 from .utils import get_message_text
 
 
-async def polish(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_polish(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 

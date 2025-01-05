@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 
-async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 

@@ -110,7 +110,7 @@ SYSTEM_PROMPT = """
 """.strip()  # noqa
 
 
-async def fate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_fate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
