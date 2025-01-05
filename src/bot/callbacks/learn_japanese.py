@@ -9,7 +9,7 @@ from ..utils import parse_url
 from .utils import get_message_text
 
 
-async def learn_japanese(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_learn_japanese(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 

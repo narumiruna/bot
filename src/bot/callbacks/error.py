@@ -13,7 +13,7 @@ from telegram.ext import ContextTypes
 from ..utils import create_page
 
 
-async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.error("Exception while handling an update: {}", context.error)
 
     update_str = update.to_dict() if isinstance(update, Update) else str(update)
@@ -43,4 +43,4 @@ def add_error_handler(app: Application) -> None:
         logger.warning("No developer chat ID specified, error messages will not be sent to a developer")
         return
 
-    app.add_error_handler(error_callback)
+    app.add_error_handler(handle_error)

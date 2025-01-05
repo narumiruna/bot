@@ -5,5 +5,5 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 
-async def log(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def log_message_update(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Message Update: {}", update)

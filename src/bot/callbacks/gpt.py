@@ -14,7 +14,7 @@ SYSTEM_PROMPT = """
 """.strip()
 
 
-async def gpt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_gpt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
