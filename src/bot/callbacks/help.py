@@ -23,6 +23,7 @@ async def handle_help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         "/ljp - Learn Japanese\n"
         "/t - Query ticker from Yahoo Finance and Taiwan stock exchange\n"
         "/trip - Get travel recommendations\n"
+        "/f - Format and normalize the document in 台灣話\n"
     )
 
     await update.message.reply_text(help_text, disable_web_page_preview=True)
