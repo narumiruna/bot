@@ -49,6 +49,7 @@ def run_bot() -> None:
             CommandHandler("ljp", callbacks.handle_learn_japanese, filters=chat_filter),
             CommandHandler("fate", callbacks.handle_fate, filters=chat_filter),
             CommandHandler("gpt", callbacks.handle_gpt, filters=chat_filter),
+            CommandHandler("f", callbacks.handle_format, filters=chat_filter),
             CommandHandler("echo", callbacks.handle_echo),
             MessageHandler(filters=chat_filter & filters.REPLY, callback=callbacks.handle_user_reply),
             MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),

@@ -27,7 +27,7 @@ def create_translate_callback(lang: str) -> Callable:
 
         url = parse_url(message_text)
         if url:
-            message_text += "\n" + URLLoader().load(url)
+            message_text = URLLoader().load(url)
 
         if context.args and context.args[0] == "explain":
             reply_text = chains.translate_and_explain(message_text, lang=lang)
