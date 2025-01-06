@@ -27,9 +27,11 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if url:
         message_text = URLLoader().load(url)
 
-    text = chains.format(message_text)
-    logger.info("Formatted text: {}", text)
+    resp = chains.format(message_text)
+    logger.info("Formatted text: {}", resp)
 
-    if len(text) > MAX_LENGTH:
-        text = create_page(title="Translation", html_content=text.replace("\n", "<br>"))
+    if len(resp.content) > MAX_LENGTH:
+        text = create_page(title=resp.title, html_content=resp.content.replace("\n", "<br>"))
+    else:
+        text = resp.content
     await update.message.reply_text(text)
