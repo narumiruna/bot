@@ -81,7 +81,7 @@ class Summary(BaseModel):
             [
                 "📝 <b>摘要</b>",
                 self.summary_text.strip(),
-                "🎯 <b>見解</b>",
+                "💡 <b>見解</b>",
                 insights,
                 f"🏷️ <b>Hashtags</b>: {hashtags}",
                 f"🔗 <a href='{url}'>推理過程</a>",
