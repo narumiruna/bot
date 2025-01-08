@@ -8,17 +8,16 @@ from ..utils import create_page
 SUMMARY_PROMPT = """
 請以台灣繁體中文為以下內容生成：
 
-- **Chain of Thought**：提供一系列推理步驟，說明如何得出摘要、關鍵重點和重要啟示。
-- **摘要**：對內容進行簡要總結。
-- **關鍵重點**：使用項目符號列出內容中的主要重點。
-- **重要啟示**：使用引言格式列出從內容中獲得的重要啟示。
+- **推理過程**：提供一系列推理步驟，說明如何得出摘要、見解。
+- **摘要**：對內容進行總結。
+- **見解**：使用項目符號列出內容中的主要重點和重要啟示。
 - **Hashtags**：提供至少三個與主題相關的英文 Hashtags，以空格分隔（例如 #Sustainability #Innovation）。
 
 # 步驟
 1. 保留核心訊息，確保每條重點表達清晰且準確，避免加入任何虛構或未經證實的資訊。適度保留細節，避免過度簡潔。
 2. 若發現相似或重複的資訊，將其合併為一條重點，以保持內容連貫且流暢。
 3. 使用符合台灣用語習慣的表達方式，排除不必要的細節，提高可讀性。
-4. 翻譯摘要、關鍵重點和重要啟示成**繁體中文**，並確保用詞皆為台灣習慣。
+4. 翻譯摘要、見解成**繁體中文**，並確保用詞皆為台灣習慣。
 
 輸入：
 {text}
@@ -26,31 +25,31 @@ SUMMARY_PROMPT = """
 
 
 class ThoughtStep(BaseModel):
-    context: str = Field(..., description="此步驟考慮的具體情境或條件。")
-    reasoning: str = Field(..., description="此步驟推理過程的解釋。")
-    conclusion: str = Field(..., description="此步驟得出的中間結論。")
+    context: str = Field(..., description="此步驟考慮的具體情境或條件")
+    reasoning: str = Field(..., description="此步驟推理過程的解釋")
+    conclusion: str = Field(..., description="此步驟得出的中間結論")
 
     def __str__(self) -> str:
         return "\n\n".join(
             [
-                f"  • Context: {self.context}",
-                f"  • Reasoning: {self.reasoning}",
-                f"  • Conclusion: {self.conclusion}",
+                f"  • <b>情境</b>: {self.context}",
+                f"  • <b>推理</b>: {self.reasoning}",
+                f"  • <b>結論</b>: {self.conclusion}",
             ]
         )
 
 
 class ChainOfThought(BaseModel):
-    steps: list[ThoughtStep] = Field(..., description="通往最終結論的一系列推理步驟。")
-    final_conclusion: str = Field(..., description="所有推理步驟後的最終結論。")
+    steps: list[ThoughtStep] = Field(..., description="通往最終結論的一系列推理步驟")
+    final_conclusion: str = Field(..., description="所有推理步驟後的最終結論")
 
     def __str__(self) -> str:
-        steps = "\n\n".join([f"🔍 Step {i + 1}\n\n{step}" for i, step in enumerate(self.steps)])
+        steps = "\n\n".join([f"🔍 <b>步驟 {i + 1}</b>\n\n{step}" for i, step in enumerate(self.steps)])
         return "\n\n".join(
             [
-                "🧠 Chain of Thought",
+                "🧠 <b>推理過程</b>",
                 steps,
-                "🎯 Final Conclusion",
+                "🎯 <b>最終結論</b>",
                 self.final_conclusion,
             ]
         )
@@ -59,42 +58,33 @@ class ChainOfThought(BaseModel):
 class Summary(BaseModel):
     chain_of_thought: ChainOfThought = Field(
         ...,
-        description=(
-            "通往摘要、關鍵重點和重要啟示的推理過程，翻譯成台灣繁體中文。"
-            "提供一系列推理步驟，說明如何得出摘要、關鍵重點和重要啟示。"
-        ),
+        description=("通往摘要、見解的推理過程，翻譯成台灣繁體中文。" "提供一系列推理步驟，說明如何得出摘要、見解。"),
     )
-    summary: str = Field(
+    summary_text: str = Field(
         ...,
-        description="對文本的簡要總結，翻譯成台灣繁體中文。保留核心訊息，確保每條重點表達清晰且準確，避免加入任何虛構或未經證實的資訊。",
+        description="對文本的總結，翻譯成台灣繁體中文。保留核心訊息，確保每條重點表達清晰且準確，避免加入任何虛構或未經證實的資訊。",
     )
-    key_points: list[str] = Field(
-        ..., description="從文本中提取的關鍵重點，翻譯成台灣繁體中文。使用項目符號列出內容中的主要重點。"
-    )
-    takeaways: list[str] = Field(
-        ..., description="從文本中獲得的重要啟示，翻譯成台灣繁體中文。使用引言格式列出從內容中獲得的重要啟示。"
+    insights: list[str] = Field(
+        ..., description="從文本中提取的見解，翻譯成台灣繁體中文。使用項目符號列出內容中的主要重點和重要啟示。"
     )
     hashtags: list[str] = Field(
         ...,
-        description="與文本相關的 Hashtags。",
+        description="與文本相關的 Hashtags",
     )
 
     def __str__(self) -> str:
-        key_points = "\n".join([f"  • {point}" for point in self.key_points])
-        takeaways = "\n".join([f"  💡 {takeaway}" for takeaway in self.takeaways])
+        insights = "\n".join([f"  • {insight}" for insight in self.insights])
         hashtags = " ".join(self.hashtags)
 
-        url = create_page(title="Chain of Thought", html_content=markdown2.markdown(str(self.chain_of_thought)))
+        url = create_page(title="推理過程", html_content=markdown2.markdown(str(self.chain_of_thought)))
         return "\n\n".join(
             [
-                "📝 Summary",
-                self.summary.strip(),
-                "🎯 Key Points",
-                key_points,
-                "💫 Takeaways",
-                takeaways,
-                f"🏷️ Hashtags: {hashtags}",
-                f"🔗 <a href='{url}'>Chain of Thought</a>",
+                "📝 <b>摘要</b>",
+                self.summary_text.strip(),
+                "🎯 <b>見解</b>",
+                insights,
+                f"🏷️ <b>Hashtags</b>: {hashtags}",
+                f"🔗 <a href='{url}'>推理過程</a>",
             ]
         )
 
