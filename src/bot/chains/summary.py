@@ -73,7 +73,7 @@ class Summary(BaseModel):
     )
 
     def __str__(self) -> str:
-        insights = "\n".join([f"  • {insight}" for insight in self.insights])
+        insights = "\n".join([f"  • {insight.strip()}" for insight in self.insights])
         hashtags = " ".join(self.hashtags)
 
         url = create_page(title="推理過程", html_content=markdown2.markdown(str(self.chain_of_thought)))
