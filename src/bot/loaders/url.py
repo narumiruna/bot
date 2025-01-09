@@ -36,7 +36,7 @@ def replace_domain(url: str) -> str:
 
 
 class URLLoader(Loader):
-    def __init__(self):
+    def __init__(self) -> None:
         self.loaders: list[Loader] = [
             YoutubeLoader(),
             ReelLoader(),
@@ -46,9 +46,6 @@ class URLLoader(Loader):
             HttpxLoader(),
             SinglefileLoader(),
         ]
-
-    def add_loader(self, loader: Loader) -> None:
-        self.loaders.append(loader)
 
     def load(self, url: str) -> str:
         url = replace_domain(url)
