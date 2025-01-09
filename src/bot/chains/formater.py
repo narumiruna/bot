@@ -13,7 +13,7 @@ class FormatResponse(BaseModel):
 def format(text: str, lang: str = "台灣話") -> FormatResponse:
     response = generate(
         f'"""{text}"""',
-        system=f"Provide a well-structured and properly normalized version of the text in HTML format with {lang}.",
+        system=f"Provide a well-structured and properly normalized version of the text in DOM format with {lang}.",
         response_format=FormatResponse,
     )
     return cast(FormatResponse, response)
