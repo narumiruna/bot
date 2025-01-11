@@ -37,6 +37,7 @@ def download_audio(url: str) -> str:
         ],
         "outtmpl": filename,
         "ffmpeg_location": ffmpeg_path,
+        "match_filter": yt_dlp.match_filter_func(["!is_live"]),
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
