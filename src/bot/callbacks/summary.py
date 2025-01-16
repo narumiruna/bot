@@ -8,7 +8,7 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import chains
-from ..loaders import URLLoader
+from ..loaders import PipelineLoader
 from ..loaders.pdf import read_pdf_content
 from ..loaders.utils import read_html_content
 from ..utils import parse_url
@@ -31,7 +31,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Parsed URL: {}", url)
 
     try:
-        text = URLLoader().load(url)
+        text = PipelineLoader().load(url)
     except Exception as e:
         logger.error("Failed to load URL: {}", e)
         await update.message.reply_text(f"Unable to load content from: {url}")

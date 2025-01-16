@@ -8,7 +8,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from .. import chains
-from ..loaders import URLLoader
+from ..loaders import PipelineLoader
 from ..utils import create_page
 from ..utils import parse_url
 from .utils import get_message_text
@@ -27,7 +27,7 @@ def create_translate_callback(lang: str) -> Callable:
 
         url = parse_url(message_text)
         if url:
-            message_text = URLLoader().load(url)
+            message_text = PipelineLoader().load(url)
 
         if context.args and context.args[0] == "explain":
             reply_text = chains.translate_and_explain(message_text, lang=lang)
