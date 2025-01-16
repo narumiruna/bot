@@ -54,7 +54,12 @@ class URLLoader(Loader):
 
         for loader in self.loaders:
             try:
-                return loader.load(url)
+                result = loader.load(url)
+                if result:
+                    logger.info("[{}] Successfully loaded URL: {}", loader.__class__.__name__, url)
+                    return result
+                else:
+                    logger.info("[{}] Failed to load URL: {}, got empty result", loader.__class__.__name__, url)
             except Exception as e:
                 logger.info("[{}] Failed to load URL: {}, got error: {}", loader.__class__.__name__, url, e)
 
