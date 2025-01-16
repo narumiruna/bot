@@ -25,7 +25,11 @@ def download_pdf_from_url(url: str) -> str:
     response = httpx.get(url=url, headers=DEFAULT_HEADERS, follow_redirects=True)
     response.raise_for_status()
 
-    suffix = ".pdf" if response.headers.get("content-type") == "application/pdf" else None
+    is_pdf = response.headers.get("content-type") == "application/pdf"
+    if not is_pdf:
+        raise ValueError(f"URL is not a PDF: {url}")
+
+    suffix = ".pdf" if is_pdf else None
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as fp:
         fp.write(response.content)
         return fp.name
