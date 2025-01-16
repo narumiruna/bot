@@ -5,6 +5,7 @@ from functools import cache
 from pathlib import Path
 
 import charset_normalizer
+import timeout_decorator
 from loguru import logger
 
 from .loader import Loader
@@ -21,6 +22,7 @@ class SinglefileLoader(Loader):
         self.cookies_file = cookies_file
         self.browser_headless = browser_headless
 
+    @timeout_decorator.timeout(20)
     def load(self, url: str) -> str:
         filename = self.download(url)
         content = str(charset_normalizer.from_path(filename).best())

@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
+import timeout_decorator
 from loguru import logger
 
 from .cloudscraper import CloudscraperLoader
@@ -47,6 +48,7 @@ class URLLoader(Loader):
             SinglefileLoader(),
         ]
 
+    @timeout_decorator.timeout(30)
     def load(self, url: str) -> str:
         url = replace_domain(url)
 

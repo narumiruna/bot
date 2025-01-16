@@ -1,5 +1,6 @@
 from typing import Literal
 
+import timeout_decorator
 from loguru import logger
 from playwright.sync_api import TimeoutError
 from playwright.sync_api import sync_playwright
@@ -19,6 +20,7 @@ class PlaywrightLoader(Loader):
         self.wait_until = wait_until
         self.browser_headless = browser_headless
 
+    @timeout_decorator.timeout(5)
     def load(self, url: str) -> str:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=self.browser_headless)

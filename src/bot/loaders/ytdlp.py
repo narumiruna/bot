@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 
 import numpy as np
+import timeout_decorator
 import whisper
 import yt_dlp
 
@@ -101,6 +102,7 @@ def _transcribe(audio: np.ndarray) -> dict:
 
 
 class YtdlpLoader(Loader):
+    @timeout_decorator.timeout(20)
     def load(self, url: str) -> str:
         audio_file = download_audio(url)
         audio = load_audio(audio_file)

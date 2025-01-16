@@ -2,6 +2,7 @@ import tempfile
 from pathlib import Path
 
 import httpx
+import timeout_decorator
 from pypdf import PdfReader
 
 from .loader import Loader
@@ -13,6 +14,7 @@ DEFAULT_HEADERS = {
 
 
 class PDFLoader(Loader):
+    @timeout_decorator.timeout(5)
     def load(self, url_or_file: str) -> str:
         if url_or_file.startswith("http"):
             url_or_file = download_pdf_from_url(url_or_file)

@@ -70,6 +70,7 @@ dependencies = [
     { name = "python-telegram-bot" },
     { name = "rich" },
     { name = "telegraph" },
+    { name = "timeout-decorator" },
     { name = "tripplus" },
     { name = "twse" },
     { name = "yfinance" },
@@ -114,6 +115,7 @@ requires-dist = [
     { name = "python-telegram-bot", specifier = ">=21.6" },
     { name = "rich", specifier = ">=13.9.4" },
     { name = "telegraph", specifier = ">=2.2.0" },
+    { name = "timeout-decorator", specifier = ">=0.5.0" },
     { name = "tripplus", git = "https://github.com/narumiruna/tripplus.git" },
     { name = "twse", specifier = ">=0.2.0" },
     { name = "yfinance", specifier = ">=0.2.46" },
@@ -1512,6 +1514,12 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/c7/89/926b66e9025b97e9fbabeaa59048a736fe3c3e4530a204109571104f921c/tiktoken-0.8.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:294440d21a2a51e12d4238e68a5972095534fe9878be57d905c476017bff99fc", size = 1236576 },
     { url = "https://files.pythonhosted.org/packages/45/e2/39d4aa02a52bba73b2cd21ba4533c84425ff8786cc63c511d68c8897376e/tiktoken-0.8.0-cp312-cp312-win_amd64.whl", hash = "sha256:d8f3192733ac4d77977432947d563d7e1b310b96497acd3c196c9bddb36ed9db", size = 883824 },
 ]
+
+[[package]]
+name = "timeout-decorator"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/80/f8/0802dd14c58b5d3d72bb9caa4315535f58787a1dc50b81bbbcaaa15451be/timeout-decorator-0.5.0.tar.gz", hash = "sha256:6a2f2f58db1c5b24a2cc79de6345760377ad8bdc13813f5265f6c3e63d16b3d7", size = 4754 }
 
 [[package]]
 name = "toml"
