@@ -9,8 +9,8 @@ from .httpx import HttpxLoader
 from .loader import Loader
 from .loader import LoaderError
 from .pdf import PDFLoader
+from .playwright import PlaywrightLoader
 from .reel import ReelLoader
-from .singlefile import SinglefileLoader
 from .youtube import YoutubeLoader
 from .ytdlp import YtdlpLoader
 
@@ -45,7 +45,7 @@ class URLLoader(Loader):
             PDFLoader(),
             CloudscraperLoader(),
             HttpxLoader(),
-            SinglefileLoader(),
+            PlaywrightLoader(),
         ]
 
     @timeout_decorator.timeout(30)
