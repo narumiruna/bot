@@ -1,1 +1,1 @@
-from .url import PipelineLoader
+from .pipeline import PipelineLoader
