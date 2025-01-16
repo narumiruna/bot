@@ -1,10 +1,12 @@
+import asyncio
 from typing import Literal
 
 import timeout_decorator
 from loguru import logger
+from playwright.async_api import async_playwright
 from playwright.sync_api import TimeoutError
-from playwright.sync_api import sync_playwright
 
+# from playwright.sync_api import sync_playwright
 from .loader import Loader
 from .utils import html_to_markdown
 
@@ -20,19 +22,37 @@ class PlaywrightLoader(Loader):
         self.wait_until = wait_until
         self.browser_headless = browser_headless
 
-    @timeout_decorator.timeout(5)
-    def load(self, url: str) -> str:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=self.browser_headless)
-            page = browser.new_page()
+    async def async_load(self, url: str) -> str:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=self.browser_headless)
+            page = await browser.new_page()
 
             try:
-                page.goto(url, timeout=self.timeout, wait_until=self.wait_until)
+                await page.goto(url, timeout=self.timeout, wait_until=self.wait_until)
             except TimeoutError as e:
                 logger.error("TimeoutError: {}", e)
-                page.goto(url)
+                await page.goto(url)
 
-            content = page.content()
-            browser.close()
-
+            content = await page.content()
+            await browser.close()
             return html_to_markdown(content)
+
+    @timeout_decorator.timeout(5)
+    def load(self, url: str) -> str:
+        return asyncio.run(self.async_load(url))
+
+    # @timeout_decorator.timeout(5)
+    # def load(self, url: str) -> str:
+    #     with sync_playwright() as p:
+    #         browser = p.chromium.launch(headless=self.browser_headless)
+    #         page = browser.new_page()
+
+    #         try:
+    #             page.goto(url, timeout=self.timeout, wait_until=self.wait_until)
+    #         except TimeoutError as e:
+    #             logger.error("TimeoutError: {}", e)
+    #             page.goto(url)
+
+    #         content = page.content()
+    #         browser.close()
+    #         return html_to_markdown(content)
