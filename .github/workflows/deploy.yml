@@ -42,6 +42,7 @@ jobs:
           echo LANGFUSE_SECRET_KEY=${{ secrets.LANGFUSE_SECRET_KEY }} >> .env
           echo LANGFUSE_PUBLIC_KEY=${{ secrets.LANGFUSE_PUBLIC_KEY }} >> .env
           echo LANGFUSE_HOST=${{ vars.LANGFUSE_HOST }} >> .env
+          echo FFMPEG_PATH=${{ vars.FFMPEG_PATH }} >> .env
       - name: Copy files
         run: |
           mkdir -p ${{ env.WORKDIR }}

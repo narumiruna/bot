@@ -2,11 +2,13 @@ import functools
 import os
 import subprocess
 import tempfile
+from typing import Final
 
 import numpy as np
 import timeout_decorator
 import whisper
 import yt_dlp
+from loguru import logger
 
 from .loader import Loader
 
@@ -17,9 +19,16 @@ try:
 except ImportError:
     _mlx_whisper_installed = False
 
+DEFAULT_FFMPEG_PATH: Final[str] = "ffmpeg"
+
 
 def get_ffmpeg_path() -> str:
-    return os.getenv("FFMPEG_PATH", "/opt/homebrew/bin/ffmpeg")
+    path = os.getenv("FFMPEG_PATH")
+    if not path:
+        path = DEFAULT_FFMPEG_PATH
+        logger.warning("FFMPEG_PATH not set, using default: {}", DEFAULT_FFMPEG_PATH)
+
+    return path
 
 
 def download_audio(url: str) -> str:
