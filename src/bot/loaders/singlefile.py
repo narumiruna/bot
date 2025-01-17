@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 from functools import cache
 from pathlib import Path
+from typing import Final
 
 import charset_normalizer
 import timeout_decorator
@@ -11,10 +12,16 @@ from loguru import logger
 from .loader import Loader
 from .utils import html_to_markdown
 
+DEFAULT_SINGLEFILE_PATH: Final[str] = "single-file"
+
 
 @cache
 def get_singlefile_path() -> str:
-    return os.getenv("SINGLEFILE_PATH", "single-file")
+    path = os.getenv("SINGLEFILE_PATH")
+    if not path:
+        path = DEFAULT_SINGLEFILE_PATH
+        logger.warning("SINGLEFILE_PATH not set, using default: {}", DEFAULT_SINGLEFILE_PATH)
+    return path
 
 
 class SinglefileLoader(Loader):
