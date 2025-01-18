@@ -11,9 +11,6 @@ async def extract_product(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not update.message:
         return
 
-    if not context.args:
-        return
-
     text = get_message_text(update)
 
     products = chains.extract_product(text=text)
