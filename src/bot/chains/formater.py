@@ -8,6 +8,9 @@ from pydantic import Field
 class FormatResponse(BaseModel):
     title: str = Field(..., description="The main title for the document.")
     content: str = Field(..., description="Markdown content representing the formatted, normalized document.")
+    content_in_taiwanese: str = Field(
+        ..., description="代表格式化、標準化文件的Markdown內容，使用台灣繁體中文，適當的保留專有名詞原文。"
+    )  # noqa: E501
 
 
 def format(text: str, lang: str = "台灣話") -> FormatResponse:
