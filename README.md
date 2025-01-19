@@ -49,10 +49,6 @@ uv sync
 
 [Install SingleFile CLI](https://github.com/gildas-lormeau/single-file-cli?tab=readme-ov-file#manual-installation)
 
-```sh
-npm install "single-file-cli"
-```
-
 ## Usage
 
 Start the bot using uv:
