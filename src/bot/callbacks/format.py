@@ -31,7 +31,7 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Formatted text: {}", resp)
 
     if len(resp.content) > MAX_LENGTH:
-        text = create_page(title=resp.title, html_content=resp.content_in_taiwanese.replace("\n", "<br>"))
+        text = create_page(title=resp.title, html_content=resp.content.replace("\n", "<br>"))
     else:
         text = resp.content
     await update.message.reply_text(text)
