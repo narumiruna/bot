@@ -1,11 +1,6 @@
 from lazyopenai import generate
 from pydantic import BaseModel
 
-SYSTEM_PROMPT = """
-你是位專業的廚師，精通各式料理，熟悉各種食材的搭配。
-使用繁體中文回答，確保回答符合台灣用語習慣。
-""".strip()  # noqa
-
 
 class InstructionStep(BaseModel):
     step_number: int
@@ -14,8 +9,9 @@ class InstructionStep(BaseModel):
 
 class RecipeIngredient(BaseModel):
     name: str
-    quantity: float
+    quantity: str
     unit: str
+    preparation: str
 
 
 class Recipe(BaseModel):
@@ -28,7 +24,7 @@ class Recipe(BaseModel):
 
         s += "📋 食材：\n"
         for ingredient in self.ingredients:
-            s += f"・{ingredient.name:<10} {ingredient.quantity:>4} {ingredient.unit}\n"
+            s += f"・{ingredient.name:<10} {ingredient.quantity:>4} {ingredient.unit} {ingredient.preparation}\n"
 
         s += "\n👨‍🍳 料理步驟：\n"
         for instruction in self.instructions:
@@ -38,10 +34,25 @@ class Recipe(BaseModel):
         return s
 
 
-def generate_recipe(text: str) -> str:
-    recipe = generate(
-        text,
-        system=SYSTEM_PROMPT,
-        response_format=Recipe,
-    )
-    return str(recipe)
+def generate_recipe(text: str, fabricate: bool = False) -> str:
+    if fabricate:
+        recipe = generate(
+            text,
+            system="你是位專業的廚師，精通各式料理，熟悉各種食材的搭配。使用繁體中文回答，確保回答符合台灣用語習慣。",
+            response_format=Recipe,
+        )
+        return str(recipe)
+    else:
+        prompt = f"""
+        從文字中抽取食譜資訊，不要捏造任何資訊。抽取後翻譯成台灣繁體中文。
+
+        文字：
+        ```
+        {text}
+        ```
+        """
+        recipe = generate(
+            prompt,
+            response_format=Recipe,
+        )
+        return str(recipe)

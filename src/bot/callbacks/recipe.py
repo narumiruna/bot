@@ -4,6 +4,8 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from .. import chains
+from ..loaders import PipelineLoader
+from ..utils import parse_url
 from .utils import get_message_text
 
 
@@ -14,8 +16,12 @@ async def generate_recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not context.args:
         return
 
-    text = get_message_text(update)
-
-    recipe = chains.generate_recipe(text=text)
-
-    await update.message.reply_text(recipe)
+    message_text = get_message_text(update)
+    url = parse_url(message_text)
+    if url:
+        message_text = PipelineLoader().load(url)
+        recipe = chains.generate_recipe(text=message_text)
+        await update.message.reply_text(recipe)
+    else:
+        recipe = chains.generate_recipe(text=message_text, fabricate=True)
+        await update.message.reply_text(recipe)
