@@ -111,7 +111,7 @@ def _transcribe(audio: np.ndarray) -> dict:
 
 
 class YtdlpLoader(Loader):
-    @timeout_decorator.timeout(20)
+    @timeout_decorator.timeout(300)
     def load(self, url: str) -> str:
         audio_file = download_audio(url)
         audio = load_audio(audio_file)

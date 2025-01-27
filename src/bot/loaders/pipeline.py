@@ -48,7 +48,6 @@ class PipelineLoader(Loader):
             SinglefileLoader(),
         ]
 
-    @timeout_decorator.timeout(30)
     def load(self, url: str) -> str:
         url = replace_domain(url)
 
