@@ -1,7 +1,9 @@
 import functools
+import hashlib
 import os
 import subprocess
 import tempfile
+from pathlib import Path
 from typing import Final
 
 import numpy as np
@@ -19,7 +21,12 @@ try:
 except ImportError:
     _mlx_whisper_installed = False
 
+
 DEFAULT_FFMPEG_PATH: Final[str] = "ffmpeg"
+
+
+def hash_url(url: str) -> str:
+    return hashlib.sha512(url.encode("utf-8")).hexdigest()
 
 
 def get_ffmpeg_path() -> str:
@@ -34,7 +41,10 @@ def get_ffmpeg_path() -> str:
 def download_audio(url: str) -> str:
     ffmpeg_path = get_ffmpeg_path()
 
-    filename = tempfile.mktemp()
+    filename = os.path.join(
+        tempfile.gettempdir(),
+        hash_url(url),
+    )
 
     ydl_opts = {
         "format": "bestaudio/best",
