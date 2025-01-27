@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
-import timeout_decorator
 from loguru import logger
 
 from .cloudscraper import CloudscraperLoader
