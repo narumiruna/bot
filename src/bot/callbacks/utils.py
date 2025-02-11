@@ -1,3 +1,5 @@
+import kabigon
+from kabigon.compose import Compose
 from telegram import Message
 from telegram import Update
 
@@ -34,3 +36,17 @@ def strip_command(text: str) -> str:
 
 def get_message_key(message: Message) -> str:
     return f"{message.message_id}:{message.chat.id}"
+
+
+def load_url(url: str) -> str:
+    return Compose(
+        [
+            kabigon.YoutubeLoader(),
+            kabigon.ReelLoader(),
+            kabigon.YtdlpLoader(),
+            kabigon.PDFLoader(),
+            kabigon.CloudscraperLoader(),
+            kabigon.HttpxLoader(),
+            kabigon.SinglefileLoader(),
+        ]
+    ).load(url)
