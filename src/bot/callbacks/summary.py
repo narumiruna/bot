@@ -2,17 +2,17 @@ from __future__ import annotations
 
 import os
 
+from kabigon.pdf import read_pdf_content
+from kabigon.utils import read_html_content
 from loguru import logger
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import chains
-from ..loaders import PipelineLoader
-from ..loaders.pdf import read_pdf_content
-from ..loaders.utils import read_html_content
 from ..utils import parse_url
 from .utils import get_message_text
+from .utils import load_url
 
 
 async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -31,7 +31,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Parsed URL: {}", url)
 
     try:
-        text = PipelineLoader().load(url)
+        text = load_url(url)
     except Exception as e:
         logger.error("Failed to load URL: {}", e)
         await update.message.reply_text(f"Unable to load content from: {url}")

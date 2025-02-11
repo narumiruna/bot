@@ -7,10 +7,10 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from .. import chains
-from ..loaders import PipelineLoader
 from ..utils import create_page
 from ..utils import parse_url
 from .utils import get_message_text
+from .utils import load_url
 
 MAX_LENGTH: Final[int] = 1_000
 
@@ -25,7 +25,7 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
     url = parse_url(message_text)
     if url:
-        message_text = PipelineLoader().load(url)
+        message_text = load_url(url)
 
     resp = chains.format(message_text)
     logger.info("Formatted text: {}", resp)
