@@ -28,7 +28,9 @@ jobs:
       - name: Install uv
         run: pip install uv
       - name: Install dependencies
-        run: uv tool install --reinstall --force --python=${{ matrix.python-version }} --with mlx .
+        run: |
+          playwright install chromium
+          uv tool install --reinstall --force --python=${{ matrix.python-version }} --with mlx .
       - name: Create dotenv
         run: |
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
