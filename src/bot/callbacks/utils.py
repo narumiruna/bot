@@ -45,8 +45,6 @@ def load_url(url: str) -> str:
             kabigon.ReelLoader(),
             kabigon.YtdlpLoader(),
             kabigon.PDFLoader(),
-            kabigon.CloudscraperLoader(),
-            kabigon.HttpxLoader(),
-            kabigon.SinglefileLoader(),
+            kabigon.PlaywrightLoader(),
         ]
     ).load(url)
