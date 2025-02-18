@@ -19,7 +19,11 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
 
     # Query Yahoo Finance
-    yf_result = tools.query_tickers(context.args)
+    try:
+        yf_result = tools.query_tickers(context.args)
+    except AttributeError as e:
+        logger.info("Failed to get ticker for {}, got error: {}", context.args, e)
+        yf_result = ""
 
     # Query TWSE
     twse_results = []
