@@ -45,22 +45,32 @@ def query_tickers(symbols: str | list[str]) -> str:
     return "\n".join(results).strip()
 
 
+def get_info(t: yf.Ticker) -> dict:
+    try:
+        info = t.info
+    except Exception as e:
+        raise TickerError(t.ticker) from e
+    return info
+
+
 def ticker_repr(t: yf.Ticker) -> str:
-    symbol = t.info.get("symbol")
-    short_name = t.info.get("shortName")
-    open_price = t.info.get("open")
-    high_price = t.info.get("dayHigh")
-    low_price = t.info.get("dayLow")
-    last_price = t.info.get("currentPrice")
-    previous_close = t.info.get("previousClose")
-    fifty_two_week_low = t.info.get("fiftyTwoWeekLow")
-    fifty_two_week_high = t.info.get("fiftyTwoWeekHigh")
-    ask_price = t.info.get("ask")
-    bid_price = t.info.get("bid")
-    volume = t.info.get("volume")
+    info = get_info(t)
+
+    symbol = info.get("symbol")
+    short_name = info.get("shortName")
+    open_price = info.get("open")
+    high_price = info.get("dayHigh")
+    low_price = info.get("dayLow")
+    last_price = info.get("currentPrice")
+    previous_close = info.get("previousClose")
+    fifty_two_week_low = info.get("fiftyTwoWeekLow")
+    fifty_two_week_high = info.get("fiftyTwoWeekHigh")
+    ask_price = info.get("ask")
+    bid_price = info.get("bid")
+    volume = info.get("volume")
 
     if open_price is None and high_price is None and low_price is None:
-        raise TickerError(symbol)
+        raise TickerError(symbol or "")
 
     mid_price = (ask_price + bid_price) / 2 if ask_price and bid_price else None
 
