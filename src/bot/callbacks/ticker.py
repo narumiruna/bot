@@ -21,7 +21,7 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     # Query Yahoo Finance
     try:
         yf_result = tools.query_tickers(context.args)
-    except AttributeError as e:
+    except Exception as e:
         logger.info("Failed to get ticker for {}, got error: {}", context.args, e)
         yf_result = ""
 
