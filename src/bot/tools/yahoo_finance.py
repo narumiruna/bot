@@ -49,7 +49,7 @@ def get_info(t: yf.Ticker) -> dict:
     try:
         info = t.info
     except Exception as e:
-        raise TickerError(t.ticker) from e
+        raise TickerError(f"{t.ticker}, got {e}") from e
     return info
 
 
