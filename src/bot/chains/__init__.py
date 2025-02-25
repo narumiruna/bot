@@ -1,4 +1,4 @@
-from .formater import format
+from .formatter import format
 from .jlpt import learn_japanese
 from .keyword import extract_keywords
 from .meta_prompt import generate_prompt
