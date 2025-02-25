@@ -49,7 +49,7 @@ def to_str(value: Any) -> str:
     return str(value) if value is not None else "N/A"
 
 
-def escape_markdown(text: object | None) -> str:
+def escape_markdown(text: str) -> str:
     """Escape special characters for Telegram MarkdownV2 format.
 
     Args:
@@ -58,25 +58,13 @@ def escape_markdown(text: object | None) -> str:
     Returns:
         Escaped text string, or empty string if input is None
     """
-    if text is None:
-        return ""
-
     # Convert to string first
-    text_str = str(text)
     pattern = r"([_*\[\]()~`>#+=|{}.!-])"
-    return re.sub(pattern, r"\\\1", text_str)
+    return re.sub(pattern, r"\\\1", text)
 
 
-def format_value(value: object) -> str:
-    """Format and escape a value for display.
-
-    Args:
-        value: Value to format and escape
-
-    Returns:
-        Formatted and escaped string ready for Markdown
-    """
-    return escape_markdown(str(value) if value is not None else "N/A")
+def format_value(value: float) -> str:
+    return escape_markdown(f"{value:.2f}")
 
 
 def query_tickers(symbols: str | list[str]) -> str:
@@ -138,8 +126,8 @@ def format_ticker_info(ticker: yf.Ticker) -> str:
     info = get_info(ticker)
 
     # Extract basic information
-    symbol = info.get("symbol", "Unknown")
-    short_name = info.get("shortName", symbol)
+    symbol = to_str(info.get("symbol", "Unknown"))
+    short_name = to_str(info.get("shortName", symbol))
 
     # Extract price information
     open_price = to_float(info.get("open"))
