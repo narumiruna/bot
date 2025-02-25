@@ -142,7 +142,7 @@ def format_ticker_info(ticker: yf.Ticker) -> str:
     volume = to_float(info.get("volume"))
 
     # Check for essential data
-    if all(p is None for p in [open_price, high_price, low_price]):
+    if all(p == 0.0 for p in [open_price, high_price, low_price]):
         raise TickerError(symbol, "Missing essential price data")
 
     # Calculate derived values: always return float
