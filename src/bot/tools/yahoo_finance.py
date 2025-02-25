@@ -66,7 +66,7 @@ def query_tickers(symbols: str | list[str]) -> str:
     for symbol in symbols:
         try:
             ticker = yf.Ticker(symbol)
-            results.append(ticker_repr(ticker))
+            results.append(format_ticker_info(ticker))
         except Exception as e:
             logger.info("Failed to get ticker for {}, got error: {}", symbol, e)
 
@@ -95,7 +95,7 @@ def get_info(ticker: yf.Ticker) -> dict:
         raise TickerError(ticker.ticker, str(e)) from e
 
 
-def ticker_repr(ticker: yf.Ticker) -> str:
+def format_ticker_info(ticker: yf.Ticker) -> str:
     """Generate a formatted representation of ticker information.
 
     Args:
