@@ -14,6 +14,7 @@ class FormattedContent(BaseModel):
 def format(text: str, lang: str = "台灣中文") -> FormattedContent:
     prompt = f"""
     Extract and organize information from the input text, then translate it to {lang}.
+    Do not fabricate any information.
 
     Please return:
     1. A clear, concise title in {lang}
