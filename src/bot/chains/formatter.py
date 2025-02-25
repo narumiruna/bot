@@ -6,12 +6,12 @@ from loguru import logger
 from pydantic import BaseModel
 
 
-class FormatResponse(BaseModel):
+class FormattedContent(BaseModel):
     title: str
     content: str
 
 
-def format(text: str, lang: str = "台灣中文") -> FormatResponse:
+def format(text: str, lang: str = "台灣中文") -> FormattedContent:
     prompt = f"""
     Extract and organize information from the input text, then translate it to {lang}.
 
@@ -28,10 +28,10 @@ def format(text: str, lang: str = "台灣中文") -> FormatResponse:
     ```
     """.strip()  # noqa: E501
     response = cast(
-        FormatResponse,
+        FormattedContent,
         generate(
             dedent(prompt),
-            response_format=FormatResponse,
+            response_format=FormattedContent,
         ),
     )
 
