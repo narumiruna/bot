@@ -2,9 +2,8 @@ from textwrap import dedent
 from typing import cast
 
 from lazyopenai import generate
+from loguru import logger
 from pydantic import BaseModel
-
-from .translation import translate_to_taiwanese
 
 
 class FormatResponse(BaseModel):
@@ -36,7 +35,5 @@ def format(text: str, lang: str = "台灣中文") -> FormatResponse:
         ),
     )
 
-    return FormatResponse(
-        title=translate_to_taiwanese(response.title),
-        content=translate_to_taiwanese(response.content),
-    )
+    logger.info("Formatted response: {}", response)
+    return response
