@@ -7,6 +7,7 @@ from telegram.ext import ContextTypes
 from ..tools import GetCurrentTime
 from ..tools import GoogleSearch
 from ..tools import LoanTool
+from ..tools import MHWeaponSelector
 from ..tools import TarotCard
 from .utils import get_message_key
 from .utils import get_message_text
@@ -16,7 +17,7 @@ async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
     if not update.message:
         return
 
-    chat = create_chat(tools=[GoogleSearch, TarotCard, LoanTool, GetCurrentTime])
+    chat = create_chat(tools=[GoogleSearch, TarotCard, LoanTool, GetCurrentTime, MHWeaponSelector])
 
     chat.load_messages(messages)
     resp = chat.create()

@@ -1,5 +1,6 @@
 from .datetime import GetCurrentTime
 from .google import GoogleSearch
+from .mh_weapon import MHWeaponSelector
 from .mortgage import LoanTool
 from .tarot import TarotCard
 from .weblio import Weblio
