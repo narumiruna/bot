@@ -1,3 +1,5 @@
+import asyncio
+import concurrent.futures
 from textwrap import dedent
 from typing import cast
 
@@ -38,3 +40,10 @@ def format(text: str, lang: str = "台灣中文") -> FormattedContent:
 
     logger.info("Formatted response: {}", response)
     return response
+
+
+async def async_format(text: str, lang: str = "台灣中文") -> FormattedContent:
+    loop = asyncio.get_event_loop()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        result = await loop.run_in_executor(executor, format, text, lang)
+        return result

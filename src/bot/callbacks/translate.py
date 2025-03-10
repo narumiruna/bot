@@ -10,8 +10,8 @@ from telegram.ext import ContextTypes
 from .. import chains
 from ..utils import create_page
 from ..utils import parse_url
+from .utils import async_load_url
 from .utils import get_message_text
-from .utils import load_url
 
 MAX_LENGTH: Final[int] = 1_000
 
@@ -27,7 +27,7 @@ def create_translate_callback(lang: str) -> Callable:
 
         url = parse_url(message_text)
         if url:
-            message_text = load_url(url)
+            message_text = await async_load_url(url)
 
         if context.args and context.args[0] == "explain":
             reply_text = chains.translate_and_explain(message_text, lang=lang)

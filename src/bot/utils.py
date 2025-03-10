@@ -1,3 +1,5 @@
+import asyncio
+import concurrent.futures
 import functools
 import json
 import re
@@ -39,3 +41,14 @@ def create_page(title: str, **kwargs) -> str:
 
     resp = client.create_page(title=title, **kwargs)
     return resp["url"]
+
+
+def async_wrapper(func):
+    @functools.wraps(func)
+    async def wrapper(*args, **kwargs):
+        loop = asyncio.get_running_loop()
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            result = await loop.run_in_executor(executor, func, *args, **kwargs)
+            return result
+
+    return wrapper
