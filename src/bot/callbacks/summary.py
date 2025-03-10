@@ -11,8 +11,8 @@ from telegram.ext import ContextTypes
 
 from .. import chains
 from ..utils import parse_url
+from .utils import async_load_url
 from .utils import get_message_text
-from .utils import load_url
 
 
 async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -31,7 +31,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info("Parsed URL: {}", url)
 
     try:
-        text = load_url(url)
+        text = await async_load_url(url)
     except Exception as e:
         logger.error("Failed to load URL: {}", e)
         await update.message.reply_text(f"Unable to load content from: {url}")
