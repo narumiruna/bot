@@ -1,3 +1,5 @@
+from functools import cache
+
 import kabigon
 from kabigon.compose import Compose
 from telegram import Message
@@ -38,7 +40,8 @@ def get_message_key(message: Message) -> str:
     return f"{message.message_id}:{message.chat.id}"
 
 
-def load_url(url: str) -> str:
+@cache
+def get_composed_loader() -> Compose:
     return Compose(
         [
             kabigon.YoutubeLoader(),
@@ -47,4 +50,14 @@ def load_url(url: str) -> str:
             kabigon.PDFLoader(),
             kabigon.SinglefileLoader(),
         ]
-    ).load(url)
+    )
+
+
+def load_url(url: str) -> str:
+    loader = get_composed_loader()
+    return loader.load(url)
+
+
+async def async_load_url(url: str) -> str:
+    loader = get_composed_loader()
+    return await loader.async_load(url)
