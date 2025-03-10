@@ -47,7 +47,7 @@ def async_wrapper(func):
     @functools.wraps(func)
     async def wrapper(*args, **kwargs):
         loop = asyncio.get_running_loop()
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
             result = await loop.run_in_executor(executor, func, *args, **kwargs)
             return result
 
