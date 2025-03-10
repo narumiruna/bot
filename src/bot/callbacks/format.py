@@ -27,7 +27,7 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if url:
         message_text = await async_load_url(url)
 
-    resp = chains.format(message_text)
+    resp = await chains.format(message_text)
     logger.info("Formatted text: {}", resp)
 
     if len(resp.content) > MAX_LENGTH:
