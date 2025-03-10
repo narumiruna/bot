@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Literal
 
-from lazyopenai import generate
 from lazyopenai.types import BaseTool
 from loguru import logger
 from pydantic import Field
@@ -10,6 +9,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from tripplus import RedemptionRequest
 
+from ..chains.utils import generate
 from .utils import get_message_text
 
 SYSTEM_PROMPT = """
@@ -56,7 +56,7 @@ async def handle_trip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     message_text = get_message_text(update)
 
-    reply_text = generate(
+    reply_text = await generate(
         message_text,
         system=SYSTEM_PROMPT,
         tools=[AwardSearch],

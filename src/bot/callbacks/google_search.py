@@ -19,7 +19,7 @@ async def search_google(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if not text:
         return
 
-    keywords = extract_keywords(text=text)
+    keywords = await extract_keywords(text=text)
     if not keywords:
         return
 
@@ -27,7 +27,7 @@ async def search_google(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         resp = await client.get(url="https://www.google.com/search", params={"q": keywords})
         resp.raise_for_status()
 
-    summarized = summarize(text=text + "\n" + markdownify(resp.text, strip=["a", "img"]).strip())
+    summarized = await summarize(text=text + "\n" + markdownify(resp.text, strip=["a", "img"]).strip())
 
     res = [
         summarized,

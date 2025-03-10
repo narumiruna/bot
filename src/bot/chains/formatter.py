@@ -1,11 +1,10 @@
-import asyncio
-import concurrent.futures
 from textwrap import dedent
 from typing import cast
 
-from lazyopenai import generate
 from loguru import logger
 from pydantic import BaseModel
+
+from .utils import generate
 
 
 class FormattedContent(BaseModel):
@@ -13,7 +12,7 @@ class FormattedContent(BaseModel):
     content: str
 
 
-def format(text: str, lang: str = "台灣中文") -> FormattedContent:
+async def format(text: str, lang: str = "台灣中文") -> FormattedContent:
     prompt = f"""
     Extract and organize information from the input text, then translate it to {lang}.
     Do not fabricate any information.
@@ -32,7 +31,7 @@ def format(text: str, lang: str = "台灣中文") -> FormattedContent:
     """.strip()  # noqa: E501
     response = cast(
         FormattedContent,
-        generate(
+        await generate(
             dedent(prompt),
             response_format=FormattedContent,
         ),
@@ -40,10 +39,3 @@ def format(text: str, lang: str = "台灣中文") -> FormattedContent:
 
     logger.info("Formatted response: {}", response)
     return response
-
-
-async def async_format(text: str, lang: str = "台灣中文") -> FormattedContent:
-    loop = asyncio.get_event_loop()
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        result = await loop.run_in_executor(executor, format, text, lang)
-        return result

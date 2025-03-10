@@ -21,5 +21,5 @@ async def handle_learn_japanese(update: Update, context: ContextTypes.DEFAULT_TY
     if url:
         text += "\n" + await async_load_url(url)
 
-    res = chains.learn_japanese(text)
+    res = await chains.learn_japanese(text)
     await update.message.reply_text(str(res))

@@ -1,9 +1,9 @@
 import markdown2
-from lazyopenai import generate
 from pydantic import BaseModel
 from pydantic import Field
 
 from ..utils import create_page
+from .utils import generate
 
 SUMMARY_PROMPT = """
 請以台灣繁體中文為以下內容生成：
@@ -58,7 +58,7 @@ class ChainOfThought(BaseModel):
 class Summary(BaseModel):
     chain_of_thought: ChainOfThought = Field(
         ...,
-        description=("通往摘要、見解的推理過程，翻譯成台灣繁體中文。" "提供一系列推理步驟，說明如何得出摘要、見解。"),
+        description=("通往摘要、見解的推理過程，翻譯成台灣繁體中文。提供一系列推理步驟，說明如何得出摘要、見解。"),
     )
     summary_text: str = Field(
         ...,
@@ -89,7 +89,7 @@ class Summary(BaseModel):
         )
 
 
-def summarize(text: str) -> str:
+async def summarize(text: str) -> str:
     """Generate a summary of the given text.
 
     Args:
@@ -98,4 +98,4 @@ def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    return str(generate(SUMMARY_PROMPT.format(text=text), response_format=Summary))
+    return str(await generate(SUMMARY_PROMPT.format(text=text), response_format=Summary))

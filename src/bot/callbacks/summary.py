@@ -38,7 +38,7 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     logger.info("Text length: {}", len(text))
 
-    result = chains.summarize(text)
+    result = await chains.summarize(text)
 
     logger.info("Summarized text: {}", result)
     await update.message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
@@ -62,7 +62,7 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
         text = read_html_content(file_path)
 
     if text:
-        summarized = chains.summarize(text)
+        summarized = await chains.summarize(text)
         await update.message.reply_text(summarized, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
     os.remove(file_path)

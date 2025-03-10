@@ -1,6 +1,7 @@
-from lazyopenai import generate
 from pydantic import BaseModel
 from pydantic import Field
+
+from .utils import generate
 
 
 class PolishedText(BaseModel):
@@ -31,5 +32,7 @@ SYSTEM_PROMPT = """Your task is to **polish** the input text in any language to 
 """  # noqa
 
 
-def polish(text: str) -> str:
-    return str(generate(f"Polish the following text:\n{text}", system=SYSTEM_PROMPT, response_format=PolishedText))
+async def polish(text: str) -> str:
+    return str(
+        await generate(f"Polish the following text:\n{text}", system=SYSTEM_PROMPT, response_format=PolishedText)
+    )

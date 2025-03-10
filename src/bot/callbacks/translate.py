@@ -30,10 +30,10 @@ def create_translate_callback(lang: str) -> Callable:
             message_text = await async_load_url(url)
 
         if context.args and context.args[0] == "explain":
-            reply_text = chains.translate_and_explain(message_text, lang=lang)
+            reply_text = await chains.translate_and_explain(message_text, lang=lang)
             logger.info("Translated and explained text to {}: {}", lang, reply_text)
         else:
-            reply_text = chains.translate(message_text, lang=lang)
+            reply_text = await chains.translate(message_text, lang=lang)
             logger.info("Translated text to {}: {}", lang, reply_text)
 
         if len(reply_text) > MAX_LENGTH:

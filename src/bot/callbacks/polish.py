@@ -16,7 +16,7 @@ async def handle_polish(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not message_text:
         return
 
-    text = chains.polish(message_text)
+    text = await chains.polish(message_text)
     logger.info("Polished text: {}", text)
 
     await update.message.reply_text(text)
