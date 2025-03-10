@@ -1,5 +1,6 @@
-from lazyopenai import generate
 from pydantic import BaseModel
+
+from .utils import generate
 
 SYSTEM_PROMPT = """
 Extract the most relevant keywords from the provided text to use them for Google search.
@@ -21,8 +22,8 @@ class Keywords(BaseModel):
         return " ".join(self.keywords)
 
 
-def extract_keywords(text: str) -> str:
-    keywords = generate(
+async def extract_keywords(text: str) -> str:
+    keywords = await generate(
         f"Extract keywords from the following text:\n{text}",
         system=SYSTEM_PROMPT,
         response_format=Keywords,

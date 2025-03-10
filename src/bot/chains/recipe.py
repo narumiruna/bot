@@ -1,5 +1,6 @@
-from lazyopenai import generate
 from pydantic import BaseModel
+
+from .utils import generate
 
 
 class InstructionStep(BaseModel):
@@ -34,7 +35,7 @@ class Recipe(BaseModel):
         return s
 
 
-def generate_recipe(text: str, fabricate: bool = False) -> str:
+async def generate_recipe(text: str, fabricate: bool = False) -> str:
     if fabricate:
         recipe = generate(
             text,
@@ -51,7 +52,7 @@ def generate_recipe(text: str, fabricate: bool = False) -> str:
         {text}
         ```
         """
-        recipe = generate(
+        recipe = await generate(
             prompt,
             response_format=Recipe,
         )

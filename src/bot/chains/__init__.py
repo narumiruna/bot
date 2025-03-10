@@ -1,4 +1,3 @@
-from .formatter import async_format
 from .formatter import format
 from .jlpt import learn_japanese
 from .keyword import extract_keywords

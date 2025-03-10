@@ -9,6 +9,7 @@ from ..tools import GoogleSearch
 from ..tools import LoanTool
 from ..tools import MHWeaponSelector
 from ..tools import TarotCard
+from ..utils import async_wrapper
 from .utils import get_message_key
 from .utils import get_message_text
 
@@ -20,7 +21,7 @@ async def send_reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
     chat = create_chat(tools=[GoogleSearch, TarotCard, LoanTool, GetCurrentTime, MHWeaponSelector])
 
     chat.load_messages(messages)
-    resp = chat.create()
+    resp = await async_wrapper(chat.create)()
 
     reply_message = await update.message.reply_text(resp)
     new_key = get_message_key(reply_message)

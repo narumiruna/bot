@@ -20,8 +20,8 @@ async def generate_recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     url = parse_url(message_text)
     if url:
         message_text = await async_load_url(url)
-        recipe = chains.generate_recipe(text=message_text)
+        recipe = await chains.generate_recipe(text=message_text)
         await update.message.reply_text(recipe)
     else:
-        recipe = chains.generate_recipe(text=message_text, fabricate=True)
+        recipe = await chains.generate_recipe(text=message_text, fabricate=True)
         await update.message.reply_text(recipe)

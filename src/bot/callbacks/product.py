@@ -13,6 +13,6 @@ async def extract_product(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     text = get_message_text(update)
 
-    products = chains.extract_product(text=text)
+    products = await chains.extract_product(text=text)
 
     await update.message.reply_text(str(products))

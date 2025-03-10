@@ -1,4 +1,4 @@
-from lazyopenai import generate
+from .utils import generate
 
 QA_PROMPT = """
 根據文章內容回答問題
@@ -17,5 +17,5 @@ QA_PROMPT = """
 """.strip()  # noqa
 
 
-def answer_question(text: str, question: str | None = None) -> str:
-    return str(generate(QA_PROMPT.format(text=text, question=question)))
+async def answer_question(text: str, question: str | None = None) -> str:
+    return str(await generate(QA_PROMPT.format(text=text, question=question)))

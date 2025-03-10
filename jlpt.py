@@ -1,6 +1,7 @@
 import httpx
-from lazyopenai import generate
 from markdownify import markdownify as md
+
+from .utils import generate
 
 SYSTEM_PROMPT = """
 你是一位精通日文的老師，熟悉日本語能力試驗（JLPT）的考試範圍，並使用台灣用語的繁體中文進行教學。從給定的文章中，整理出最困難的詞彙、語法結構及文字的理解，並提供詳細解釋和相應的例句。

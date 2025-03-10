@@ -1,8 +1,9 @@
 from typing import cast
 
-from lazyopenai import generate
 from pydantic import BaseModel
 from pydantic import Field
+
+from .utils import generate
 
 
 class Price(BaseModel):
@@ -43,8 +44,8 @@ class Products(BaseModel):
         return "\n\n".join(str(product) for product in self.products)
 
 
-def extract_product(text: str) -> Products:
-    response = generate(
+async def extract_product(text: str) -> Products:
+    response = await generate(
         text,
         system="Use only the information directly provided in the context—do not fabricate or include placeholders.",  # noqa: E501
         response_format=Products,
