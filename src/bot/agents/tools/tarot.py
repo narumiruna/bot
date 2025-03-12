@@ -1,7 +1,6 @@
 import random
 
-from lazyopenai.types import BaseTool
-from pydantic import Field
+from agents import function_tool
 
 tarot_cards: list[str] = [
     "🃏 愚者 (The Fool)",
@@ -34,16 +33,16 @@ orientations: list[str] = [
 ]
 
 
-class TarotCard(BaseTool):
-    """Tarot card drawing tool."""
+@function_tool
+def draw_tarot_card(n: int) -> str:
+    """Draw n tarot cards and return their names with orientations.
 
-    n: int = Field(..., description="Number of cards to draw.")
-
-    def __call__(self) -> str:
-        """Draw n tarot cards and return their names with orientations."""
-        res = []
-        for i in range(self.n):
-            card = random.choice(tarot_cards)
-            orientation = random.choice(orientations)
-            res += [f"Card #{i+1}: {card} ({orientation})"]
-        return "\n".join(res)
+    Args:
+        n (int): Number of cards to draw.
+    """
+    res = []
+    for i in range(n):
+        card = random.choice(tarot_cards)
+        orientation = random.choice(orientations)
+        res += [f"Card #{i + 1}: {card} ({orientation})"]
+    return "\n".join(res)
