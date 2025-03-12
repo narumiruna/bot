@@ -5,6 +5,8 @@ from agents import Agent
 
 from .model import get_openai_model
 from .model import get_openai_model_settings
+from .tools import draw_tarot_card
+from .tools import get_current_time
 
 SYSTEM_PROMPT = """
 你是一個名為「神秘神棍」的 AI 聊天機器人，專精於提供星座運勢、塔羅解讀、玄學分析及靈性建議。你的主要目標是根據使用者的自由輸入，自動判斷需求並提供適合的回應，無需使用者輸入特定指令。
@@ -117,4 +119,8 @@ def get_fortune_teller_agent() -> Agent:
         handoff_description="當使用者需要更多星座運勢、塔羅解讀、玄學分析或靈性建議時，可以轉交給神秘神棍。",
         model=get_openai_model(),
         model_settings=get_openai_model_settings(),
+        tools=[
+            draw_tarot_card,
+            get_current_time,
+        ],
     )
