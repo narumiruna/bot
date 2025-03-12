@@ -18,7 +18,6 @@ async def handle_help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         "/polish - Polish and improve text\n"
         "/echo - Echo the message\n"
         "/yt - Search YouTube\n"
-        "/g - Search Google\n"
         "/recipe - Generate a recipe\n"
         "/ljp - Learn Japanese\n"
         "/t - Query ticker from Yahoo Finance and Taiwan stock exchange\n"
