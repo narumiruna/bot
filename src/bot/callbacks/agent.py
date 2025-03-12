@@ -13,9 +13,6 @@ from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
-from ..agents import get_openai_client
-from ..agents import get_openai_model
-from ..agents import get_openai_model_settings
 from ..tools.openai_agents import extract_content
 from ..tools.openai_agents import get_current_time
 from ..tools.openai_agents import query_ticker_from_yahoo_finance
@@ -25,13 +22,7 @@ from .utils import get_message_text
 
 class MultiAgentService:
     def __init__(self, memory_window: int = 100) -> None:
-        self.openai_client = get_openai_client()
         self.memory_window = memory_window
-
-        self.model_settings = get_openai_model_settings()
-
-        self.model = get_openai_model()
-        logger.info(f"Using model: {self.model}")
 
         tools = [
             get_current_time,
@@ -72,7 +63,7 @@ class MultiAgentService:
         # send the messages to the agent
         result = await Runner.run(self.current_agent, input=messages)
 
-        # handle new items including messages, handoffs, and tool calls
+        # log the new items
         for new_item in result.new_items:
             agent_name = new_item.agent.name
             if isinstance(new_item, MessageOutputItem):
