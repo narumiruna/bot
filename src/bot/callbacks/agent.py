@@ -17,14 +17,14 @@ from agents import set_default_openai_key
 from agents import set_tracing_disabled
 from loguru import logger
 from openai import AsyncAzureOpenAI
-from openai import OpenAI
+from openai import AsyncOpenAI
 from telegram import Update
 from telegram.ext import ContextTypes
 
 from .utils import get_message_text
 
 
-def get_openai_client() -> OpenAI:
+def get_openai_client() -> AsyncOpenAI:
     azure_api_key = os.getenv(key="AZURE_OPENAI_API_KEY")
     if azure_api_key is not None:
         logger.info("Using Azure OpenAI API")
@@ -36,7 +36,7 @@ def get_openai_client() -> OpenAI:
         # Disable tracing since Azure doesn't support it
         set_tracing_disabled(True)
     else:
-        openai_client = OpenAI()
+        openai_client = AsyncOpenAI()
     return openai_client
 
 
@@ -58,6 +58,7 @@ class MultiAgentService:
         self.japanese_agent = Agent(
             name="Japanese agent",
             instructions="You only speak Japanese.",
+            handoff_description="Switch to another language if user speaks another language",
             model=self.model,
             model_settings=self.model_settings,
         )
@@ -65,6 +66,7 @@ class MultiAgentService:
         self.english_agent = Agent(
             name="English agent",
             instructions="You only speak English",
+            handoff_description="Switch to another language if user speaks another language",
             model=self.model,
             model_settings=self.model_settings,
         )
@@ -72,6 +74,7 @@ class MultiAgentService:
         self.taiwanese_agent = Agent(
             name="Taiwanese agent",
             instructions="You only speak Taiwanese",
+            handoff_description="Switch to another language if user speaks another language",
             model=self.model,
             model_settings=self.model_settings,
         )
@@ -93,34 +96,37 @@ class MultiAgentService:
         if not message_text:
             return
 
+        # Get the memory for the current chat (group or user)
         memory_key = str(update.message.chat.id)
         messages = self.memory.get(memory_key, [])
+
+        # add the user message to the list of messages
         messages.append({"role": "user", "content": message_text})
 
-        global current_agent
+        # send the messages to the agent
         result = await Runner.run(self.current_agent, input=messages)
 
+        # handle new items including messages, handoffs, and tool calls
         for new_item in result.new_items:
             agent_name = new_item.agent.name
             if isinstance(new_item, MessageOutputItem):
-                (f"{agent_name}: {ItemHelpers.text_message_output(new_item)}")
+                logger.info("{}: {}", agent_name, ItemHelpers.text_message_output(new_item))
             elif isinstance(new_item, HandoffOutputItem):
-                await update.message.reply_text(
-                    f"Handed off from {new_item.source_agent.name} to {new_item.target_agent.name}"
-                )
+                logger.info("Handed off from {} to {}", new_item.source_agent.name, new_item.target_agent.name)
             elif isinstance(new_item, ToolCallItem):
-                await update.message.reply_text(f"{agent_name}: Calling a tool")
+                logger.info("{}: Calling a tool", agent_name)
             elif isinstance(new_item, ToolCallOutputItem):
-                await update.message.reply_text(f"{agent_name}: Tool call output: {new_item.output}")
+                logger.info("{}: Tool call output: {}", agent_name, new_item.output)
             else:
-                await update.message.reply_text(f"{agent_name}: Skipping item: {new_item.__class__.__name__}")
+                logger.info("{}: Skipping item: {}", agent_name, new_item.__class__.__name__)
 
+        # update the memory
         input_items = result.to_input_list()
         if len(input_items) > self.memory_window:
             input_items = input_items[-self.memory_window :]
-
         self.memory[memory_key] = input_items
 
+        # update the current agent
         self.current_agent = result.last_agent
 
         await update.message.reply_text(result.final_output)
