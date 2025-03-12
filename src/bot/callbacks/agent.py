@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import cast
 
 from agents import Agent
 from agents import HandoffOutputItem
@@ -41,7 +42,7 @@ def get_openai_client() -> AsyncOpenAI:
         set_tracing_disabled(True)
     else:
         openai_client = AsyncOpenAI()
-    return openai_client
+    return cast(AsyncOpenAI, openai_client)
 
 
 class MultiAgentService:
