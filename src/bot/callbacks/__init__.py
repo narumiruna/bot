@@ -2,7 +2,6 @@ from .agent import MultiAgentService
 from .echo import handle_echo
 from .error import add_error_handler
 from .error import handle_error
-from .fate import handle_fate
 from .format import handle_format
 from .help import handle_help
 from .learn_japanese import handle_learn_japanese
