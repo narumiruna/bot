@@ -34,15 +34,16 @@ def get_openai_client() -> AsyncOpenAI:
     if azure_api_key is not None:
         logger.info("Using Azure OpenAI API")
 
-        openai_client = AsyncAzureOpenAI(api_key=azure_api_key)
+        azure_client = AsyncAzureOpenAI(api_key=azure_api_key)
         set_default_openai_key(azure_api_key)
-        set_default_openai_client(openai_client)
+        set_default_openai_client(azure_client)
 
         # Disable tracing since Azure doesn't support it
         set_tracing_disabled(True)
-    else:
-        openai_client = AsyncOpenAI()
-    return cast(AsyncOpenAI, openai_client)
+
+        return cast(AsyncOpenAI, azure_client)
+
+    return AsyncOpenAI()
 
 
 class MultiAgentService:
