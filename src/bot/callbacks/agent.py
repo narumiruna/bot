@@ -13,10 +13,10 @@ from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
-from ..tools.openai_agents import extract_content
-from ..tools.openai_agents import get_current_time
-from ..tools.openai_agents import query_ticker_from_yahoo_finance
-from ..tools.openai_agents import web_search
+from ..agents.tools import extract_content
+from ..agents.tools import get_current_time
+from ..agents.tools import query_ticker_from_yahoo_finance
+from ..agents.tools import web_search
 from .utils import get_message_text
 
 
