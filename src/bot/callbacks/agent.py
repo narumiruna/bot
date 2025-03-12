@@ -12,7 +12,6 @@ from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents import TResponseInputItem
-from agents import trace
 from rich import print
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -91,8 +90,7 @@ async def handle_agent(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     messages.append({"role": "user", "content": message_text})
 
     global current_agent
-    with trace("Telegram Bot", group_id=memory_key):
-        result = await Runner.run(current_agent, input=messages)
+    result = await Runner.run(current_agent, input=messages)
 
     for new_item in result.new_items:
         agent_name = new_item.agent.name
