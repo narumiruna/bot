@@ -1,7 +1,6 @@
 import random
 
-from lazyopenai.types import BaseTool
-from pydantic import Field
+from agents import function_tool
 
 monster_hunter_weapons: list[str] = [
     "大剣 (大剣)",
@@ -21,15 +20,15 @@ monster_hunter_weapons: list[str] = [
 ]
 
 
-class MHWeaponSelector(BaseTool):
-    """Monster Hunter weapon selection tool."""
+@function_tool
+def draw_monster_hunter_weapon(n: int) -> str:
+    """Draw n Monster Hunter weapons and return their names.
 
-    n: int = Field(..., description="Number of weapons to select.")
-
-    def __call__(self) -> str:
-        """Select n random Monster Hunter weapons."""
-        res = []
-        for i in range(self.n):
-            job = random.choice(monster_hunter_weapons)
-            res += [f"Job #{i + 1}: {job}"]
-        return "\n".join(res)
+    Args:
+        n (int): Number of weapons to draw.
+    """
+    res = []
+    for i in range(n):
+        job = random.choice(monster_hunter_weapons)
+        res += [f"Job #{i + 1}: {job}"]
+    return "\n".join(res)
