@@ -3,6 +3,7 @@ from __future__ import annotations
 from agents import HandoffOutputItem
 from agents import ItemHelpers
 from agents import MessageOutputItem
+from agents import RunItem
 from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
@@ -19,6 +20,21 @@ from ..agents.tools import get_current_time
 from ..agents.tools import query_ticker_from_yahoo_finance
 from ..agents.tools import web_search
 from .utils import get_message_text
+
+
+def log_run_items(items: list[RunItem]) -> None:
+    for item in items:
+        agent_name = item.agent.name
+        if isinstance(item, MessageOutputItem):
+            logger.info("{}: {}", agent_name, ItemHelpers.text_message_output(item))
+        elif isinstance(item, HandoffOutputItem):
+            logger.info("Handed off from {} to {}", item.source_agent.name, item.target_agent.name)
+        elif isinstance(item, ToolCallItem):
+            logger.info("{}: Calling a tool", agent_name)
+        elif isinstance(item, ToolCallOutputItem):
+            logger.info("{}: Tool call output: {}", agent_name, item.output)
+        else:
+            logger.info("{}: Skipping item: {}", agent_name, item.__class__.__name__)
 
 
 class MultiAgentService:
@@ -74,18 +90,7 @@ class MultiAgentService:
         result = await Runner.run(self.current_agent, input=messages)
 
         # log the new items
-        for new_item in result.new_items:
-            agent_name = new_item.agent.name
-            if isinstance(new_item, MessageOutputItem):
-                logger.info("{}: {}", agent_name, ItemHelpers.text_message_output(new_item))
-            elif isinstance(new_item, HandoffOutputItem):
-                logger.info("Handed off from {} to {}", new_item.source_agent.name, new_item.target_agent.name)
-            elif isinstance(new_item, ToolCallItem):
-                logger.info("{}: Calling a tool", agent_name)
-            elif isinstance(new_item, ToolCallOutputItem):
-                logger.info("{}: Tool call output: {}", agent_name, new_item.output)
-            else:
-                logger.info("{}: Skipping item: {}", agent_name, new_item.__class__.__name__)
+        log_run_items(result.new_items)
 
         # update the memory
         input_items = result.to_input_list()
