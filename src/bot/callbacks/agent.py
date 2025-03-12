@@ -21,6 +21,8 @@ from openai import AsyncOpenAI
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from ..tools.openai_agents import get_current_time
+from ..tools.openai_agents import query_ticker_from_yahoo_finance
 from .utils import get_message_text
 
 
@@ -55,12 +57,17 @@ class MultiAgentService:
         )
         logger.info(f"Using model: {self.model}")
 
+        tools = [
+            get_current_time,
+            query_ticker_from_yahoo_finance,
+        ]
         self.japanese_agent = Agent(
             name="Japanese agent",
             instructions="You only speak Japanese.",
             handoff_description="Switch to another language if user speaks another language",
             model=self.model,
             model_settings=self.model_settings,
+            tools=tools,
         )
 
         self.english_agent = Agent(
@@ -69,6 +76,7 @@ class MultiAgentService:
             handoff_description="Switch to another language if user speaks another language",
             model=self.model,
             model_settings=self.model_settings,
+            tools=tools,
         )
 
         self.taiwanese_agent = Agent(
@@ -77,6 +85,7 @@ class MultiAgentService:
             handoff_description="Switch to another language if user speaks another language",
             model=self.model,
             model_settings=self.model_settings,
+            tools=tools,
         )
 
         self.taiwanese_agent.handoffs = [self.japanese_agent, self.english_agent]
