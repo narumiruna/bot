@@ -1,3 +1,4 @@
+from .agent import handle_agent
 from .echo import handle_echo
 from .error import add_error_handler
 from .error import handle_error
