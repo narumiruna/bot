@@ -21,8 +21,10 @@ from openai import AsyncOpenAI
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from ..tools.openai_agents import extract_content
 from ..tools.openai_agents import get_current_time
 from ..tools.openai_agents import query_ticker_from_yahoo_finance
+from ..tools.openai_agents import web_search
 from .utils import get_message_text
 
 
@@ -60,6 +62,8 @@ class MultiAgentService:
         tools = [
             get_current_time,
             query_ticker_from_yahoo_finance,
+            web_search,
+            extract_content,
         ]
         self.japanese_agent = Agent(
             name="Japanese agent",
