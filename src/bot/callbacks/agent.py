@@ -60,7 +60,15 @@ class MultiAgentService:
         messages = self.memory.get(memory_key, [])
 
         # add the user message to the list of messages
-        messages.append({"role": "user", "content": message_text})
+        if update.message.from_user:
+            message_text = f"{update.message.from_user.first_name}: {message_text}"
+
+        messages.append(
+            {
+                "role": "user",
+                "content": message_text,
+            }
+        )
 
         # send the messages to the agent
         result = await Runner.run(self.current_agent, input=messages)
