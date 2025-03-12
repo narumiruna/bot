@@ -1,27 +1,18 @@
 from __future__ import annotations
 
-import os
-from typing import cast
-
-from agents import Agent
 from agents import HandoffOutputItem
 from agents import ItemHelpers
 from agents import MessageOutputItem
-from agents import ModelSettings
-from agents import OpenAIChatCompletionsModel
 from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents import TResponseInputItem
-from agents import set_default_openai_client
-from agents import set_default_openai_key
-from agents import set_tracing_disabled
 from loguru import logger
-from openai import AsyncAzureOpenAI
-from openai import AsyncOpenAI
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from ..agents import get_default_agent
+from ..agents import get_fortune_teller_agent
 from ..tools.openai_agents import extract_content
 from ..tools.openai_agents import get_current_time
 from ..tools.openai_agents import query_ticker_from_yahoo_finance
@@ -29,37 +20,9 @@ from ..tools.openai_agents import web_search
 from .utils import get_message_text
 
 
-def get_openai_client() -> AsyncOpenAI:
-    azure_api_key = os.getenv(key="AZURE_OPENAI_API_KEY")
-    if azure_api_key is not None:
-        logger.info("Using Azure OpenAI API")
-
-        azure_client = AsyncAzureOpenAI(api_key=azure_api_key)
-        set_default_openai_key(azure_api_key)
-        set_default_openai_client(azure_client)
-
-        # Disable tracing since Azure doesn't support it
-        set_tracing_disabled(True)
-
-        return cast(AsyncOpenAI, azure_client)
-
-    return AsyncOpenAI()
-
-
 class MultiAgentService:
     def __init__(self, memory_window: int = 100) -> None:
-        self.openai_client = get_openai_client()
         self.memory_window = memory_window
-
-        self.model_settings = ModelSettings(
-            temperature=float(os.getenv("OPENAI_TEMPERATURE", 0.0)),
-        )
-
-        self.model = OpenAIChatCompletionsModel(
-            os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-            openai_client=self.openai_client,
-        )
-        logger.info(f"Using model: {self.model}")
 
         tools = [
             get_current_time,
@@ -67,36 +30,15 @@ class MultiAgentService:
             web_search,
             extract_content,
         ]
-        self.japanese_agent = Agent(
-            name="Japanese agent",
-            instructions="You only speak Japanese.",
-            handoff_description="Switch to another language if user speaks another language",
-            model=self.model,
-            model_settings=self.model_settings,
-            tools=tools,
-        )
 
-        self.english_agent = Agent(
-            name="English agent",
-            instructions="You only speak English",
-            handoff_description="Switch to another language if user speaks another language",
-            model=self.model,
-            model_settings=self.model_settings,
-            tools=tools,
-        )
+        self.furtune_teller_agent = get_fortune_teller_agent()
+        self.furtune_teller_agent.tools = tools
 
-        self.taiwanese_agent = Agent(
-            name="Taiwanese agent",
-            instructions="You only speak Taiwanese",
-            handoff_description="Switch to another language if user speaks another language",
-            model=self.model,
-            model_settings=self.model_settings,
-            tools=tools,
-        )
+        self.taiwanese_agent = get_default_agent()
+        self.taiwanese_agent.tools = tools
 
-        self.taiwanese_agent.handoffs = [self.japanese_agent, self.english_agent]
-        self.english_agent.handoffs = [self.japanese_agent, self.taiwanese_agent]
-        self.japanese_agent.handoffs = [self.english_agent, self.taiwanese_agent]
+        self.taiwanese_agent.handoffs = [self.furtune_teller_agent]
+        self.furtune_teller_agent.handoffs = [self.taiwanese_agent]
 
         self.current_agent = self.taiwanese_agent
 
@@ -121,7 +63,7 @@ class MultiAgentService:
         # send the messages to the agent
         result = await Runner.run(self.current_agent, input=messages)
 
-        # handle new items including messages, handoffs, and tool calls
+        # log the new items
         for new_item in result.new_items:
             agent_name = new_item.agent.name
             if isinstance(new_item, MessageOutputItem):
