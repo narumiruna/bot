@@ -12,6 +12,7 @@ from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents import TResponseInputItem
+from agents import set_default_openai_client
 from agents import set_default_openai_key
 from agents import set_tracing_disabled
 from loguru import logger
@@ -30,6 +31,7 @@ def get_openai_client() -> OpenAI:
 
         openai_client = AsyncAzureOpenAI(api_key=azure_api_key)
         set_default_openai_key(azure_api_key)
+        set_default_openai_client(openai_client)
 
         # Disable tracing since Azure doesn't support it
         set_tracing_disabled(True)
@@ -38,7 +40,7 @@ def get_openai_client() -> OpenAI:
     return openai_client
 
 
-class MultiAgent:
+class MultiAgentService:
     def __init__(self, memory_window: int = 100) -> None:
         self.openai_client = get_openai_client()
         self.memory_window = memory_window
@@ -55,7 +57,6 @@ class MultiAgent:
 
         self.japanese_agent = Agent(
             name="Japanese agent",
-            handoff_description="When the user speaks Japanese",
             instructions="You only speak Japanese.",
             model=self.model,
             model_settings=self.model_settings,
@@ -63,7 +64,6 @@ class MultiAgent:
 
         self.english_agent = Agent(
             name="English agent",
-            handoff_description="When the user speaks English",
             instructions="You only speak English",
             model=self.model,
             model_settings=self.model_settings,
@@ -71,7 +71,6 @@ class MultiAgent:
 
         self.taiwanese_agent = Agent(
             name="Taiwanese agent",
-            handoff_description="When the user speaks Taiwanese",
             instructions="You only speak Taiwanese",
             model=self.model,
             model_settings=self.model_settings,
@@ -125,6 +124,3 @@ class MultiAgent:
         self.current_agent = result.last_agent
 
         await update.message.reply_text(result.final_output)
-
-
-handle_agent = MultiAgent().handle_agent

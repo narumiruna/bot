@@ -32,6 +32,8 @@ def get_bot_token() -> str:
 def run_bot() -> None:
     chat_filter = get_chat_filter()
 
+    multi_agent_service = callbacks.MultiAgentService()
+
     app = Application.builder().token(get_bot_token()).build()
     app.add_handlers(
         [
@@ -51,7 +53,7 @@ def run_bot() -> None:
             CommandHandler("gpt", callbacks.handle_gpt, filters=chat_filter),
             CommandHandler("f", callbacks.handle_format, filters=chat_filter),
             CommandHandler("p", callbacks.extract_product, filters=chat_filter),
-            CommandHandler("a", callbacks.handle_agent, filters=chat_filter),
+            CommandHandler("a", multi_agent_service.handle_agent, filters=chat_filter),
             CommandHandler("echo", callbacks.handle_echo),
             MessageHandler(filters=chat_filter & filters.REPLY, callback=callbacks.handle_user_reply),
             MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
