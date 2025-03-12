@@ -13,6 +13,7 @@ from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
+from ..agents.tools import draw_tarot_card
 from ..agents.tools import extract_content
 from ..agents.tools import get_current_time
 from ..agents.tools import query_ticker_from_yahoo_finance
@@ -24,18 +25,19 @@ class MultiAgentService:
     def __init__(self, memory_window: int = 100) -> None:
         self.memory_window = memory_window
 
-        tools = [
+        self.furtune_teller_agent = get_fortune_teller_agent()
+        self.furtune_teller_agent.tools = [
+            draw_tarot_card,
+            get_current_time,
+        ]
+
+        self.taiwanese_agent = get_default_agent()
+        self.taiwanese_agent.tools = [
             get_current_time,
             query_ticker_from_yahoo_finance,
             web_search,
             extract_content,
         ]
-
-        self.furtune_teller_agent = get_fortune_teller_agent()
-        self.furtune_teller_agent.tools = tools
-
-        self.taiwanese_agent = get_default_agent()
-        self.taiwanese_agent.tools = tools
 
         self.taiwanese_agent.handoffs = [self.furtune_teller_agent]
         self.furtune_teller_agent.handoffs = [self.taiwanese_agent]
