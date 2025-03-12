@@ -58,11 +58,13 @@ class MultiAgentService:
         messages = self.memory.get(memory_key, [])
 
         # add the user message to the list of messages
+        if update.message.from_user:
+            message_text = f"{update.message.from_user.first_name}: {message_text}"
 
         messages.append(
             {
                 "role": "user",
-                "content": f"{update.message.from_user.first_name}: {message_text}",
+                "content": message_text,
             }
         )
 
