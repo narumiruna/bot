@@ -36,6 +36,7 @@ jobs:
           echo BOT_WHITELIST=${{ vars.BOT_WHITELIST }} >> .env
           # echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
           echo OPENAI_MODEL=${{ vars.OPENAI_MODEL }} >> .env
+          echo OPENAI_API_VERSION=${{ vars.OPENAI_API_VERSION }} >> .env
           echo DEVELOPER_CHAT_ID=${{ vars.DEVELOPER_CHAT_ID }} >> .env
           echo SINGLEFILE_PATH=${{ vars.SINGLEFILE_PATH }} >> .env
           echo AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }} >> .env
