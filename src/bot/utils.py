@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+import aiofiles
 import telegraph
 
 
@@ -17,6 +18,16 @@ def save_text(text: str, f: str) -> None:
 def load_json(f: str) -> Any:
     with Path(f).open(encoding="utf-8") as fp:
         return json.load(fp)
+
+
+def save_json(data: Any, f: str) -> None:
+    with Path(f).open("w", encoding="utf-8") as fp:
+        json.dump(data, fp, ensure_ascii=False, indent=4)
+
+
+async def async_save_json(data: Any, f: str) -> None:
+    async with aiofiles.open(f, "w", encoding="utf-8") as fp:
+        json.dump(data, fp, ensure_ascii=False, indent=4)
 
 
 def parse_url(s: str) -> str:
