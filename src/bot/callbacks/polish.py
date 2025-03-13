@@ -5,14 +5,14 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from .. import chains
-from .utils import get_message_text
+from .utils import get_message_text_from_update
 
 
 async def handle_polish(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
-    message_text = get_message_text(update)
+    message_text = get_message_text_from_update(update)
     if not message_text:
         return
 

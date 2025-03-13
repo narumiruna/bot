@@ -6,19 +6,24 @@ from telegram import Message
 from telegram import Update
 
 
-def get_message_text(update: Update, include_reply_to_message: bool = True) -> str:
-    message = update.message
-    if not message:
-        return ""
-
+def get_message_text(message: Message, include_reply_to_message: bool = True) -> str:
     message_text = message.text or ""
     message_text = strip_command(message_text)
+
     if not include_reply_to_message:
         return message_text
 
     reply_text = message.reply_to_message.text if message.reply_to_message and message.reply_to_message.text else ""
 
     return f"{reply_text}\n{message_text}" if reply_text else message_text
+
+
+def get_message_text_from_update(update: Update, include_reply_to_message: bool = True) -> str:
+    message = update.message
+    if not message:
+        return ""
+
+    return get_message_text(message, include_reply_to_message)
 
 
 def strip_command(text: str) -> str:

@@ -6,7 +6,7 @@ from telegram.ext import ContextTypes
 from .. import chains
 from ..utils import parse_url
 from .utils import async_load_url
-from .utils import get_message_text
+from .utils import get_message_text_from_update
 
 
 async def generate_recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -16,7 +16,7 @@ async def generate_recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not context.args:
         return
 
-    message_text = get_message_text(update)
+    message_text = get_message_text_from_update(update)
     url = parse_url(message_text)
     if url:
         message_text = await async_load_url(url)

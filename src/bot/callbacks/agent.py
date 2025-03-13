@@ -8,13 +8,17 @@ from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents import TResponseInputItem
+from aiocache import Cache
 from loguru import logger
+from telegram import Message
 from telegram import Update
 from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
 from .utils import get_message_text
+
+_cache = Cache(Cache.REDIS)
 
 
 def log_run_items(items: list[RunItem]) -> None:
@@ -47,25 +51,22 @@ class MultiAgentService:
         # message.chat.id -> list of messages
         self.memory: dict[str, list[TResponseInputItem]] = {}
 
-    async def handle_agent(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        if not update.message:
-            return
-
+    async def handle_message(self, message: Message) -> None:
         # TODO: Implement filters.MessageFilter
         # if is_reply(update) and not is_reply_from_bot(update):
         #     return
 
-        message_text = get_message_text(update)
+        message_text = get_message_text(message)
         if not message_text:
             return
 
         # Get the memory for the current chat (group or user)
-        memory_key = str(update.message.chat.id)
+        memory_key = str(message.chat.id)
         messages = self.memory.get(memory_key, [])
 
         # add the user message to the list of messages
-        if update.message.from_user:
-            message_text = f"{update.message.from_user.first_name}: {message_text}"
+        if message.from_user:
+            message_text = f"{message.from_user.first_name}: {message_text}"
 
         messages.append(
             {
@@ -89,7 +90,51 @@ class MultiAgentService:
         # update the current agent
         self.current_agent = result.last_agent
 
-        await update.message.reply_text(result.final_output)
+        await message.reply_text(result.final_output)
+
+    async def handle_agent(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        if not update.message:
+            return
+
+        # # TODO: Implement filters.MessageFilter
+        # # if is_reply(update) and not is_reply_from_bot(update):
+        # #     return
+
+        # message_text = get_message_text(update)
+        # if not message_text:
+        #     return
+
+        # # Get the memory for the current chat (group or user)
+        # memory_key = str(update.message.chat.id)
+        # messages = self.memory.get(memory_key, [])
+
+        # # add the user message to the list of messages
+        # if update.message.from_user:
+        #     message_text = f"{update.message.from_user.first_name}: {message_text}"
+
+        # messages.append(
+        #     {
+        #         "role": "user",
+        #         "content": message_text,
+        #     }
+        # )
+
+        # # send the messages to the agent
+        # result = await Runner.run(self.current_agent, input=messages)
+
+        # # log the new items
+        # log_run_items(result.new_items)
+
+        # # update the memory
+        # input_items = result.to_input_list()
+        # if len(input_items) > self.memory_window:
+        #     input_items = input_items[-self.memory_window :]
+        # self.memory[memory_key] = input_items
+
+        # # update the current agent
+        # self.current_agent = result.last_agent
+
+        # await update.message.reply_text(result.final_output)
 
 
 def is_reply(update: Update) -> bool:
