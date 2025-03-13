@@ -6,14 +6,14 @@ from telegram.ext import ContextTypes
 from .. import chains
 from ..utils import parse_url
 from .utils import async_load_url
-from .utils import get_message_text
+from .utils import get_message_text_from_update
 
 
 async def handle_learn_japanese(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
-    text = get_message_text(update)
+    text = get_message_text_from_update(update)
     if not text:
         return
 

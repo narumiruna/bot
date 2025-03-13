@@ -11,7 +11,7 @@ from .. import chains
 from ..utils import create_page
 from ..utils import parse_url
 from .utils import async_load_url
-from .utils import get_message_text
+from .utils import get_message_text_from_update
 
 MAX_LENGTH: Final[int] = 1_000
 
@@ -21,7 +21,7 @@ def create_translate_callback(lang: str) -> Callable:
         if not update.message:
             return
 
-        message_text = get_message_text(update)
+        message_text = get_message_text_from_update(update)
         if not message_text:
             return
 

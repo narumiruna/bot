@@ -9,6 +9,7 @@ from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents import TResponseInputItem
 from loguru import logger
+from telegram import Message
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -47,25 +48,18 @@ class MultiAgentService:
         # message.chat.id -> list of messages
         self.memory: dict[str, list[TResponseInputItem]] = {}
 
-    async def handle_agent(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        if not update.message:
-            return
-
-        # TODO: Implement filters.MessageFilter
-        # if is_reply(update) and not is_reply_from_bot(update):
-        #     return
-
-        message_text = get_message_text(update)
+    async def handle_message(self, message: Message) -> None:
+        message_text = get_message_text(message)
         if not message_text:
             return
 
         # Get the memory for the current chat (group or user)
-        memory_key = str(update.message.chat.id)
+        memory_key = str(message.chat.id)
         messages = self.memory.get(memory_key, [])
 
         # add the user message to the list of messages
-        if update.message.from_user:
-            message_text = f"{update.message.from_user.first_name}: {message_text}"
+        if message.from_user:
+            message_text = f"{message.from_user.first_name}: {message_text}"
 
         messages.append(
             {
@@ -89,7 +83,34 @@ class MultiAgentService:
         # update the current agent
         self.current_agent = result.last_agent
 
-        await update.message.reply_text(result.final_output)
+        await message.reply_text(result.final_output)
+
+    async def handle_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        message = update.message
+        if not message:
+            return
+
+        await self.handle_message(message)
+
+    async def handle_reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        # TODO: Implement filters.MessageFilter for reply to bot
+
+        message = update.message
+        if not message:
+            return
+
+        reply_to_message = message.reply_to_message
+        if not reply_to_message:
+            return
+
+        from_user = reply_to_message.from_user
+        if not from_user:
+            return
+
+        if not from_user.is_bot:
+            return
+
+        await self.handle_message(message)
 
 
 def is_reply(update: Update) -> bool:
