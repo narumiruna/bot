@@ -38,6 +38,10 @@ def run_bot() -> None:
     app = Application.builder().token(get_bot_token()).build()
     app.add_handlers(
         [
+            # Handle message before command
+            MessageHandler(filters=chat_filter & filters.REPLY, callback=multi_agent_service.handle_reply),
+            MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
+            CommandHandler("a", multi_agent_service.handle_command, filters=chat_filter),
             CommandHandler("help", callbacks.handle_help, filters=chat_filter),
             CommandHandler("s", callbacks.summarize, filters=chat_filter),
             CommandHandler("jp", callbacks.create_translate_callback("日本語"), filters=chat_filter),
@@ -49,10 +53,7 @@ def run_bot() -> None:
             CommandHandler("recipe", callbacks.generate_recipe, filters=chat_filter),
             CommandHandler("ljp", callbacks.handle_learn_japanese, filters=chat_filter),
             CommandHandler("f", callbacks.handle_format, filters=chat_filter),
-            CommandHandler("a", multi_agent_service.handle_command, filters=chat_filter),
             CommandHandler("echo", callbacks.handle_echo),
-            MessageHandler(filters=chat_filter & filters.REPLY, callback=multi_agent_service.handle_reply),
-            MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
         ]
     )
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
