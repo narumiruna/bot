@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from agents import HandoffOutputItem
 from agents import ItemHelpers
 from agents import MessageOutputItem
@@ -14,6 +16,8 @@ from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
+from ..utils import async_save_json
+from ..utils import load_json
 from .utils import get_message_text
 
 
@@ -33,7 +37,7 @@ def log_run_items(items: list[RunItem]) -> None:
 
 
 class MultiAgentService:
-    def __init__(self, memory_window: int = 100) -> None:
+    def __init__(self, memory_window: int = 100, memory_file: str = "memory.json") -> None:
         self.memory_window = memory_window
 
         self.furtune_teller_agent = get_fortune_teller_agent()
@@ -46,6 +50,9 @@ class MultiAgentService:
 
         # message.chat.id -> list of messages
         self.memory: dict[str, list[TResponseInputItem]] = {}
+        memory_path = Path(memory_file)
+        if memory_path.exists():
+            self.memory = load_json(str(memory_path))
 
     async def handle_agent(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not update.message:
@@ -81,6 +88,8 @@ class MultiAgentService:
         if len(input_items) > self.memory_window:
             input_items = input_items[-self.memory_window :]
         self.memory[memory_key] = input_items
+
+        await async_save_json(self.memory, "memory.json")
 
         # update the current agent
         self.current_agent = result.last_agent
