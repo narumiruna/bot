@@ -21,7 +21,6 @@ async def handle_help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         "/recipe - Generate a recipe\n"
         "/ljp - Learn Japanese\n"
         "/t - Query ticker from Yahoo Finance and Taiwan stock exchange\n"
-        "/trip - Get travel recommendations\n"
         "/f - Format and normalize the document in 台灣話\n"
     )
 
