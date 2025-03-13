@@ -35,6 +35,7 @@ dependencies = [
     "duckduckgo-search>=7.5.1",
     "aiofiles>=24.1.0",
     "aiocache[redis]>=0.12.3",
+    "tenacity>=9.0.0",
 ]
 
 [project.scripts]
