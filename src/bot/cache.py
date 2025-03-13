@@ -6,7 +6,7 @@ from aiocache import BaseCache
 from aiocache import Cache
 from loguru import logger
 
-DEFAULT_REDIS_URL: Final[str] = "redis://localhost:6379/0"
+DEFAULT_REDIS_URL: Final[str] = "redis://localhost:6379/01?pool_max_size=1"
 DEFAULT_MEMORY_URL: Final[str] = "memory://"
 
 
