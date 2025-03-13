@@ -38,12 +38,12 @@ class MultiAgentService:
         self.max_cache_size = max_cache_size
 
         self.furtune_teller_agent = get_fortune_teller_agent()
-        self.taiwanese_agent = get_default_agent()
+        self.default_agent = get_default_agent()
 
-        self.taiwanese_agent.handoffs = [self.furtune_teller_agent]
-        self.furtune_teller_agent.handoffs = [self.taiwanese_agent]
+        self.default_agent.handoffs = [self.furtune_teller_agent]
+        self.furtune_teller_agent.handoffs = [self.default_agent]
 
-        self.current_agent = self.taiwanese_agent
+        self.current_agent = self.default_agent
 
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()
