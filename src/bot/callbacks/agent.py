@@ -52,7 +52,7 @@ class MultiAgentService:
             return
 
         # TODO: Implement filters.MessageFilter
-        if is_reply(update) and not is_bot_reply(update):
+        if is_reply(update) and not is_reply_from_bot(update):
             return
 
         message_text = get_message_text(update)
@@ -99,7 +99,7 @@ def is_reply(update: Update) -> bool:
     return bool(update.message.reply_to_message)
 
 
-def is_bot_reply(update: Update) -> bool:
+def is_reply_from_bot(update: Update) -> bool:
     message = update.message
     if not message:
         return False
