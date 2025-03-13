@@ -12,10 +12,10 @@ from telegram import Message
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from ..agents import get_default_agent
-from ..agents import get_fortune_teller_agent
 from ..cache import get_cache_from_env
-from .utils import get_message_text
+from ..callbacks.utils import get_message_text
+from . import get_default_agent
+from . import get_fortune_teller_agent
 
 
 def log_run_items(items: list[RunItem]) -> None:

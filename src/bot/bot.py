@@ -10,6 +10,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import filters
 
 from . import callbacks
+from .agents import MultiAgentService
 
 
 def get_chat_filter() -> filters.BaseFilter:
@@ -32,7 +33,7 @@ def get_bot_token() -> str:
 def run_bot() -> None:
     chat_filter = get_chat_filter()
 
-    multi_agent_service = callbacks.MultiAgentService()
+    multi_agent_service = MultiAgentService()
 
     app = Application.builder().token(get_bot_token()).build()
     app.add_handlers(

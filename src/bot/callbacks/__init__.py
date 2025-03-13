@@ -1,4 +1,3 @@
-from .agent import MultiAgentService
 from .echo import handle_echo
 from .error import add_error_handler
 from .error import handle_error
