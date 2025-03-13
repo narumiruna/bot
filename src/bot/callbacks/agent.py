@@ -52,10 +52,6 @@ class MultiAgentService:
         self.memory: dict[str, list[TResponseInputItem]] = {}
 
     async def handle_message(self, message: Message) -> None:
-        # TODO: Implement filters.MessageFilter
-        # if is_reply(update) and not is_reply_from_bot(update):
-        #     return
-
         message_text = get_message_text(message)
         if not message_text:
             return
@@ -92,49 +88,32 @@ class MultiAgentService:
 
         await message.reply_text(result.final_output)
 
-    async def handle_agent(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        if not update.message:
+    async def handle_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        message = update.message
+        if not message:
             return
 
-        # # TODO: Implement filters.MessageFilter
-        # # if is_reply(update) and not is_reply_from_bot(update):
-        # #     return
+        await self.handle_message(message)
 
-        # message_text = get_message_text(update)
-        # if not message_text:
-        #     return
+    async def handle_reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        # TODO: Implement filters.MessageFilter for reply to bot
 
-        # # Get the memory for the current chat (group or user)
-        # memory_key = str(update.message.chat.id)
-        # messages = self.memory.get(memory_key, [])
+        message = update.message
+        if not message:
+            return
 
-        # # add the user message to the list of messages
-        # if update.message.from_user:
-        #     message_text = f"{update.message.from_user.first_name}: {message_text}"
+        reply_to_message = message.reply_to_message
+        if not reply_to_message:
+            return
 
-        # messages.append(
-        #     {
-        #         "role": "user",
-        #         "content": message_text,
-        #     }
-        # )
+        from_user = reply_to_message.from_user
+        if not from_user:
+            return
 
-        # # send the messages to the agent
-        # result = await Runner.run(self.current_agent, input=messages)
+        if not from_user.is_bot:
+            return
 
-        # # log the new items
-        # log_run_items(result.new_items)
-
-        # # update the memory
-        # input_items = result.to_input_list()
-        # if len(input_items) > self.memory_window:
-        #     input_items = input_items[-self.memory_window :]
-        # self.memory[memory_key] = input_items
-
-        # # update the current agent
-        # self.current_agent = result.last_agent
-
-        # await update.message.reply_text(result.final_output)
+        await self.handle_message(message)
 
 
 def is_reply(update: Update) -> bool:
