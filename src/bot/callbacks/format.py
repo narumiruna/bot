@@ -10,16 +10,17 @@ from .. import chains
 from ..utils import create_page
 from ..utils import parse_url
 from .utils import async_load_url
-from .utils import get_message_text_from_update
+from .utils import get_message_text
 
 MAX_LENGTH: Final[int] = 1_000
 
 
 async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
+    message = update.message
+    if not message:
         return
 
-    message_text = get_message_text_from_update(update)
+    message_text = get_message_text(message)
     if not message_text:
         return
 
@@ -35,4 +36,4 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         text = resp.content
 
-    await update.message.reply_text(text)
+    await message.reply_text(text)

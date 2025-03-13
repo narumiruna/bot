@@ -12,5 +12,5 @@ from .summary import summarize_document
 from .ticker import query_ticker
 from .translate import create_translate_callback
 from .trip import handle_trip
-from .utils import get_message_text_from_update
+from .utils import get_message_text
 from .youtube_search import search_youtube

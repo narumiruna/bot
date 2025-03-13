@@ -12,21 +12,22 @@ from telegram.ext import ContextTypes
 from .. import chains
 from ..utils import parse_url
 from .utils import async_load_url
-from .utils import get_message_text_from_update
+from .utils import get_message_text
 
 
 async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
+    message = update.message
+    if not message:
         return
 
-    message_text = get_message_text_from_update(update)
+    message_text = get_message_text(message)
     if not message_text:
         return
     logger.info("message_text: {}", message_text)
 
     url = parse_url(message_text)
     if not url:
-        await update.message.reply_text(f"Please provide a valid URL, got: {message_text}")
+        await message.reply_text(f"Please provide a valid URL, got: {message_text}")
         return
     logger.info("Parsed URL: {}", url)
 
@@ -34,21 +35,22 @@ async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         text = await async_load_url(url)
     except Exception as e:
         logger.error("Failed to load URL: {}", e)
-        await update.message.reply_text(f"Unable to load content from: {url}")
+        await message.reply_text(f"Unable to load content from: {url}")
         return
     logger.info("Text length: {}", len(text))
 
     result = await chains.summarize(text)
 
     logger.info("Summarized text: {}", result)
-    await update.message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    await message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 
 async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
+    message = update.message
+    if not message:
         return
 
-    document = update.message.document
+    document = message.document
     if not document:
         return
 
@@ -63,6 +65,6 @@ async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     if text:
         summarized = await chains.summarize(text)
-        await update.message.reply_text(summarized, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(summarized, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
     os.remove(file_path)

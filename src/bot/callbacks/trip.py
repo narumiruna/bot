@@ -10,7 +10,7 @@ from telegram.ext import ContextTypes
 from tripplus import RedemptionRequest
 
 from ..chains.utils import generate
-from .utils import get_message_text_from_update
+from .utils import get_message_text
 
 SYSTEM_PROMPT = """
 你是一位專業的哩程旅遊顧問，擅長協助規劃機票兌換及旅遊行程。請使用台灣用語習慣的繁體中文，精簡且重點式地回覆。
@@ -51,14 +51,15 @@ class AwardSearch(BaseTool):
 
 
 async def handle_trip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
+    message = update.message
+    if not message:
         return
 
-    message_text = get_message_text_from_update(update)
+    message_text = get_message_text(message)
 
     reply_text = await generate(
         message_text,
         system=SYSTEM_PROMPT,
         tools=[AwardSearch],
     )
-    await update.message.reply_text(reply_text)
+    await message.reply_text(reply_text)
