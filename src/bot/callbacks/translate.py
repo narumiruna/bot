@@ -11,17 +11,18 @@ from .. import chains
 from ..utils import create_page
 from ..utils import parse_url
 from .utils import async_load_url
-from .utils import get_message_text_from_update
+from .utils import get_message_text
 
 MAX_LENGTH: Final[int] = 1_000
 
 
 def create_translate_callback(lang: str) -> Callable:
     async def translate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        if not update.message:
+        message = update.message
+        if not message:
             return
 
-        message_text = get_message_text_from_update(update)
+        message_text = get_message_text(message)
         if not message_text:
             return
 
@@ -38,6 +39,6 @@ def create_translate_callback(lang: str) -> Callable:
 
         if len(reply_text) > MAX_LENGTH:
             reply_text = create_page(title="Translation", html_content=reply_text.replace("\n", "<br>"))
-        await update.message.reply_text(reply_text)
+        await message.reply_text(reply_text)
 
     return translate
