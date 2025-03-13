@@ -8,7 +8,7 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 from twse.stock_info import query_stock_info
 
-from .. import tools
+from ..yahoo_finance import query_tickers
 
 
 async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -20,7 +20,7 @@ async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     # Query Yahoo Finance
     try:
-        yf_result = tools.query_tickers(context.args)
+        yf_result = query_tickers(context.args)
     except Exception as e:
         logger.info("Failed to get ticker for {}, got error: {}", context.args, e)
         yf_result = ""
