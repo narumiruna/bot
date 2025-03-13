@@ -1,5 +1,5 @@
+from .content_extractor import extract_content_from_url
 from .datetime import get_current_time
-from .duckduckgo import extract_content
 from .duckduckgo import web_search
 from .monster_hunter_weapon import draw_monster_hunter_weapon
 from .mortgage import compute_loan_details

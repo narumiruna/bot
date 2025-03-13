@@ -4,7 +4,7 @@ from agents import Agent
 
 from .model import get_openai_model
 from .model import get_openai_model_settings
-from .tools import extract_content
+from .tools import extract_content_from_url
 from .tools import get_current_time
 from .tools import query_ticker_from_yahoo_finance
 from .tools import web_search
@@ -28,6 +28,6 @@ def get_default_agent() -> Agent:
             get_current_time,
             query_ticker_from_yahoo_finance,
             web_search,
-            extract_content,
+            extract_content_from_url,
         ],
     )
