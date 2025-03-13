@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from agents import HandoffOutputItem
 from agents import ItemHelpers
 from agents import MessageOutputItem
@@ -16,8 +14,6 @@ from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
-from ..utils import async_save_json
-from ..utils import load_json
 from .utils import get_message_text
 
 
@@ -50,12 +46,13 @@ class MultiAgentService:
 
         # message.chat.id -> list of messages
         self.memory: dict[str, list[TResponseInputItem]] = {}
-        memory_path = Path(memory_file)
-        if memory_path.exists():
-            self.memory = load_json(str(memory_path))
 
     async def handle_agent(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not update.message:
+            return
+
+        # TODO: Implement filters.MessageFilter
+        if is_reply(update) and not is_bot_reply(update):
             return
 
         message_text = get_message_text(update)
@@ -89,9 +86,30 @@ class MultiAgentService:
             input_items = input_items[-self.memory_window :]
         self.memory[memory_key] = input_items
 
-        await async_save_json(self.memory, "memory.json")
-
         # update the current agent
         self.current_agent = result.last_agent
 
         await update.message.reply_text(result.final_output)
+
+
+def is_reply(update: Update) -> bool:
+    if not update.message:
+        return False
+
+    return bool(update.message.reply_to_message)
+
+
+def is_bot_reply(update: Update) -> bool:
+    message = update.message
+    if not message:
+        return False
+
+    reply_to_message = message.reply_to_message
+    if not reply_to_message:
+        return False
+
+    from_user = reply_to_message.from_user
+    if not from_user:
+        return False
+
+    return from_user.is_bot
