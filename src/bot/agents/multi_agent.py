@@ -60,10 +60,14 @@ class MultiAgentService:
             messages = []
             logger.info("No key found for {}", key)
 
-        # add the user message to the list of messages
-        if message.from_user:
-            message_text = f"{message.from_user.first_name}: {message_text}"
+        user = message.from_user
+        if user:
+            # Add the user's first name and username to the message
+            # User(first_name='なるみ', id=123456789, is_bot=False, language_code='zh-hans', username='narumi')
+            # -> なるみ(narumi): 你好
+            message_text = f"{user.first_name}({user.username}): {message_text}"
 
+        # add the user message to the list of messages
         messages.append(
             {
                 "role": "user",
