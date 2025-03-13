@@ -7,7 +7,6 @@ from agents import RunItem
 from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
-from agents import TResponseInputItem
 from loguru import logger
 from telegram import Message
 from telegram import Update
@@ -15,6 +14,7 @@ from telegram.ext import ContextTypes
 
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
+from ..cache import get_cache_from_env
 from .utils import get_message_text
 
 
@@ -46,7 +46,7 @@ class MultiAgentService:
         self.current_agent = self.taiwanese_agent
 
         # message.chat.id -> list of messages
-        self.memory: dict[str, list[TResponseInputItem]] = {}
+        self.cache = get_cache_from_env()
 
     async def handle_message(self, message: Message) -> None:
         message_text = get_message_text(message)
@@ -54,8 +54,11 @@ class MultiAgentService:
             return
 
         # Get the memory for the current chat (group or user)
-        memory_key = str(message.chat.id)
-        messages = self.memory.get(memory_key, [])
+        key = f"bot:{message.chat.id}"
+        messages = await self.cache.get(key)
+        if messages is None:
+            messages = []
+            logger.info("No key found for {}", key)
 
         # add the user message to the list of messages
         if message.from_user:
@@ -78,7 +81,7 @@ class MultiAgentService:
         input_items = result.to_input_list()
         if len(input_items) > self.memory_window:
             input_items = input_items[-self.memory_window :]
-        self.memory[memory_key] = input_items
+        await self.cache.set(key, input_items)
 
         # update the current agent
         self.current_agent = result.last_agent
