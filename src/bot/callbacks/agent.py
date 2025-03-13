@@ -8,7 +8,6 @@ from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents import TResponseInputItem
-from aiocache import Cache
 from loguru import logger
 from telegram import Message
 from telegram import Update
@@ -17,8 +16,6 @@ from telegram.ext import ContextTypes
 from ..agents import get_default_agent
 from ..agents import get_fortune_teller_agent
 from .utils import get_message_text
-
-_cache = Cache(Cache.REDIS)
 
 
 def log_run_items(items: list[RunItem]) -> None:
