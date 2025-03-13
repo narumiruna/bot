@@ -34,8 +34,8 @@ def log_run_items(items: list[RunItem]) -> None:
 
 
 class MultiAgentService:
-    def __init__(self, memory_window: int = 100, memory_file: str = "memory.json") -> None:
-        self.memory_window = memory_window
+    def __init__(self, max_cache_size: int = 100) -> None:
+        self.max_cache_size = max_cache_size
 
         self.furtune_teller_agent = get_fortune_teller_agent()
         self.taiwanese_agent = get_default_agent()
@@ -79,8 +79,8 @@ class MultiAgentService:
 
         # update the memory
         input_items = result.to_input_list()
-        if len(input_items) > self.memory_window:
-            input_items = input_items[-self.memory_window :]
+        if len(input_items) > self.max_cache_size:
+            input_items = input_items[-self.max_cache_size :]
         await self.cache.set(key, input_items)
 
         # update the current agent
