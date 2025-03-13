@@ -7,6 +7,7 @@ from .model import get_openai_model_settings
 from .tools import extract_content_from_url
 from .tools import get_current_time
 from .tools import query_ticker_from_yahoo_finance
+from .tools import search_award
 from .tools import web_search
 
 INSTRUCTION = """
@@ -29,5 +30,6 @@ def get_default_agent() -> Agent:
             query_ticker_from_yahoo_finance,
             web_search,
             extract_content_from_url,
+            search_award,
         ],
     )
