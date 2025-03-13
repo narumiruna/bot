@@ -48,8 +48,12 @@ class MultiAgentService:
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()
 
-    async def handle_message(self, message: Message) -> None:
-        message_text = get_message_text(message)
+    async def handle_message(self, message: Message, include_reply_to_message: bool = False) -> None:
+        message_text = get_message_text(
+            message,
+            include_reply_to_message=include_reply_to_message,
+            include_user_name=True,
+        )
         if not message_text:
             return
 
@@ -59,13 +63,6 @@ class MultiAgentService:
         if messages is None:
             messages = []
             logger.info("No key found for {}", key)
-
-        user = message.from_user
-        if user:
-            # Add the user's first name and username to the message
-            # User(first_name='なるみ', id=123456789, is_bot=False, language_code='zh-hans', username='narumi')
-            # -> なるみ(narumi): 你好
-            message_text = f"{user.first_name}({user.username}): {message_text}"
 
         # add the user message to the list of messages
         messages.append(
@@ -92,14 +89,14 @@ class MultiAgentService:
 
         await message.reply_text(result.final_output)
 
-    async def handle_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async def handle_command(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         message = update.message
         if not message:
             return
 
-        await self.handle_message(message)
+        await self.handle_message(message, include_reply_to_message=False)
 
-    async def handle_reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async def handle_reply(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         # TODO: Implement filters.MessageFilter for reply to bot
 
         message = update.message
@@ -117,4 +114,4 @@ class MultiAgentService:
         if not from_user.is_bot:
             return
 
-        await self.handle_message(message)
+        await self.handle_message(message, include_reply_to_message=True)
