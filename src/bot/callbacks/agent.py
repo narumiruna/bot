@@ -114,26 +114,3 @@ class MultiAgentService:
             return
 
         await self.handle_message(message)
-
-
-def is_reply(update: Update) -> bool:
-    if not update.message:
-        return False
-
-    return bool(update.message.reply_to_message)
-
-
-def is_reply_from_bot(update: Update) -> bool:
-    message = update.message
-    if not message:
-        return False
-
-    reply_to_message = message.reply_to_message
-    if not reply_to_message:
-        return False
-
-    from_user = reply_to_message.from_user
-    if not from_user:
-        return False
-
-    return from_user.is_bot
