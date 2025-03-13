@@ -51,7 +51,7 @@ def run_bot() -> None:
             CommandHandler("f", callbacks.handle_format, filters=chat_filter),
             CommandHandler("a", multi_agent_service.handle_agent, filters=chat_filter),
             CommandHandler("echo", callbacks.handle_echo),
-            MessageHandler(filters=chat_filter & filters.REPLY, callback=multi_agent_service.handle_agent),
+            # MessageHandler(filters=chat_filter & filters.REPLY, callback=multi_agent_service.handle_agent),
             MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
         ]
     )

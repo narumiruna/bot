@@ -52,8 +52,8 @@ class MultiAgentService:
             return
 
         # TODO: Implement filters.MessageFilter
-        if is_reply(update) and not is_reply_from_bot(update):
-            return
+        # if is_reply(update) and not is_reply_from_bot(update):
+        #     return
 
         message_text = get_message_text(update)
         if not message_text:
