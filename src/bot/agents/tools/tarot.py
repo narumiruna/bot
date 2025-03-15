@@ -35,10 +35,18 @@ orientations: list[str] = [
 
 @function_tool
 def draw_tarot_card(n: int) -> str:
-    """Draw n tarot cards and return their names with orientations.
+    """Draw and return a formatted string of randomly selected tarot cards with orientations.
 
     Args:
-        n (int): Number of cards to draw.
+        n (int): Number of tarot cards to draw.
+
+    Returns:
+        str: A newline-separated string where each line contains the card number, the tarot card, and its orientation.
+
+    Example:
+        >>> print(draw_tarot_card(2))
+        Card #1: 🃏 愚者 (The Fool) (正位 (Upright))
+        Card #2: 🎭 魔術師 (The Magician) (逆位 (Reversed))
     """
     res = []
     for i in range(n):
