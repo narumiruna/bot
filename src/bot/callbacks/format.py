@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Final
 
-from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -28,12 +27,11 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if url:
         message_text = await async_load_url(url)
 
-    resp = await chains.format_v2(message_text)
-    logger.info("Formatted text: {}", resp)
+    result = await chains.create_notes(message_text)
 
-    if len(resp.content) > MAX_LENGTH:
-        text = create_page(title=resp.title, html_content=resp.content.replace("\n", "<br>"))
+    if len(str(result)) > MAX_LENGTH:
+        text = create_page(title=result.title, html_content=str(result).replace("\n", "<br>"))
     else:
-        text = resp.content
+        text = str(result)
 
     await message.reply_text(text)

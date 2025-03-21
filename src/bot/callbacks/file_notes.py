@@ -34,8 +34,9 @@ async def extract_notes_from_document(update: Update, context: ContextTypes.DEFA
     if not text:
         return
 
+    result = await chains.create_notes(text)
     await message.reply_text(
-        await chains.format_v2(text),
+        str(result),
         parse_mode=ParseMode.HTML,
         disable_web_page_preview=True,
     )
