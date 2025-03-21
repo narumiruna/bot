@@ -84,7 +84,7 @@ def get_composed_loader() -> Compose:
             kabigon.ReelLoader(),
             kabigon.YtdlpLoader(),
             kabigon.PDFLoader(),
-            kabigon.SinglefileLoader(),
+            kabigon.PlaywrightLoader(),
         ]
     )
 
