@@ -16,7 +16,6 @@ class ResearchReport(BaseModel):
     methodology: str
     hightlights: list[str]
     conclusion: str
-    references: list[str]
 
     def __str__(self) -> str:
         lines = []
@@ -30,9 +29,6 @@ class ResearchReport(BaseModel):
             lines.append("\n".join(["✨ 重點"] + [f"- {highlight}" for highlight in self.hightlights]))
 
         lines.append(f"🎯 結論\n{self.conclusion}")
-
-        if self.references:
-            lines.append("\n".join(["📚 參考"] + [f"- {reference}" for reference in self.references]))
 
         return "\n\n".join(lines)
 
@@ -54,7 +50,6 @@ async def extract_notes(text: str, lang: str = "台灣中文") -> ResearchReport
     4. A methodology section describing approaches or methods used
     5. Key highlights or findings (as bullet points)
     6. A conclusion summarizing implications and importance
-    7. References or sources if mentioned in the text
 
     Input text:
     ```
