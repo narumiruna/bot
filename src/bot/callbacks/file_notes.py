@@ -11,7 +11,7 @@ from telegram.ext import ContextTypes
 from .. import chains
 
 
-async def summarize_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def extract_notes_from_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.message
     if not message:
         return

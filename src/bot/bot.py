@@ -53,7 +53,7 @@ def run_bot() -> None:
             CommandHandler("echo", callbacks.handle_echo),
             # Message handlers should be placed at the end.
             MessageHandler(filters=chat_filter & filters.REPLY, callback=multi_agent_service.handle_reply),
-            MessageHandler(filters=chat_filter, callback=callbacks.summarize_document),
+            MessageHandler(filters=chat_filter, callback=callbacks.extract_notes_from_document),
         ]
     )
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
