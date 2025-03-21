@@ -23,7 +23,7 @@ class ResearchReport(BaseModel):
     introduction: str
     methodology: str
     hightlights: list[str]
-    causal_relationships: list[CausalRelationship] = []
+    causal_relationships: list[CausalRelationship]
     conclusion: str
 
     def __str__(self) -> str:
