@@ -27,7 +27,7 @@ async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if url:
         message_text = await async_load_url(url)
 
-    result = await chains.create_notes(message_text)
+    result = await chains.format(message_text)
 
     if len(str(result)) > MAX_LENGTH:
         text = create_page(title=result.title, html_content=str(result).replace("\n", "<br>"))

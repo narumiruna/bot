@@ -1,9 +1,12 @@
+import asyncio
 from textwrap import dedent
 from typing import cast
 
 from loguru import logger
 from pydantic import BaseModel
 
+from .notes import create_notes_from_chunk
+from .utils import chunk_on_delimiter
 from .utils import generate
 
 
@@ -11,8 +14,11 @@ class FormattedContent(BaseModel):
     title: str
     content: str
 
+    def __str__(self) -> str:
+        return self.content
 
-async def format(text: str, lang: str = "台灣中文") -> FormattedContent:
+
+async def _format(text: str, lang: str = "台灣中文") -> FormattedContent:
     prompt = f"""
     Extract and organize information from the input text, then translate it to {lang}.
     Do not fabricate any information.
@@ -39,3 +45,13 @@ async def format(text: str, lang: str = "台灣中文") -> FormattedContent:
 
     logger.info("Formatted response: {}", response)
     return response
+
+
+async def format(text: str, lang: str = "台灣中文") -> FormattedContent:
+    chunks = chunk_on_delimiter(text)
+
+    if len(chunks) == 1:
+        return await _format(text)
+
+    results = await asyncio.gather(*[create_notes_from_chunk(chunk) for chunk in chunks])
+    return await _format("\n".join(results))
