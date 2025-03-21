@@ -30,6 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv tool install --reinstall --force --python=${{ matrix.python-version }} --with mlx .
+          uv tool run playwright install chromium
       - name: Create dotenv
         run: |
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
