@@ -9,12 +9,21 @@ from .utils import chunk_on_delimiter
 from .utils import generate
 
 
+class CausalRelationship(BaseModel):
+    cause: str
+    effect: str
+
+    def __str__(self) -> str:
+        return f"{self.cause} -> {self.effect}"
+
+
 class ResearchReport(BaseModel):
     title: str
     abstract: str
     introduction: str
     methodology: str
     hightlights: list[str]
+    causal_relationships: list[CausalRelationship] = []
     conclusion: str
 
     def __str__(self) -> str:
@@ -27,6 +36,11 @@ class ResearchReport(BaseModel):
 
         if self.hightlights:
             lines.append("\n".join(["✨ 重點"] + [f"- {highlight}" for highlight in self.hightlights]))
+
+        if self.causal_relationships:
+            lines.append(
+                "\n".join(["🔄 因果關係"] + [f"- {relationship}" for relationship in self.causal_relationships])
+            )
 
         lines.append(f"🎯 結論\n{self.conclusion}")
 
@@ -49,7 +63,8 @@ async def extract_notes(text: str, lang: str = "台灣中文") -> ResearchReport
     3. An introduction explaining the context and purpose
     4. A methodology section describing approaches or methods used
     5. Key highlights or findings (as bullet points)
-    6. A conclusion summarizing implications and importance
+    6. Causal relationships identified in the text (cause -> effect format)
+    7. A conclusion summarizing implications and importance
 
     Input text:
     ```
