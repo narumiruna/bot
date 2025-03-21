@@ -159,7 +159,7 @@ requires-dist = [
     { name = "charset-normalizer", specifier = ">=3.4.0" },
     { name = "cloudscraper", specifier = ">=1.2.71" },
     { name = "duckduckgo-search", specifier = ">=7.5.1" },
-    { name = "kabigon", specifier = ">=0.4.1" },
+    { name = "kabigon", specifier = ">=0.4.2" },
     { name = "lazyopenai", extras = ["langfuse"], specifier = ">=0.5.0" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "lxml", specifier = ">=5.3.0" },
@@ -603,7 +603,7 @@ wheels = [
 
 [[package]]
 name = "kabigon"
-version = "0.4.1"
+version = "0.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioytt" },
@@ -621,7 +621,7 @@ dependencies = [
     { name = "yt-dlp" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/b5/dc050d4717e088bb909d0c4f2bb835e3dafd27e12402dbf8302ba3cf6292/kabigon-0.4.1-py3-none-any.whl", hash = "sha256:c7929a901d812906c32dfafd60ebbf245511e7e2dd1dcff9fad906b9ef476a2e", size = 11315 },
+    { url = "https://files.pythonhosted.org/packages/b3/93/c9c083d073d06caef514e57beebe370a1a15dfaff1f6547741ac766904d2/kabigon-0.4.2-py3-none-any.whl", hash = "sha256:891baf1dd4bac6bc3d4fd1ff68ec9efda27ff67604884aab60e55bb7cc2dedbd", size = 10806 },
 ]
 
 [[package]]

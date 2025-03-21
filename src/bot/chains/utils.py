@@ -18,7 +18,7 @@ async def generate(
         return result
 
 
-def chunk_on_delimiter(text: str, delimiter: str = " ", max_length: int = 100_000) -> list[str]:
+def chunk_on_delimiter(text: str, delimiter: str = " ", max_length: int = 200_000) -> list[str]:
     chunks = []
     current_chunk = ""
     for word in text.split(delimiter):
