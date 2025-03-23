@@ -43,8 +43,8 @@ class MultiAgentService:
         self.furtune_teller_agent = get_fortune_teller_agent()
         self.default_agent = get_default_agent()
 
-        self.default_agent.handoffs = [self.furtune_teller_agent]
-        self.furtune_teller_agent.handoffs = [self.default_agent]
+        # self.default_agent.handoffs = [self.furtune_teller_agent]
+        # self.furtune_teller_agent.handoffs = [self.default_agent]
 
         self.current_agent = self.default_agent
 
