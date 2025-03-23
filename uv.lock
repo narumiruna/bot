@@ -104,9 +104,6 @@ source = { editable = "." }
 dependencies = [
     { name = "aiocache", extra = ["redis"] },
     { name = "aiofiles" },
-    { name = "beautifulsoup4" },
-    { name = "charset-normalizer" },
-    { name = "cloudscraper" },
     { name = "duckduckgo-search" },
     { name = "kabigon" },
     { name = "lazyopenai", extra = ["langfuse"] },
@@ -117,20 +114,14 @@ dependencies = [
     { name = "mortgage" },
     { name = "numba" },
     { name = "openai-agents" },
-    { name = "openai-whisper" },
-    { name = "playwright" },
-    { name = "pypdf" },
     { name = "python-dotenv" },
     { name = "python-telegram-bot" },
     { name = "rich" },
     { name = "telegraph" },
-    { name = "timeout-decorator" },
     { name = "tripplus" },
     { name = "twse" },
     { name = "yfinance" },
     { name = "youtube-search" },
-    { name = "youtube-transcript-api" },
-    { name = "yt-dlp" },
 ]
 
 [package.dev-dependencies]
@@ -155,9 +146,6 @@ mlx = [
 requires-dist = [
     { name = "aiocache", extras = ["redis"], specifier = ">=0.12.3" },
     { name = "aiofiles", specifier = ">=24.1.0" },
-    { name = "beautifulsoup4", specifier = ">=4.12.3" },
-    { name = "charset-normalizer", specifier = ">=3.4.0" },
-    { name = "cloudscraper", specifier = ">=1.2.71" },
     { name = "duckduckgo-search", specifier = ">=7.5.1" },
     { name = "kabigon", specifier = ">=0.5.1" },
     { name = "lazyopenai", extras = ["langfuse"], specifier = ">=0.5.0" },
@@ -168,20 +156,14 @@ requires-dist = [
     { name = "mortgage", specifier = ">=1.0.5" },
     { name = "numba", specifier = ">=0.60.0" },
     { name = "openai-agents", specifier = ">=0.0.3" },
-    { name = "openai-whisper", specifier = ">=20240930" },
-    { name = "playwright", specifier = ">=1.49.1" },
-    { name = "pypdf", specifier = ">=5.0.1" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-telegram-bot", specifier = ">=21.6" },
     { name = "rich", specifier = ">=13.9.4" },
     { name = "telegraph", specifier = ">=2.2.0" },
-    { name = "timeout-decorator", specifier = ">=0.5.0" },
     { name = "tripplus", git = "https://github.com/narumiruna/tripplus.git" },
     { name = "twse", specifier = ">=0.2.0" },
     { name = "yfinance", specifier = ">=0.2.54" },
     { name = "youtube-search", specifier = ">=2.1.2" },
-    { name = "youtube-transcript-api", specifier = ">=0.6.2" },
-    { name = "yt-dlp", specifier = ">=2024.10.22" },
 ]
 
 [package.metadata.requires-dev]
