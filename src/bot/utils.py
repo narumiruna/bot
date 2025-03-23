@@ -76,7 +76,7 @@ def get_composed_loader() -> Compose:
             kabigon.ReelLoader(),
             kabigon.YtdlpLoader(),
             kabigon.PDFLoader(),
-            kabigon.PlaywrightLoader(),
+            kabigon.PlaywrightLoader(timeout=60_000),
         ]
     )
 
