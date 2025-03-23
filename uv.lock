@@ -159,7 +159,7 @@ requires-dist = [
     { name = "charset-normalizer", specifier = ">=3.4.0" },
     { name = "cloudscraper", specifier = ">=1.2.71" },
     { name = "duckduckgo-search", specifier = ">=7.5.1" },
-    { name = "kabigon", specifier = ">=0.5.0" },
+    { name = "kabigon", specifier = ">=0.5.1" },
     { name = "lazyopenai", extras = ["langfuse"], specifier = ">=0.5.0" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "lxml", specifier = ">=5.3.0" },
@@ -604,7 +604,7 @@ wheels = [
 
 [[package]]
 name = "kabigon"
-version = "0.5.0"
+version = "0.5.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioytt" },
@@ -621,7 +621,7 @@ dependencies = [
     { name = "yt-dlp" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f0/f7/f973c55ea1039befee30d77a5d2c1e2a42ab4a655d31d23ccf76b39e36f0/kabigon-0.5.0-py3-none-any.whl", hash = "sha256:c699dc013ca552c9295490a45d64501d89660b9f9254eb0a49546ad2c96bc4d5", size = 10333 },
+    { url = "https://files.pythonhosted.org/packages/8f/d6/66597084b8f315621f7db8a6c9ab80e859dad5bb7c6368c76bd295ade042/kabigon-0.5.1-py3-none-any.whl", hash = "sha256:07295a432833a03951636db2184571800caef0d474f9edf3eaa950c0f5b64539", size = 10421 },
 ]
 
 [[package]]
@@ -1910,11 +1910,11 @@ wheels = [
 
 [[package]]
 name = "tzdata"
-version = "2025.1"
+version = "2025.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/43/0f/fa4723f22942480be4ca9527bbde8d43f6c3f2fe8412f00e7f5f6746bc8b/tzdata-2025.1.tar.gz", hash = "sha256:24894909e88cdb28bd1636c6887801df64cb485bd593f2fd83ef29075a81d694", size = 194950 }
+sdist = { url = "https://files.pythonhosted.org/packages/95/32/1a225d6164441be760d75c2c42e2780dc0873fe382da3e98a2e1e48361e5/tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9", size = 196380 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0f/dd/84f10e23edd882c6f968c21c2434fe67bd4a528967067515feca9e611e5e/tzdata-2025.1-py2.py3-none-any.whl", hash = "sha256:7e127113816800496f027041c570f50bcd464a020098a3b6b199517772303639", size = 346762 },
+    { url = "https://files.pythonhosted.org/packages/5c/23/c7abc0ca0a1526a0774eca151daeb8de62ec457e77262b66b359c3c7679e/tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8", size = 347839 },
 ]
 
 [[package]]
