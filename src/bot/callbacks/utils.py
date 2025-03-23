@@ -1,7 +1,3 @@
-from functools import cache
-
-import kabigon
-from kabigon.compose import Compose
 from loguru import logger
 from telegram import Message
 
@@ -74,26 +70,3 @@ def strip_command(text: str) -> str:
 
 def get_message_key(message: Message) -> str:
     return f"{message.message_id}:{message.chat.id}"
-
-
-@cache
-def get_composed_loader() -> Compose:
-    return Compose(
-        [
-            kabigon.YoutubeLoader(),
-            kabigon.ReelLoader(),
-            kabigon.YtdlpLoader(),
-            kabigon.PDFLoader(),
-            kabigon.PlaywrightLoader(),
-        ]
-    )
-
-
-def load_url(url: str) -> str:
-    loader = get_composed_loader()
-    return loader.load(url)
-
-
-async def async_load_url(url: str) -> str:
-    loader = get_composed_loader()
-    return await loader.async_load(url)

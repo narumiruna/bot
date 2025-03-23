@@ -12,11 +12,11 @@ from telegram import Message
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from bot.callbacks.utils import async_load_url
-from bot.utils import parse_url
+from bot.utils import async_load_url
 
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
+from ..utils import parse_url
 from . import get_default_agent
 from . import get_fortune_teller_agent
 

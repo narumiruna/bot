@@ -1,6 +1,6 @@
 from agents import function_tool
 
-from ...callbacks.utils import async_load_url
+from bot.utils import async_load_url
 
 
 @function_tool

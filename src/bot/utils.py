@@ -3,11 +3,14 @@ import concurrent.futures
 import functools
 import json
 import re
+from functools import cache
 from pathlib import Path
 from typing import Any
 
 import aiofiles
+import kabigon
 import telegraph
+from kabigon.compose import Compose
 
 
 def save_text(text: str, f: str) -> None:
@@ -63,3 +66,26 @@ def async_wrapper(func):
             return result
 
     return wrapper
+
+
+@cache
+def get_composed_loader() -> Compose:
+    return Compose(
+        [
+            kabigon.YoutubeLoader(),
+            kabigon.ReelLoader(),
+            kabigon.YtdlpLoader(),
+            kabigon.PDFLoader(),
+            kabigon.PlaywrightLoader(),
+        ]
+    )
+
+
+def load_url(url: str) -> str:
+    loader = get_composed_loader()
+    return loader.load(url)
+
+
+async def async_load_url(url: str) -> str:
+    loader = get_composed_loader()
+    return await loader.async_load(url)
