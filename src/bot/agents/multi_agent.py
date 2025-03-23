@@ -12,6 +12,9 @@ from telegram import Message
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from bot.callbacks.utils import async_load_url
+from bot.utils import parse_url
+
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
 from . import get_default_agent
@@ -63,6 +66,12 @@ class MultiAgentService:
         if messages is None:
             messages = []
             logger.info("No key found for {}", key)
+
+        # replace the URL with the content
+        parsed_url = parse_url(message_text)
+        if parsed_url:
+            url_content = await async_load_url(parsed_url)
+            message_text = message_text.replace(parsed_url, url_content, 1)
 
         # add the user message to the list of messages
         messages.append(
