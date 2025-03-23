@@ -23,7 +23,6 @@ dependencies = [
     "yfinance>=0.2.54",
     "openai-agents>=0.0.3",
     "duckduckgo-search>=7.5.1",
-    "aiofiles>=24.1.0",
     "aiocache[redis]>=0.12.3",
     "kabigon>=0.5.1",
 ]
