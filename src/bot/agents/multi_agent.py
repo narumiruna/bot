@@ -71,7 +71,11 @@ class MultiAgentService:
         parsed_url = parse_url(message_text)
         if parsed_url:
             url_content = await async_load_url(parsed_url)
-            message_text = message_text.replace(parsed_url, url_content, 1)
+            message_text = message_text.replace(
+                parsed_url,
+                f"[URL content from {parsed_url}]:\n'''\n{url_content}\n'''\n[END of URL content]\n",
+                1,
+            )
 
         # add the user message to the list of messages
         messages.append(
