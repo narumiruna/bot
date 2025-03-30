@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import os
+from typing import Final
 
 from kabigon.pdf import read_pdf_content
 from kabigon.utils import read_html_content
 from telegram import Update
-from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from .. import chains
+from ..utils import create_page
+
+MAX_LENGTH: Final[int] = 1_000
 
 
 async def extract_notes_from_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -34,9 +37,10 @@ async def extract_notes_from_document(update: Update, context: ContextTypes.DEFA
     if not text:
         return
 
-    result = await chains.create_notes(text)
-    await message.reply_text(
-        str(result),
-        parse_mode=ParseMode.HTML,
-        disable_web_page_preview=True,
-    )
+    result = await chains.format(text)
+    if len(str(result)) > MAX_LENGTH:
+        text = create_page(title=result.title, html_content=str(result).replace("\n", "<br>"))
+    else:
+        text = str(result)
+
+    await message.reply_text(text)
