@@ -27,6 +27,14 @@
         "yfmcp": {
           "command": "uvx",
           "args": ["yfmcp"]
+        },
+        "mcp-server-twse": {
+          "command": "uvx",
+          "args": [
+            "--from",
+            "git+https://github.com/narumiruna/mcp-server-twse",
+            "mcp-server-twse"
+          ]
         }
       }
     },
