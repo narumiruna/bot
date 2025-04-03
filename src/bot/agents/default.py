@@ -28,14 +28,14 @@ def get_default_agent() -> Agent:
         mcp_servers=[
             MCPServerStdio(
                 params={
-                    "command": "/Users/narumi/.cargo/bin/uvx",
+                    "command": "uvx",
                     "args": ["yfmcp"],
                 }
             ),
             # https://github.com/modelcontextprotocol/servers/tree/main/src/time
             MCPServerStdio(
                 params={
-                    "command": "/Users/narumi/.cargo/bin/uvx",
+                    "command": "uvx",
                     "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
                 }
             ),
