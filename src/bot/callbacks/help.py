@@ -5,7 +5,10 @@ from telegram.ext import ContextTypes
 
 
 async def handle_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await context.bot.send_message(
+    if not update.message:
+        return
+
+    await update.message.reply_text(
         "\n".join(
             [
                 "code: https://github.com/narumiruna/bot",
