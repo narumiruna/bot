@@ -29,6 +29,7 @@ jobs:
         run: pip install uv
       - name: Install dependencies
         run: |
+          rm -rf .venv
           uv sync
           uv run playwright install chromium
       - name: Create dotenv
