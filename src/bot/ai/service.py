@@ -10,6 +10,8 @@ from agents import RunItem
 from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
+from agents import handoff
+from agents.extensions import handoff_filters
 from agents.items import ResponseFunctionToolCall
 from agents.mcp import MCPServerStdio
 from loguru import logger
@@ -53,28 +55,49 @@ def log_new_items(new_items: list[RunItem]) -> None:
             logger.info("Skipping item: {}", new_item.__class__.__name__)
 
 
+def remove_tool_messages(messages):
+    filtered_messages = []
+    tool_types = [
+        "function_call",
+        "function_call_output",
+        "computer_call",
+        "computer_call_output",
+        "file_search_call",
+        "web_search_call",
+    ]
+    for msg in messages:
+        msg_type = msg.get("type")
+        if msg_type in tool_types:
+            continue
+        filtered_messages.append(msg)
+    return filtered_messages
+
+
 class AgentService:
     def __init__(self, params: ServiceParams, max_cache_size: int = 100) -> None:
         self.command = params["command"]
         self.help = params["help"]
 
         agent_params = params["agent"]
+
+        self.handoff_agents = [
+            Agent(
+                name=agent["name"],
+                instructions=agent["instructions"],
+                model=get_openai_model(),
+                model_settings=get_openai_model_settings(),
+                mcp_servers=[MCPServerStdio(params=p) for p in agent["mcp_servers"].values()],
+            )
+            for agent in params["handoffs"]
+        ]
+
         self.agent = Agent(
             name=agent_params["name"],
             instructions=agent_params["instructions"],
             model=get_openai_model(),
             model_settings=get_openai_model_settings(),
             mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
-            handoffs=[
-                Agent(
-                    name=sub_agent["name"],
-                    instructions=sub_agent["instructions"],
-                    model=get_openai_model(),
-                    model_settings=get_openai_model_settings(),
-                    mcp_servers=[MCPServerStdio(params=p) for p in sub_agent["mcp_servers"].values()],
-                )
-                for sub_agent in params["handoffs"]
-            ],
+            handoffs=[handoff(agent, input_filter=handoff_filters.remove_all_tools) for agent in self.handoff_agents],
         )
 
         # max_cache_size is the maximum number of messages to keep in the cache
@@ -87,9 +110,7 @@ class AgentService:
         for mcp_server in self.agent.mcp_servers:
             await mcp_server.connect()
 
-        for agent in self.agent.handoffs:
-            if not isinstance(agent, Agent):
-                continue
+        for agent in self.handoff_agents:
             for mcp_server in agent.mcp_servers:
                 await mcp_server.connect()
 
@@ -97,9 +118,7 @@ class AgentService:
         for mcp_server in self.agent.mcp_servers:
             await mcp_server.cleanup()
 
-        for agent in self.agent.handoffs:
-            if not isinstance(agent, Agent):
-                continue
+        for agent in self.handoff_agents:
             for mcp_server in agent.mcp_servers:
                 await mcp_server.cleanup()
 
@@ -124,6 +143,9 @@ class AgentService:
         if messages is None:
             messages = []
             logger.info("No key found for {}", key)
+
+        # remove all tool messages from the memory
+        messages = remove_tool_messages(messages)
 
         # replace the URL with the content
         parsed_url = parse_url(message_text)
@@ -150,6 +172,7 @@ class AgentService:
 
         # update the memory
         input_items = result.to_input_list()
+        messages = remove_tool_messages(messages)
         if len(input_items) > self.max_cache_size:
             input_items = input_items[-self.max_cache_size :]
         await self.cache.set(key, input_items)
