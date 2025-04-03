@@ -10,7 +10,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import filters
 
 from . import callbacks
-from .agents import MultiAgentService
+from .agents import AgentService
 
 
 def get_chat_filter() -> filters.BaseFilter:
@@ -32,10 +32,19 @@ def get_bot_token() -> str:
 
 def run_bot() -> None:
     chat_filter = get_chat_filter()
+    multi_agent_service = AgentService()
 
-    multi_agent_service = MultiAgentService()
+    async def connect(application: Application) -> None:
+        for agent in multi_agent_service.agents:
+            for mcp_server in agent.mcp_servers:
+                await mcp_server.connect()
 
-    app = Application.builder().token(get_bot_token()).build()
+    async def cleanup(application: Application) -> None:
+        for agent in multi_agent_service.agents:
+            for mcp_server in agent.mcp_servers:
+                await mcp_server.cleanup()
+
+    app = Application.builder().token(get_bot_token()).post_init(connect).post_stop(cleanup).build()
     app.add_handlers(
         [
             CommandHandler("a", multi_agent_service.handle_command, filters=chat_filter),
