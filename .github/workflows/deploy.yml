@@ -51,7 +51,7 @@ jobs:
           mkdir -p ${{ env.WORKDIR }}
           cp .env ${{ env.WORKDIR }}
           cp bot.plist ${{ env.PLIST_DIR }}
-          cp config/default.yaml ${{ env.WORKDIR }}
+          cp config/default.json ${{ env.WORKDIR }}
       - name: Start service
         working-directory: ${{ env.PLIST_DIR }}
         run: |
