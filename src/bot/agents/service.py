@@ -26,7 +26,7 @@ from ..agents.model import get_openai_model
 from ..agents.model import get_openai_model_settings
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
-from ..config import CommandParams
+from ..config import AgentServiceParams
 from ..utils import parse_url
 from . import get_default_agent
 
@@ -55,7 +55,7 @@ def log_new_items(new_items: list[RunItem]) -> None:
 
 
 class AgentService:
-    def __init__(self, params: CommandParams, max_cache_size: int = 100) -> None:
+    def __init__(self, params: AgentServiceParams, max_cache_size: int = 100) -> None:
         self.command = params["command"]
         self.help = params["help"]
         self.agents = [
