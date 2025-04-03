@@ -59,12 +59,23 @@ class AgentService:
         self.help = params["help"]
 
         agent_params = params["agent"]
+        handoffs = [
+            Agent(
+                name=sub_agent["name"],
+                instructions=sub_agent["instructions"],
+                model=get_openai_model(),
+                model_settings=get_openai_model_settings(),
+                mcp_servers=[MCPServerStdio(params=p) for p in sub_agent["mcp_servers"].values()],
+            )
+            for sub_agent in params["handoffs"]
+        ]
         self.agent = Agent(
             name=agent_params["name"],
             instructions=agent_params["instructions"],
             model=get_openai_model(),
             model_settings=get_openai_model_settings(),
             mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
+            handoffs=handoffs,
         )
 
         # max_cache_size is the maximum number of messages to keep in the cache
@@ -72,6 +83,22 @@ class AgentService:
 
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()
+
+    async def connect(self) -> None:
+        for mcp_server in self.agent.mcp_servers:
+            await mcp_server.connect()
+
+        for agent in self.agent.handoffs:
+            for mcp_server in agent.mcp_servers:
+                await mcp_server.connect()
+
+    async def cleanup(self) -> None:
+        for mcp_server in self.agent.mcp_servers:
+            await mcp_server.cleanup()
+
+        for agent in self.agent.handoffs:
+            for mcp_server in agent.mcp_servers:
+                await mcp_server.cleanup()
 
     def get_command_handler(self, filters: filters.BaseFilter) -> CommandHandler:
         return CommandHandler(command=self.command, callback=self.handle_command, filters=filters)

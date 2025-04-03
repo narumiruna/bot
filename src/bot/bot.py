@@ -39,14 +39,12 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     services = [AgentService(params) for params in load_config(config_file)]
 
     async def connect(application: Application) -> None:
-        for command in services:
-            for mcp_server in command.agent.mcp_servers:
-                await mcp_server.connect()
+        for service in services:
+            await service.connect()
 
     async def cleanup(application: Application) -> None:
-        for command in services:
-            for mcp_server in command.agent.mcp_servers:
-                await mcp_server.cleanup()
+        for service in services:
+            await service.cleanup()
 
     app = Application.builder().token(get_bot_token()).post_init(connect).post_shutdown(cleanup).build()
 
