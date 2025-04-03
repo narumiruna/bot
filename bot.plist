@@ -5,7 +5,7 @@
     <key>EnvironmentVariables</key>
     <dict>
       <key>PATH</key>
-      <string>/Users/narumi/.cargo/bin:/Users/narumi/.nvm/versions/node/v20.11.1/bin:/Users/narumi/.local/bin:/opt/homebrew/bin:/usr/local/bin</string>
+      <string>/Users/narumi/.cargo/bin:/Users/narumi/.nvm/versions/node/v20.11.1/bin:/Users/narumi/.local/bin:/opt/homebrew/bin:/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin</string>
     </dict>
     <key>Label</key>
     <string>dev.narumi.bot</string>
