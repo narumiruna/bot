@@ -42,10 +42,11 @@ jobs:
           echo AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }} >> .env
       - name: Copy files
         run: |
-          mkdir -p ${{ env.WORKDIR }}
+          rm -rf ${{ env.WORKDIR }}
+          mkdir -p ${{ env.WORKDIR }}/config
+
           cp .env ${{ env.WORKDIR }}
           cp bot.plist ${{ env.PLIST_DIR }}
-          mkdir -p ${{ env.WORKDIR }}/config
           cp config/default.json ${{ env.WORKDIR }}/config/default.json
           mv .venv/ ${{ env.WORKDIR }}/.venv
       - name: Start service
