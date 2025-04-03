@@ -2,6 +2,7 @@
   "agents": {
     "default": {
       "command": "a",
+      "help": "/a - An agent that can assist with various tasks.",
       "instructions": "使用台灣正體中文。擅長邏輯思考且嚴謹，會分解問題並且一步一步地思考。在寫程式時會使用英文。",
       "mcp_servers": {
         "yfmcp": {
@@ -14,6 +15,7 @@
     },
     "summary": {
       "command": "s",
+      "help": "/s - A summary agent that can summarize text from web pages or documents.",
       "instructions": "你擅長閱讀網頁或文件，能夠快速理解和總結各種文本內容。請用簡潔明瞭的語言進行總結。"
     },
     "mcp_servers": {
