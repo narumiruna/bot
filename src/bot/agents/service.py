@@ -52,29 +52,24 @@ def log_new_items(new_items: list[RunItem]) -> None:
 
 
 class AgentService:
-    @classmethod
-    def from_params(cls, agent_params: AgentParams) -> AgentService:
-        return cls(
-            [
-                Agent(
-                    name=agent_params["name"],
-                    instructions=agent_params["instructions"],
-                    model=get_openai_model(),
-                    model_settings=get_openai_model_settings(),
-                    mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
-                )
-            ]
-        )
-
-    def __init__(self, agents: list[Agent], max_cache_size: int = 100) -> None:
-        self.max_cache_size = max_cache_size
-        if not agents:
-            agents = [get_default_agent()]
-        if len(agents) < 1:
-            raise ValueError("At least one agent is required")
-        self.agents = agents
-
+    def __init__(self, params_list: list[AgentParams] | None = None, max_cache_size: int = 100) -> None:
+        params_list = params_list or []
+        self.agents = [
+            Agent(
+                name=params["name"],
+                instructions=params["instructions"],
+                model=get_openai_model(),
+                model_settings=get_openai_model_settings(),
+                mcp_servers=[MCPServerStdio(params=p) for p in params["mcp_servers"].values()],
+            )
+            for params in params_list
+        ]
+        if not self.agents:
+            self.agents = [get_default_agent()]
         self.current_agent = self.agents[0]
+
+        # max_cache_size is the maximum number of messages to keep in the cache
+        self.max_cache_size = max_cache_size
 
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()

@@ -39,7 +39,7 @@ class AgentServiceCommand:
         self.filters = filters
         self.command = params["command"]
         self.help = params["help"]
-        self.agent = AgentService.from_params(params["agent"])
+        self.agent = AgentService([params["agent"]])
 
     def get_command_handler(self, filters: filters.BaseFilter) -> CommandHandler:
         return CommandHandler(command=self.command, callback=self.agent.handle_command, filters=filters)
