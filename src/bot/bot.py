@@ -12,7 +12,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import filters
 
 from . import callbacks
-from .agents import AgentService
+from .ai import AgentService
 from .config import load_config
 
 
