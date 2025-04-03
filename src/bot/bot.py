@@ -13,7 +13,6 @@ from telegram.ext import filters
 
 from . import callbacks
 from .agents import AgentService
-from .config import CommandParams
 from .config import load_config
 
 
@@ -34,33 +33,19 @@ def get_bot_token() -> str:
     return token
 
 
-class AgentServiceCommand:
-    def __init__(self, params: CommandParams) -> None:
-        self.filters = filters
-        self.command = params["command"]
-        self.help = params["help"]
-        self.agent = AgentService([params["agent"]])
-
-    def get_command_handler(self, filters: filters.BaseFilter) -> CommandHandler:
-        return CommandHandler(command=self.command, callback=self.agent.handle_command, filters=filters)
-
-    def get_message_handler(self, filters: filters.BaseFilter) -> MessageHandler:
-        return MessageHandler(filters=filters, callback=self.agent.handle_reply)
-
-
 def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "config/default.json") -> None:  # noqa
     chat_filter = get_chat_filter()
-    commands = [AgentServiceCommand(params) for params in load_config(config_file)]
+    commands = [AgentService(params) for params in load_config(config_file)]
 
     async def connect(application: Application) -> None:
         for command in commands:
-            for agent in command.agent.agents:
+            for agent in command.agents:
                 for mcp_server in agent.mcp_servers:
                     await mcp_server.connect()
 
     async def cleanup(application: Application) -> None:
         for command in commands:
-            for agent in command.agent.agents:
+            for agent in command.agents:
                 for mcp_server in agent.mcp_servers:
                     await mcp_server.cleanup()
 

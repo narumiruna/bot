@@ -15,7 +15,10 @@ from agents.mcp import MCPServerStdio
 from loguru import logger
 from telegram import Message
 from telegram import Update
+from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
+from telegram.ext import MessageHandler
+from telegram.ext import filters
 
 from bot.utils import async_load_url
 
@@ -23,7 +26,7 @@ from ..agents.model import get_openai_model
 from ..agents.model import get_openai_model_settings
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
-from ..config import AgentParams
+from ..config import CommandParams
 from ..utils import parse_url
 from . import get_default_agent
 
@@ -52,19 +55,20 @@ def log_new_items(new_items: list[RunItem]) -> None:
 
 
 class AgentService:
-    def __init__(self, params_list: list[AgentParams] | None = None, max_cache_size: int = 100) -> None:
-        params_list = params_list or []
+    def __init__(self, params: CommandParams, max_cache_size: int = 100) -> None:
+        self.command = params["command"]
+        self.help = params["help"]
         self.agents = [
             Agent(
-                name=params["name"],
-                instructions=params["instructions"],
+                name=params["agent"]["name"],
+                instructions=params["agent"]["instructions"],
                 model=get_openai_model(),
                 model_settings=get_openai_model_settings(),
-                mcp_servers=[MCPServerStdio(params=p) for p in params["mcp_servers"].values()],
+                mcp_servers=[MCPServerStdio(params=p) for p in params["agent"]["mcp_servers"].values()],
             )
-            for params in params_list
         ]
         if not self.agents:
+            logger.info("No agents found in config, using default agent")
             self.agents = [get_default_agent()]
         self.current_agent = self.agents[0]
 
@@ -73,6 +77,12 @@ class AgentService:
 
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()
+
+    def get_command_handler(self, filters: filters.BaseFilter) -> CommandHandler:
+        return CommandHandler(command=self.command, callback=self.handle_command, filters=filters)
+
+    def get_message_handler(self, filters: filters.BaseFilter) -> MessageHandler:
+        return MessageHandler(filters=filters, callback=self.handle_reply)
 
     async def handle_message(self, message: Message, include_reply_to_message: bool = False) -> None:
         message_text = get_message_text(
