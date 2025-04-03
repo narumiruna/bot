@@ -46,7 +46,7 @@ def log_new_items(new_items: list[RunItem]) -> None:
             logger.info("Skipping item: {}", new_item.__class__.__name__)
 
 
-class MultiAgentService:
+class AgentService:
     def __init__(self, max_cache_size: int = 100) -> None:
         self.max_cache_size = max_cache_size
         self.agents = [
