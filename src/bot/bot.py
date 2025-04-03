@@ -35,23 +35,21 @@ def get_bot_token() -> str:
 
 def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "config/default.json") -> None:  # noqa
     chat_filter = get_chat_filter()
-    commands = [AgentService(params) for params in load_config(config_file)]
+    services = [AgentService(params) for params in load_config(config_file)]
 
     async def connect(application: Application) -> None:
-        for command in commands:
-            for agent in command.agents:
-                for mcp_server in agent.mcp_servers:
-                    await mcp_server.connect()
+        for command in services:
+            for mcp_server in command.agent.mcp_servers:
+                await mcp_server.connect()
 
     async def cleanup(application: Application) -> None:
-        for command in commands:
-            for agent in command.agents:
-                for mcp_server in agent.mcp_servers:
-                    await mcp_server.cleanup()
+        for command in services:
+            for mcp_server in command.agent.mcp_servers:
+                await mcp_server.cleanup()
 
     app = Application.builder().token(get_bot_token()).post_init(connect).post_shutdown(cleanup).build()
 
-    for command in commands:
+    for command in services:
         app.add_handler(command.get_command_handler(filters=chat_filter))
 
     app.add_handlers(
@@ -72,7 +70,7 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     )
 
     # Message handlers should be placed at the end.
-    for command in commands:
+    for command in services:
         app.add_handler(command.get_message_handler(filters=chat_filter & filters.REPLY))
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.extract_notes_from_document))
 

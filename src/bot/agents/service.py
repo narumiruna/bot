@@ -28,7 +28,6 @@ from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
 from ..config import AgentServiceParams
 from ..utils import parse_url
-from . import get_default_agent
 
 
 def shorten_text(text: str, width: int = 100, placeholder: str = "...") -> str:
@@ -58,19 +57,15 @@ class AgentService:
     def __init__(self, params: AgentServiceParams, max_cache_size: int = 100) -> None:
         self.command = params["command"]
         self.help = params["help"]
-        self.agents = [
-            Agent(
-                name=params["agent"]["name"],
-                instructions=params["agent"]["instructions"],
-                model=get_openai_model(),
-                model_settings=get_openai_model_settings(),
-                mcp_servers=[MCPServerStdio(params=p) for p in params["agent"]["mcp_servers"].values()],
-            )
-        ]
-        if not self.agents:
-            logger.info("No agents found in config, using default agent")
-            self.agents = [get_default_agent()]
-        self.current_agent = self.agents[0]
+
+        agent_params = params["agent"]
+        self.agent = Agent(
+            name=agent_params["name"],
+            instructions=agent_params["instructions"],
+            model=get_openai_model(),
+            model_settings=get_openai_model_settings(),
+            mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
+        )
 
         # max_cache_size is the maximum number of messages to keep in the cache
         self.max_cache_size = max_cache_size
@@ -119,7 +114,7 @@ class AgentService:
         )
 
         # send the messages to the agent
-        result = await Runner.run(self.current_agent, input=messages)
+        result = await Runner.run(self.agent, input=messages)
 
         log_new_items(result.new_items)
 
@@ -130,7 +125,7 @@ class AgentService:
         await self.cache.set(key, input_items)
 
         # update the current agent
-        self.current_agent = result.last_agent
+        # self.agent = result.last_agent
 
         await message.reply_text(result.final_output)
 
