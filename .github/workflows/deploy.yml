@@ -29,8 +29,10 @@ jobs:
         run: pip install uv
       - name: Install dependencies
         run: |
-          uv tool install --reinstall --force --python=${{ matrix.python-version }} --with mlx .
-          uv tool run playwright install chromium
+          # uv tool install --reinstall --force --python=${{ matrix.python-version }} --with mlx .
+          # uv tool run playwright install chromium
+          uv sync
+          uv run playwright install chromium
       - name: Create dotenv
         run: |
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
@@ -53,6 +55,7 @@ jobs:
           cp bot.plist ${{ env.PLIST_DIR }}
           mkdir -p ${{ env.WORKDIR }}/config
           cp config/default.json ${{ env.WORKDIR }}/config/default.json
+          mv .venv/ ${{ env.WORKDIR }}/.venv
       - name: Start service
         working-directory: ${{ env.PLIST_DIR }}
         run: |

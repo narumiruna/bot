@@ -11,7 +11,9 @@
     <string>dev.narumi.bot</string>
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/narumi/.local/bin/bot</string>
+      <string>/Users/narumi/.cargo/bin/uv</string>
+      <string>run</string>
+      <string>bot</string>
     </array>
     <key>KeepAlive</key>
     <true />
