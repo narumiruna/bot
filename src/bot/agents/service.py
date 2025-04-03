@@ -129,7 +129,7 @@ class AgentService:
         if not message:
             return
 
-        await self.handle_message(message, include_reply_to_message=False)
+        await self.handle_message(message, include_reply_to_message=True)
 
     async def handle_reply(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         # TODO: Implement filters.MessageFilter for reply to bot
