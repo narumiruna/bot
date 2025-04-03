@@ -15,17 +15,19 @@ from agents.mcp import MCPServerStdio
 from loguru import logger
 from telegram import Message
 from telegram import Update
+from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
+from telegram.ext import MessageHandler
+from telegram.ext import filters
 
 from bot.utils import async_load_url
 
-from ..agents.model import get_openai_model
-from ..agents.model import get_openai_model_settings
+from ..ai.model import get_openai_model
+from ..ai.model import get_openai_model_settings
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
-from ..config import AgentParams
+from ..config import ServiceParams
 from ..utils import parse_url
-from . import get_default_agent
 
 
 def shorten_text(text: str, width: int = 100, placeholder: str = "...") -> str:
@@ -52,27 +54,30 @@ def log_new_items(new_items: list[RunItem]) -> None:
 
 
 class AgentService:
-    def __init__(self, params_list: list[AgentParams] | None = None, max_cache_size: int = 100) -> None:
-        params_list = params_list or []
-        self.agents = [
-            Agent(
-                name=params["name"],
-                instructions=params["instructions"],
-                model=get_openai_model(),
-                model_settings=get_openai_model_settings(),
-                mcp_servers=[MCPServerStdio(params=p) for p in params["mcp_servers"].values()],
-            )
-            for params in params_list
-        ]
-        if not self.agents:
-            self.agents = [get_default_agent()]
-        self.current_agent = self.agents[0]
+    def __init__(self, params: ServiceParams, max_cache_size: int = 100) -> None:
+        self.command = params["command"]
+        self.help = params["help"]
+
+        agent_params = params["agent"]
+        self.agent = Agent(
+            name=agent_params["name"],
+            instructions=agent_params["instructions"],
+            model=get_openai_model(),
+            model_settings=get_openai_model_settings(),
+            mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
+        )
 
         # max_cache_size is the maximum number of messages to keep in the cache
         self.max_cache_size = max_cache_size
 
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()
+
+    def get_command_handler(self, filters: filters.BaseFilter) -> CommandHandler:
+        return CommandHandler(command=self.command, callback=self.handle_command, filters=filters)
+
+    def get_message_handler(self, filters: filters.BaseFilter) -> MessageHandler:
+        return MessageHandler(filters=filters, callback=self.handle_reply)
 
     async def handle_message(self, message: Message, include_reply_to_message: bool = False) -> None:
         message_text = get_message_text(
@@ -109,7 +114,7 @@ class AgentService:
         )
 
         # send the messages to the agent
-        result = await Runner.run(self.current_agent, input=messages)
+        result = await Runner.run(self.agent, input=messages)
 
         log_new_items(result.new_items)
 
@@ -119,8 +124,8 @@ class AgentService:
             input_items = input_items[-self.max_cache_size :]
         await self.cache.set(key, input_items)
 
-        # update the current agent
-        self.current_agent = result.last_agent
+        # handoff to another agent
+        # self.agent = result.last_agent
 
         await message.reply_text(result.final_output)
 
