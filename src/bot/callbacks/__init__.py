@@ -6,7 +6,6 @@ from .format import handle_format
 from .help import handle_help
 from .learn_japanese import handle_learn_japanese
 from .log import log_message_update
-from .polish import handle_polish
 from .recipe import generate_recipe
 from .summary import summarize
 from .ticker import query_ticker
