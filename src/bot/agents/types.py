@@ -8,3 +8,4 @@ class AgentParams(TypedDict):
     help: str
     instructions: str
     mcp_servers: dict[str, MCPServerStdioParams]
+    output_type: str | None
