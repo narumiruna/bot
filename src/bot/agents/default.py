@@ -1,6 +1,7 @@
 from functools import cache
 
 from agents import Agent
+from agents.mcp import MCPServerStdio
 
 from .model import get_openai_model
 from .model import get_openai_model_settings
@@ -36,5 +37,20 @@ def get_default_agent() -> Agent:
             web_search,
             extract_content_from_url,
             search_award,
+        ],
+        mcp_servers=[
+            MCPServerStdio(
+                params={
+                    "command": "uvx",
+                    "args": ["yfmcp"],
+                }
+            ),
+            # https://github.com/modelcontextprotocol/servers/tree/main/src/time
+            MCPServerStdio(
+                params={
+                    "command": "uvx",
+                    "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
+                }
+            ),
         ],
     )

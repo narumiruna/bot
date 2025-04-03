@@ -18,7 +18,6 @@ from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
 from ..utils import parse_url
 from . import get_default_agent
-from . import get_fortune_teller_agent
 
 
 def log_run_items(items: list[RunItem]) -> None:
@@ -39,14 +38,10 @@ def log_run_items(items: list[RunItem]) -> None:
 class MultiAgentService:
     def __init__(self, max_cache_size: int = 100) -> None:
         self.max_cache_size = max_cache_size
-
-        self.furtune_teller_agent = get_fortune_teller_agent()
-        self.default_agent = get_default_agent()
-
-        # self.default_agent.handoffs = [self.furtune_teller_agent]
-        # self.furtune_teller_agent.handoffs = [self.default_agent]
-
-        self.current_agent = self.default_agent
+        self.agents = [
+            get_default_agent(),
+        ]
+        self.current_agent = self.agents[0]
 
         # message.chat.id -> list of messages
         self.cache = get_cache_from_env()
