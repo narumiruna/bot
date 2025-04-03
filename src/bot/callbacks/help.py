@@ -11,6 +11,7 @@ async def handle_help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     help_text = (
         "code: https://github.com/narumiruna/bot\n"
         "/help - Show this help message\n"
+        "/a - An agent that can assist with various tasks"
         "/s - Summarize a document or URL content\n"
         "/jp - Translate text to Japanese\n"
         "/tc - Translate text to Traditional Chinese\n"
