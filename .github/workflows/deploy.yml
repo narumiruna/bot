@@ -49,8 +49,9 @@ jobs:
       - name: Copy files
         run: |
           mkdir -p ${{ env.WORKDIR }}
-          mv .env ${{ env.WORKDIR }}
-          mv bot.plist ${{ env.PLIST_DIR }}
+          cp .env ${{ env.WORKDIR }}
+          cp bot.plist ${{ env.PLIST_DIR }}
+          cp config/default.yaml ${{ env.WORKDIR }}
       - name: Start service
         working-directory: ${{ env.PLIST_DIR }}
         run: |
