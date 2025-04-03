@@ -36,15 +36,14 @@ def get_bot_token() -> str:
 
 def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "config/default.json") -> None:  # noqa
     chat_filter = get_chat_filter()
-    services = [AgentService(params) for params in load_config(config_file)]
+
+    service = AgentService(load_config(config_file))
 
     async def connect(application: Application) -> None:
-        for service in services:
-            await service.connect()
+        await service.connect()
 
     async def cleanup(application: Application) -> None:
-        for service in services:
-            await service.cleanup()
+        await service.cleanup()
 
     app = Application.builder().token(get_bot_token()).post_init(connect).post_shutdown(cleanup).build()
 
@@ -60,11 +59,9 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
         "/t - Query ticker from Yahoo Finance and Taiwan stock exchange",
         "/f - Format and normalize the document in 台灣話",
     ]
+    helps.append(f"/{service.command} - {service.help}")
 
-    for command in services:
-        app.add_handler(command.get_command_handler(filters=chat_filter))
-        helps.append(f"/{command.command} - {command.help}")
-
+    app.add_handler(service.get_command_handler(filters=chat_filter))
     app.add_handlers(
         [
             HelpHandler(helps=helps),
@@ -80,7 +77,7 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     )
 
     # Message handlers should be placed at the end.
-    app.add_handler(services[0].get_message_handler(filters=chat_filter & filters.REPLY))
+    app.add_handler(service.get_message_handler(filters=chat_filter & filters.REPLY))
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.extract_notes_from_document))
 
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
