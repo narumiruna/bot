@@ -24,12 +24,12 @@ from telegram.ext import filters
 
 from bot.utils import async_load_url
 
-from ..ai.model import get_openai_model
-from ..ai.model import get_openai_model_settings
-from ..cache import get_cache_from_env
-from ..callbacks.utils import get_message_text
-from ..config import ServiceParams
-from ..utils import parse_url
+from .cache import get_cache_from_env
+from .callbacks.utils import get_message_text
+from .config import ServiceParams
+from .model import get_openai_model
+from .model import get_openai_model_settings
+from .utils import parse_url
 
 
 def shorten_text(text: str, width: int = 100, placeholder: str = "...") -> str:

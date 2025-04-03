@@ -12,9 +12,9 @@ from telegram.ext import MessageHandler
 from telegram.ext import filters
 
 from . import callbacks
-from .ai import AgentService
 from .callbacks import HelpHandler
 from .config import load_config
+from .service import AgentService
 
 
 def get_chat_filter() -> filters.BaseFilter:
