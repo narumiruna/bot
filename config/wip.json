@@ -14,9 +14,8 @@
     "summary": {
       "command": "s",
       "help": "/s - A summary agent that can summarize text from web pages or documents.",
-      "instructions": "你擅長閱讀網頁或文件，能夠快速理解和總結各種文本內容。請用簡潔明瞭的語言進行總結。"
-    },
-    "mcp_servers": {
+      "instructions": "你擅長閱讀網頁或文件，能夠快速理解和總結各種文本內容。請用簡潔明瞭的語言進行總結。",
+      "mcp_servers": {
       "yfmcp": {
         "command": "uvx",
         "args": ["summarymcp"]
