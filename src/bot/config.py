@@ -7,7 +7,7 @@ from typing import TypedDict
 from agents.mcp import MCPServerStdioParams
 
 
-class AgentServiceParams(TypedDict):
+class ServiceParams(TypedDict):
     command: str
     help: str
     agent: AgentParams
@@ -21,7 +21,7 @@ class AgentParams(TypedDict):
     output_type: str | None
 
 
-def load_config(f: str | Path) -> list[AgentServiceParams]:
+def load_config(f: str | Path) -> list[ServiceParams]:
     path = Path(f)
     if path.suffix != ".json":
         raise ValueError(f"File {f} is not a json file")

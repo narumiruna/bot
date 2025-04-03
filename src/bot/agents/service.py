@@ -26,7 +26,7 @@ from ..agents.model import get_openai_model
 from ..agents.model import get_openai_model_settings
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
-from ..config import AgentServiceParams
+from ..config import ServiceParams
 from ..utils import parse_url
 
 
@@ -54,7 +54,7 @@ def log_new_items(new_items: list[RunItem]) -> None:
 
 
 class AgentService:
-    def __init__(self, params: AgentServiceParams, max_cache_size: int = 100) -> None:
+    def __init__(self, params: ServiceParams, max_cache_size: int = 100) -> None:
         self.command = params["command"]
         self.help = params["help"]
 
@@ -124,7 +124,7 @@ class AgentService:
             input_items = input_items[-self.max_cache_size :]
         await self.cache.set(key, input_items)
 
-        # update the current agent
+        # handoff to another agent
         # self.agent = result.last_agent
 
         await message.reply_text(result.final_output)
