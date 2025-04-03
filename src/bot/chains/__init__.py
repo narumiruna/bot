@@ -4,7 +4,6 @@ from .keyword import extract_keywords
 from .notes import create_notes
 from .polisher import polish
 from .product import extract_product
-from .qa import answer_question
 from .recipe import generate_recipe
 from .summary import summarize
 from .translation import translate

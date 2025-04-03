@@ -4,13 +4,9 @@ from .error import handle_error
 from .file_notes import extract_notes_from_document
 from .format import handle_format
 from .help import handle_help
-from .learn_japanese import handle_learn_japanese
 from .log import log_message_update
-from .polish import handle_polish
-from .recipe import generate_recipe
 from .summary import summarize
 from .ticker import query_ticker
 from .translate import create_translate_callback
-from .trip import handle_trip
 from .utils import get_message_text
 from .youtube_search import search_youtube
