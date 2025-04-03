@@ -18,11 +18,8 @@ async def handle_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 "/jp - Translate text to Japanese",
                 "/tc - Translate text to Traditional Chinese",
                 "/en - Translate text to English",
-                "/polish - Polish and improve text",
                 "/echo - Echo the message",
                 "/yt - Search YouTube",
-                "/recipe - Generate a recipe",
-                "/ljp - Learn Japanese",
                 "/t - Query ticker from Yahoo Finance and Taiwan stock exchange",
                 "/f - Format and normalize the document in 台灣話",
             ]
