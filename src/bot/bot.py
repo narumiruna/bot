@@ -61,7 +61,6 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
             CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),
             CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
-            CommandHandler("recipe", callbacks.generate_recipe, filters=chat_filter),
             CommandHandler("ljp", callbacks.handle_learn_japanese, filters=chat_filter),
             CommandHandler("f", callbacks.handle_format, filters=chat_filter),
             CommandHandler("echo", callbacks.handle_echo),
