@@ -33,8 +33,6 @@ BOT_WHITELIST=comma_separated_user_ids
 
 MODEL=gpt-4o-mini
 OPENAI_API_KEY=your_openai_api_key
-
-SINGLEFILE_PATH=your_singlefile_path
 ```
 
 ## Installation
