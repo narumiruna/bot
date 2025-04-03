@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>PATH</key>
+      <string>/Users/narumi/.cargo/bin:/Users/narumi/.nvm/versions/node/v20.11.1/bin:/Users/narumi/.local/bin:/opt/homebrew/bin:/usr/local/bin</string>
+    </dict>
     <key>Label</key>
     <string>dev.narumi.bot</string>
     <key>ProgramArguments</key>
