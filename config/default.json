@@ -1,25 +1,47 @@
-[
-  {
-    "command": "a",
-    "help": "An agent that can assist with various tasks.",
-    "agent": {
-      "name": "default",
-      "instructions": "使用台灣正體中文。擅長邏輯思考且嚴謹，會分解問題並且一步一步地思考。在寫程式時會使用英文。",
+{
+  "command": "a",
+  "help": "An agent that can assist with various tasks.",
+  "agent": {
+    "name": "default",
+    "instructions": "使用台灣正體中文。擅長邏輯思考且嚴謹，會分解問題並且一步一步地思考。在寫程式時會使用英文。你會根據使用者的需求切換到適當的子代理人進行處理。",
+    "mcp_servers": {
+      "memory": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-memory"]
+      },
+      "time": {
+        "command": "uvx",
+        "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"]
+      },
+      "fetch": {
+        "command": "uvx",
+        "args": ["mcp-server-fetch"]
+      }
+    }
+  },
+  "handoffs": [
+    {
+      "name": "stock",
+      "instructions": "你會處理跟股票相關的問題。",
       "mcp_servers": {
         "yfmcp": {
           "command": "uvx",
           "args": ["yfmcp"]
+        },
+        "mcp-server-twse": {
+          "command": "uvx",
+          "args": [
+            "--from",
+            "git+https://github.com/narumiruna/mcp-server-twse",
+            "mcp-server-twse"
+          ]
         }
       }
-    }
-  },
-  {
-    "command": "summarize",
-    "help": "A summary agent that can summarize text from web pages or documents.",
-    "agent": {
+    },
+    {
       "name": "summary",
       "instructions": "你擅長閱讀網頁或文件，能夠快速理解和總結各種文本內容。請用簡潔明瞭的語言進行總結。",
       "mcp_servers": {}
     }
-  }
-]
+  ]
+}

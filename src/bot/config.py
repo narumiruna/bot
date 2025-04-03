@@ -11,6 +11,7 @@ class ServiceParams(TypedDict):
     command: str
     help: str
     agent: AgentParams
+    handoffs: list[AgentParams]
 
 
 class AgentParams(TypedDict):
@@ -21,7 +22,7 @@ class AgentParams(TypedDict):
     output_type: str | None
 
 
-def load_config(f: str | Path) -> list[ServiceParams]:
+def load_config(f: str | Path) -> ServiceParams:
     path = Path(f)
     if path.suffix != ".json":
         raise ValueError(f"File {f} is not a json file")
