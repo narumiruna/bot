@@ -46,12 +46,12 @@ jobs:
           echo LANGFUSE_PUBLIC_KEY=${{ secrets.LANGFUSE_PUBLIC_KEY }} >> .env
           echo LANGFUSE_HOST=${{ vars.LANGFUSE_HOST }} >> .env
           echo FFMPEG_PATH=${{ vars.FFMPEG_PATH }} >> .env
-      - name: Copy files
+      - name: Move files
         run: |
           mkdir -p ${{ env.WORKDIR }}
-          cp .env ${{ env.WORKDIR }}
-          cp bot.plist ${{ env.PLIST_DIR }}
-          cp config/default.json ${{ env.WORKDIR }}
+          mv .env ${{ env.WORKDIR }}
+          mv bot.plist ${{ env.PLIST_DIR }}
+          mv config/default.json ${{ env.WORKDIR }}
       - name: Start service
         working-directory: ${{ env.PLIST_DIR }}
         run: |
