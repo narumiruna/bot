@@ -29,8 +29,6 @@ jobs:
         run: pip install uv
       - name: Install dependencies
         run: |
-          pwd
-          rm -rf .venv
           uv sync
           uv run playwright install chromium
       - name: Create dotenv
@@ -45,12 +43,8 @@ jobs:
       - name: Copy files
         run: |
           rm -rf ${{ env.WORKDIR }}
-          mkdir -p ${{ env.WORKDIR }}/config
-
-          cp .env ${{ env.WORKDIR }}
+          cp -rf ${{ github.workspace }} ${{ env.WORKDIR }}
           cp bot.plist ${{ env.PLIST_DIR }}
-          cp config/default.json ${{ env.WORKDIR }}/config/default.json
-          mv .venv/ ${{ env.WORKDIR }}/.venv
       - name: Start service
         working-directory: ${{ env.PLIST_DIR }}
         run: |
