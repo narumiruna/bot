@@ -59,23 +59,22 @@ class AgentService:
         self.help = params["help"]
 
         agent_params = params["agent"]
-        handoffs = [
-            Agent(
-                name=sub_agent["name"],
-                instructions=sub_agent["instructions"],
-                model=get_openai_model(),
-                model_settings=get_openai_model_settings(),
-                mcp_servers=[MCPServerStdio(params=p) for p in sub_agent["mcp_servers"].values()],
-            )
-            for sub_agent in params["handoffs"]
-        ]
         self.agent = Agent(
             name=agent_params["name"],
             instructions=agent_params["instructions"],
             model=get_openai_model(),
             model_settings=get_openai_model_settings(),
             mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
-            handoffs=handoffs,
+            handoffs=[
+                Agent(
+                    name=sub_agent["name"],
+                    instructions=sub_agent["instructions"],
+                    model=get_openai_model(),
+                    model_settings=get_openai_model_settings(),
+                    mcp_servers=[MCPServerStdio(params=p) for p in sub_agent["mcp_servers"].values()],
+                )
+                for sub_agent in params["handoffs"]
+            ],
         )
 
         # max_cache_size is the maximum number of messages to keep in the cache
@@ -89,6 +88,8 @@ class AgentService:
             await mcp_server.connect()
 
         for agent in self.agent.handoffs:
+            if not isinstance(agent, Agent):
+                continue
             for mcp_server in agent.mcp_servers:
                 await mcp_server.connect()
 
@@ -97,6 +98,8 @@ class AgentService:
             await mcp_server.cleanup()
 
         for agent in self.agent.handoffs:
+            if not isinstance(agent, Agent):
+                continue
             for mcp_server in agent.mcp_servers:
                 await mcp_server.cleanup()
 
