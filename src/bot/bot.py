@@ -64,7 +64,7 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
                 for mcp_server in agent.mcp_servers:
                     await mcp_server.cleanup()
 
-    app = Application.builder().token(get_bot_token()).post_init(connect).post_stop(cleanup).build()
+    app = Application.builder().token(get_bot_token()).post_init(connect).post_shutdown(cleanup).build()
 
     for command in commands:
         app.add_handler(command.get_command_handler(filters=chat_filter))
