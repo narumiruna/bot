@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import textwrap
 
+from agents import Agent
 from agents import HandoffOutputItem
 from agents import ItemHelpers
 from agents import MessageOutputItem
@@ -10,6 +11,7 @@ from agents import Runner
 from agents import ToolCallItem
 from agents import ToolCallOutputItem
 from agents.items import ResponseFunctionToolCall
+from agents.mcp import MCPServerStdio
 from loguru import logger
 from telegram import Message
 from telegram import Update
@@ -17,8 +19,11 @@ from telegram.ext import ContextTypes
 
 from bot.utils import async_load_url
 
+from ..agents.model import get_openai_model
+from ..agents.model import get_openai_model_settings
 from ..cache import get_cache_from_env
 from ..callbacks.utils import get_message_text
+from ..config import AgentParams
 from ..utils import parse_url
 from . import get_default_agent
 
@@ -47,11 +52,28 @@ def log_new_items(new_items: list[RunItem]) -> None:
 
 
 class AgentService:
-    def __init__(self, max_cache_size: int = 100) -> None:
+    @classmethod
+    def from_params(cls, agent_params: AgentParams) -> AgentService:
+        return cls(
+            [
+                Agent(
+                    name=agent_params["name"],
+                    instructions=agent_params["instructions"],
+                    model=get_openai_model(),
+                    model_settings=get_openai_model_settings(),
+                    mcp_servers=[MCPServerStdio(params=p) for p in agent_params["mcp_servers"].values()],
+                )
+            ]
+        )
+
+    def __init__(self, agents: list[Agent], max_cache_size: int = 100) -> None:
         self.max_cache_size = max_cache_size
-        self.agents = [
-            get_default_agent(),
-        ]
+        if not agents:
+            agents = [get_default_agent()]
+        if len(agents) < 1:
+            raise ValueError("At least one agent is required")
+        self.agents = agents
+
         self.current_agent = self.agents[0]
 
         # message.chat.id -> list of messages
