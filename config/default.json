@@ -4,7 +4,20 @@
   "agent": {
     "name": "default",
     "instructions": "使用台灣正體中文。擅長邏輯思考且嚴謹，會分解問題並且一步一步地思考。在寫程式時會使用英文。你會根據使用者的需求切換到適當的子代理人進行處理。",
-    "mcp_servers": {}
+    "mcp_servers": {
+      "memory": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-memory"]
+      },
+      "time": {
+        "command": "uvx",
+        "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"]
+      },
+      "fetch": {
+        "command": "uvx",
+        "args": ["mcp-server-fetch"]
+      }
+    }
   },
   "handoffs": [
     {
