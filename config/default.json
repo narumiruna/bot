@@ -19,12 +19,7 @@
     "agent": {
       "name": "summary",
       "instructions": "你擅長閱讀網頁或文件，能夠快速理解和總結各種文本內容。請用簡潔明瞭的語言進行總結。",
-      "mcp_servers": {
-        "playwright": {
-          "command": "npx",
-          "args": ["@playwright/mcp@latest"]
-        }
-      }
+      "mcp_servers": {}
     }
   }
 ]

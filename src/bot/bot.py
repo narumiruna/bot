@@ -70,8 +70,7 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     )
 
     # Message handlers should be placed at the end.
-    for command in services:
-        app.add_handler(command.get_message_handler(filters=chat_filter & filters.REPLY))
+    app.add_handler(services[0].get_message_handler(filters=chat_filter & filters.REPLY))
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.extract_notes_from_document))
 
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
