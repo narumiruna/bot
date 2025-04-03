@@ -13,6 +13,7 @@ from telegram.ext import filters
 
 from . import callbacks
 from .ai import AgentService
+from .callbacks import HelpHandler
 from .config import load_config
 
 
@@ -49,12 +50,26 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
 
     app = Application.builder().token(get_bot_token()).post_init(connect).post_shutdown(cleanup).build()
 
+    helps = [
+        "code: https://github.com/narumiruna/bot",
+        "/help - Show this help message",
+        "/s - Summarize a document or URL content",
+        "/jp - Translate text to Japanese",
+        "/tc - Translate text to Traditional Chinese",
+        "/en - Translate text to English",
+        "/echo - Echo the message",
+        "/yt - Search YouTube",
+        "/t - Query ticker from Yahoo Finance and Taiwan stock exchange",
+        "/f - Format and normalize the document in 台灣話",
+    ]
+
     for command in services:
         app.add_handler(command.get_command_handler(filters=chat_filter))
+        helps.append(f"/{command.command} - {command.help}")
 
     app.add_handlers(
         [
-            CommandHandler("help", callbacks.handle_help, filters=chat_filter),
+            HelpHandler(helps=helps),
             CommandHandler("s", callbacks.summarize, filters=chat_filter),
             CommandHandler("jp", callbacks.create_translate_callback("日本語"), filters=chat_filter),
             CommandHandler("tc", callbacks.create_translate_callback("台灣話"), filters=chat_filter),

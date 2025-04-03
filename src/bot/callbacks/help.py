@@ -1,28 +1,20 @@
 from __future__ import annotations
 
 from telegram import Update
+from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
+from telegram.ext.filters import BaseFilter
 
 
-async def handle_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
-        return
+class HelpHandler(CommandHandler):
+    def __init__(self, helps: list[str], command: str = "help", filters: BaseFilter | None = None) -> None:
+        async def callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+            if not update.message:
+                return
 
-    await update.message.reply_text(
-        "\n".join(
-            [
-                "code: https://github.com/narumiruna/bot",
-                "/help - Show this help message",
-                "/a - An agent that can assist with various tasks",
-                "/s - Summarize a document or URL content",
-                "/jp - Translate text to Japanese",
-                "/tc - Translate text to Traditional Chinese",
-                "/en - Translate text to English",
-                "/echo - Echo the message",
-                "/yt - Search YouTube",
-                "/t - Query ticker from Yahoo Finance and Taiwan stock exchange",
-                "/f - Format and normalize the document in 台灣話",
-            ]
-        ),
-        disable_web_page_preview=True,
-    )
+            await update.message.reply_text(
+                "\n".join(helps),
+                disable_web_page_preview=True,
+            )
+
+        super().__init__(command=command, callback=callback, filters=filters)
