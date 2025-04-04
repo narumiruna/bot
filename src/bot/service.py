@@ -91,7 +91,7 @@ class AgentService:
             for agent in params["handoffs"]
         ]
 
-        self.agent = Agent(
+        self.triage_agent = Agent(
             name=agent_params["name"],
             instructions=agent_params["instructions"],
             model=get_openai_model(),
@@ -100,6 +100,9 @@ class AgentService:
             handoffs=[handoff(agent, input_filter=handoff_filters.remove_all_tools) for agent in self.handoff_agents],
         )
 
+        # Set the current agent to the triage agent
+        self._current_agent = self.triage_agent
+
         # max_cache_size is the maximum number of messages to keep in the cache
         self.max_cache_size = max_cache_size
 
@@ -107,7 +110,7 @@ class AgentService:
         self.cache = get_cache_from_env()
 
     async def connect(self) -> None:
-        for mcp_server in self.agent.mcp_servers:
+        for mcp_server in self.triage_agent.mcp_servers:
             await mcp_server.connect()
 
         for agent in self.handoff_agents:
@@ -115,7 +118,7 @@ class AgentService:
                 await mcp_server.connect()
 
     async def cleanup(self) -> None:
-        for mcp_server in self.agent.mcp_servers:
+        for mcp_server in self.triage_agent.mcp_servers:
             await mcp_server.cleanup()
 
         for agent in self.handoff_agents:
@@ -128,7 +131,12 @@ class AgentService:
     def get_message_handler(self, filters: filters.BaseFilter) -> MessageHandler:
         return MessageHandler(filters=filters, callback=self.handle_reply)
 
-    async def handle_message(self, message: Message, include_reply_to_message: bool = False) -> None:
+    async def handle_message(
+        self,
+        message: Message,
+        include_reply_to_message: bool = False,
+        use_triage_agent: bool = False,
+    ) -> None:
         message_text = get_message_text(
             message,
             include_reply_to_message=include_reply_to_message,
@@ -166,7 +174,9 @@ class AgentService:
         )
 
         # send the messages to the agent
-        result = await Runner.run(self.agent, input=messages)
+        if use_triage_agent:
+            self._current_agent = self.triage_agent
+        result = await Runner.run(self._current_agent, input=messages)
 
         log_new_items(result.new_items)
 
@@ -178,7 +188,7 @@ class AgentService:
         await self.cache.set(key, input_items)
 
         # handoff to another agent
-        # self.agent = result.last_agent
+        self._current_agent = result.last_agent
 
         await message.reply_text(result.final_output)
 
@@ -187,7 +197,7 @@ class AgentService:
         if not message:
             return
 
-        await self.handle_message(message, include_reply_to_message=True)
+        await self.handle_message(message, include_reply_to_message=True, use_triage_agent=True)
 
     async def handle_reply(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         # TODO: Implement filters.MessageFilter for reply to bot
@@ -207,4 +217,4 @@ class AgentService:
         if not from_user.is_bot:
             return
 
-        await self.handle_message(message, include_reply_to_message=True)
+        await self.handle_message(message, include_reply_to_message=True, use_triage_agent=False)
