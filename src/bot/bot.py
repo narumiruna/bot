@@ -11,9 +11,17 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
-from . import callbacks
 from .agent import AgentService
-from .callbacks import HelpHandler
+from .callbacks import ErrorCallback
+from .callbacks import HelpCallback
+from .callbacks import TranslationCallback
+from .callbacks import echo_callback
+from .callbacks import file_callback
+from .callbacks import format_callback
+from .callbacks import message_logging_callback
+from .callbacks import query_ticker_callback
+from .callbacks import search_youtube_callback
+from .callbacks import summarize_callback
 from .config import load_config
 
 
@@ -64,23 +72,26 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     app.add_handler(service.get_command_handler(filters=chat_filter))
     app.add_handlers(
         [
-            HelpHandler(helps=helps),
-            CommandHandler("s", callbacks.summarize, filters=chat_filter),
-            CommandHandler("jp", callbacks.create_translate_callback("日本語"), filters=chat_filter),
-            CommandHandler("tc", callbacks.create_translate_callback("台灣話"), filters=chat_filter),
-            CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),
-            CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
-            CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
-            CommandHandler("f", callbacks.handle_format, filters=chat_filter),
-            CommandHandler("echo", callbacks.handle_echo),
+            CommandHandler("help", HelpCallback(helps=helps), filters=chat_filter),
+            CommandHandler("s", summarize_callback, filters=chat_filter),
+            CommandHandler("jp", TranslationCallback("日本語"), filters=chat_filter),
+            CommandHandler("tc", TranslationCallback("台灣中文"), filters=chat_filter),
+            CommandHandler("en", TranslationCallback("English"), filters=chat_filter),
+            CommandHandler("t", query_ticker_callback, filters=chat_filter),
+            CommandHandler("yt", search_youtube_callback, filters=chat_filter),
+            CommandHandler("f", format_callback, filters=chat_filter),
+            CommandHandler("echo", echo_callback),
         ]
     )
 
     # Message handlers should be placed at the end.
     app.add_handler(service.get_message_handler(filters=chat_filter & filters.REPLY))
-    app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.extract_notes_from_document))
+    app.add_handler(MessageHandler(filters=chat_filter, callback=file_callback))
 
-    app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
+    app.add_handler(MessageHandler(filters=chat_filter, callback=message_logging_callback), group=1)
 
-    callbacks.add_error_handler(app)
+    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
+    if developer_chat_id:
+        app.add_error_handler(ErrorCallback(developer_chat_id))
+
     app.run_polling(allowed_updates=Update.ALL_TYPES)

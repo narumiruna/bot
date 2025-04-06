@@ -12,7 +12,7 @@ from ..utils import parse_url
 from .utils import get_message_text
 
 
-async def summarize(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.message
     if not message:
         return
