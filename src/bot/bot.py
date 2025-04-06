@@ -11,13 +11,14 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
-from . import callbacks
 from .agent import AgentService
 from .callbacks import ErrorCallback
 from .callbacks import HelpCallback
 from .callbacks import TranslationCallback
 from .callbacks import echo_callback
+from .callbacks import file_callback
 from .callbacks import format_callback
+from .callbacks import message_logging_callback
 from .callbacks import query_ticker_callback
 from .callbacks import search_youtube_callback
 from .callbacks import summarize_callback
@@ -85,9 +86,9 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
 
     # Message handlers should be placed at the end.
     app.add_handler(service.get_message_handler(filters=chat_filter & filters.REPLY))
-    app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.extract_notes_from_document))
+    app.add_handler(MessageHandler(filters=chat_filter, callback=file_callback))
 
-    app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
+    app.add_handler(MessageHandler(filters=chat_filter, callback=message_logging_callback), group=1)
 
     developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
     if developer_chat_id:

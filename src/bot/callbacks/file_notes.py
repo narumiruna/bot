@@ -14,7 +14,7 @@ from ..utils import create_page
 MAX_LENGTH: Final[int] = 1_000
 
 
-async def extract_notes_from_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def file_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.message
     if not message:
         return
