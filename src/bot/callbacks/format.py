@@ -15,7 +15,7 @@ from .utils import get_message_text
 MAX_LENGTH: Final[int] = 1_000
 
 
-async def handle_format(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def format_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.message
     if not message:
         return

@@ -17,6 +17,10 @@ from .callbacks import ErrorCallback
 from .callbacks import HelpCallback
 from .callbacks import TranslationCallback
 from .callbacks import echo_callback
+from .callbacks import format_callback
+from .callbacks import query_ticker_callback
+from .callbacks import search_youtube_callback
+from .callbacks import summarize_callback
 from .config import load_config
 
 
@@ -68,13 +72,13 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     app.add_handlers(
         [
             CommandHandler("help", HelpCallback(helps=helps), filters=chat_filter),
-            CommandHandler("s", callbacks.summarize, filters=chat_filter),
+            CommandHandler("s", summarize_callback, filters=chat_filter),
             CommandHandler("jp", TranslationCallback("日本語"), filters=chat_filter),
             CommandHandler("tc", TranslationCallback("台灣中文"), filters=chat_filter),
             CommandHandler("en", TranslationCallback("English"), filters=chat_filter),
-            CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
-            CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
-            CommandHandler("f", callbacks.handle_format, filters=chat_filter),
+            CommandHandler("t", query_ticker_callback, filters=chat_filter),
+            CommandHandler("yt", search_youtube_callback, filters=chat_filter),
+            CommandHandler("f", format_callback, filters=chat_filter),
             CommandHandler("echo", echo_callback),
         ]
     )

@@ -11,7 +11,7 @@ from twse.stock_info import query_stock_info
 from ..yahoo_finance import query_tickers
 
 
-async def query_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def query_ticker_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 

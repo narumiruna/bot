@@ -11,7 +11,7 @@ from youtube_search import YoutubeSearch
 MAX_RESULTS: Final[int] = 10
 
 
-async def search_youtube(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def search_youtube_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 
