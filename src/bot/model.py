@@ -30,4 +30,7 @@ def get_openai_model() -> OpenAIChatCompletionsModel:
 @cache
 def get_openai_model_settings():
     temperature = float(os.getenv("OPENAI_TEMPERATURE", 0.0))
-    return ModelSettings(temperature=temperature)
+    return ModelSettings(
+        temperature=temperature,
+        tool_choice="required",
+    )
