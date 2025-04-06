@@ -20,10 +20,6 @@
       "fetch": {
         "command": "uvx",
         "args": ["mcp-server-fetch"]
-      },
-      "g-search": {
-        "command": "npx",
-        "args": ["-y", "g-search-mcp"]
       }
     }
   },
