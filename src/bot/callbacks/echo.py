@@ -8,7 +8,7 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 
-async def handle_echo(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+async def echo_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
 

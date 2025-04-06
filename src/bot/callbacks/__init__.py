@@ -1,4 +1,4 @@
-from .echo import handle_echo
+from .echo import echo_callback
 from .error import add_error_handler
 from .error import handle_error
 from .file_notes import extract_notes_from_document

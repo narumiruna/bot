@@ -14,6 +14,7 @@ from telegram.ext import filters
 from . import callbacks
 from .agent import AgentService
 from .callbacks import HelpCallback
+from .callbacks import echo_callback
 from .config import load_config
 
 
@@ -72,7 +73,7 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
             CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
             CommandHandler("f", callbacks.handle_format, filters=chat_filter),
-            CommandHandler("echo", callbacks.handle_echo),
+            CommandHandler("echo", echo_callback),
         ]
     )
 
