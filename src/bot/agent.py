@@ -131,6 +131,19 @@ class AgentService:
     def get_message_handler(self, filters: filters.BaseFilter) -> MessageHandler:
         return MessageHandler(filters=filters, callback=self.handle_reply)
 
+    async def load_url_content(self, message_text: str) -> str:
+        parsed_url = parse_url(message_text)
+        if not parsed_url:
+            return message_text
+
+        url_content = await async_load_url(parsed_url)
+        message_text = message_text.replace(
+            parsed_url,
+            f"[URL content from {parsed_url}]:\n'''\n{url_content}\n'''\n[END of URL content]\n",
+            1,
+        )
+        return message_text
+
     async def handle_message(
         self,
         message: Message,
@@ -156,14 +169,7 @@ class AgentService:
         messages = remove_tool_messages(messages)
 
         # replace the URL with the content
-        parsed_url = parse_url(message_text)
-        if parsed_url:
-            url_content = await async_load_url(parsed_url)
-            message_text = message_text.replace(
-                parsed_url,
-                f"[URL content from {parsed_url}]:\n'''\n{url_content}\n'''\n[END of URL content]\n",
-                1,
-            )
+        message_text = await self.load_url_content(message_text)
 
         # add the user message to the list of messages
         messages.append(
