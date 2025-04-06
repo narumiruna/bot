@@ -1,6 +1,5 @@
 from .echo import echo_callback
-from .error import add_error_handler
-from .error import handle_error
+from .error import ErrorCallback
 from .file_notes import extract_notes_from_document
 from .format import handle_format
 from .help import HelpCallback

@@ -13,6 +13,7 @@ from telegram.ext import filters
 
 from . import callbacks
 from .agent import AgentService
+from .callbacks import ErrorCallback
 from .callbacks import HelpCallback
 from .callbacks import echo_callback
 from .config import load_config
@@ -83,5 +84,8 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
 
     app.add_handler(MessageHandler(filters=chat_filter, callback=callbacks.log_message_update), group=1)
 
-    callbacks.add_error_handler(app)
+    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
+    if developer_chat_id:
+        app.add_error_handler(ErrorCallback(developer_chat_id))
+
     app.run_polling(allowed_updates=Update.ALL_TYPES)
