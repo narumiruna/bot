@@ -6,6 +6,6 @@ from .help import HelpCallback
 from .log import log_message_update
 from .summary import summarize
 from .ticker import query_ticker
-from .translate import create_translate_callback
+from .translate import TranslationCallback
 from .utils import get_message_text
 from .youtube_search import search_youtube

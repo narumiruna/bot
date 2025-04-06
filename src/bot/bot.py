@@ -15,6 +15,7 @@ from . import callbacks
 from .agent import AgentService
 from .callbacks import ErrorCallback
 from .callbacks import HelpCallback
+from .callbacks import TranslationCallback
 from .callbacks import echo_callback
 from .config import load_config
 
@@ -68,9 +69,9 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
         [
             CommandHandler("help", HelpCallback(helps=helps), filters=chat_filter),
             CommandHandler("s", callbacks.summarize, filters=chat_filter),
-            CommandHandler("jp", callbacks.create_translate_callback("日本語"), filters=chat_filter),
-            CommandHandler("tc", callbacks.create_translate_callback("台灣話"), filters=chat_filter),
-            CommandHandler("en", callbacks.create_translate_callback("English"), filters=chat_filter),
+            CommandHandler("jp", TranslationCallback("日本語"), filters=chat_filter),
+            CommandHandler("tc", TranslationCallback("台灣中文"), filters=chat_filter),
+            CommandHandler("en", TranslationCallback("English"), filters=chat_filter),
             CommandHandler("t", callbacks.query_ticker, filters=chat_filter),
             CommandHandler("yt", callbacks.search_youtube, filters=chat_filter),
             CommandHandler("f", callbacks.handle_format, filters=chat_filter),

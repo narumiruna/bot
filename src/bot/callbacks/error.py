@@ -15,7 +15,7 @@ class ErrorCallback:
     def __init__(self, chat_id: str) -> None:
         self.chat_id = chat_id
 
-    async def error_callback(self, update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async def __call__(self, update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         logger.error("Exception while handling an update: {}", context.error)
 
         update_str = update.to_dict() if isinstance(update, Update) else str(update)

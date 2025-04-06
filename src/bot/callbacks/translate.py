@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import Final
 
 from loguru import logger
@@ -17,8 +16,11 @@ from .utils import get_message_text
 MAX_LENGTH: Final[int] = 1_000
 
 
-def create_translate_callback(lang: str) -> Callable:
-    async def translate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+class TranslationCallback:
+    def __init__(self, lang: str) -> None:
+        self.lang = lang
+
+    async def __call__(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         message = update.message
         if not message:
             return
@@ -31,15 +33,9 @@ def create_translate_callback(lang: str) -> Callable:
         if url:
             message_text = await async_load_url(url)
 
-        if context.args and context.args[0] == "explain":
-            reply_text = await chains.translate_and_explain(message_text, lang=lang)
-            logger.info("Translated and explained text to {}: {}", lang, reply_text)
-        else:
-            reply_text = await chains.translate(message_text, lang=lang)
-            logger.info("Translated text to {}: {}", lang, reply_text)
+        reply_text = await chains.translate(message_text, lang=self.lang)
+        logger.info("Translated text to {}: {}", self.lang, reply_text)
 
         if len(reply_text) > MAX_LENGTH:
             reply_text = create_page(title="Translation", html_content=reply_text.replace("\n", "<br>"))
         await message.reply_text(reply_text)
-
-    return translate
