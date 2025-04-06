@@ -13,7 +13,7 @@ from telegram.ext import filters
 
 from . import callbacks
 from .agent import AgentService
-from .callbacks import HelpHandler
+from .callbacks import HelpCallback
 from .config import load_config
 
 
@@ -64,7 +64,7 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     app.add_handler(service.get_command_handler(filters=chat_filter))
     app.add_handlers(
         [
-            HelpHandler(helps=helps),
+            CommandHandler("help", HelpCallback(helps=helps), filters=chat_filter),
             CommandHandler("s", callbacks.summarize, filters=chat_filter),
             CommandHandler("jp", callbacks.create_translate_callback("日本語"), filters=chat_filter),
             CommandHandler("tc", callbacks.create_translate_callback("台灣話"), filters=chat_filter),

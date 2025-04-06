@@ -3,7 +3,7 @@ from .error import add_error_handler
 from .error import handle_error
 from .file_notes import extract_notes_from_document
 from .format import handle_format
-from .help import HelpHandler
+from .help import HelpCallback
 from .log import log_message_update
 from .summary import summarize
 from .ticker import query_ticker
