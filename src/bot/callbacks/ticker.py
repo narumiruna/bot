@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from loguru import logger
+import logfire
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
@@ -22,7 +22,7 @@ async def query_ticker_callback(update: Update, context: ContextTypes.DEFAULT_TY
     try:
         yf_result = query_tickers(context.args)
     except Exception as e:
-        logger.info("Failed to get ticker for {}, got error: {}", context.args, e)
+        logfire.info(f"Failed to get ticker for {context.args}, got error: {e}")
         yf_result = ""
 
     # Query TWSE
@@ -31,7 +31,7 @@ async def query_ticker_callback(update: Update, context: ContextTypes.DEFAULT_TY
         try:
             twse_results += [query_stock_info(symbol.strip()).pretty_repr()]
         except json.JSONDecodeError as e:
-            logger.error("Failed to get ticker for {}, got error: {}", symbol, e)
+            logfire.error(f"Failed to get ticker for {symbol}, got error: {e}")
             continue
 
     # Combine results

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import textwrap
 
+import logfire
 from agents import Agent
 from agents import HandoffOutputItem
 from agents import ItemHelpers
@@ -14,7 +15,6 @@ from agents import handoff
 from agents.extensions import handoff_filters
 from agents.items import ResponseFunctionToolCall
 from agents.mcp import MCPServerStdio
-from loguru import logger
 from telegram import Message
 from telegram import Update
 from telegram.ext import CommandHandler
@@ -39,20 +39,18 @@ def shorten_text(text: str, width: int = 100, placeholder: str = "...") -> str:
 def log_new_items(new_items: list[RunItem]) -> None:
     for new_item in new_items:
         if isinstance(new_item, MessageOutputItem):
-            logger.info("Message: {}", shorten_text(ItemHelpers.text_message_output(new_item)))
+            message = ItemHelpers.text_message_output(new_item)
+            logfire.info(f"Message: {message}")
         elif isinstance(new_item, HandoffOutputItem):
-            logger.info(
-                "Handed off from {} to {}",
-                new_item.source_agent.name,
-                new_item.target_agent.name,
-            )
+            logfire.info(f"Handed off from {new_item.source_agent.name} to {new_item.target_agent.name}")
         elif isinstance(new_item, ToolCallItem):
             if isinstance(new_item.raw_item, ResponseFunctionToolCall):
-                logger.info("Calling tool: {}({})", new_item.raw_item.name, new_item.raw_item.arguments)
+                logfire.info(f"Calling tool: {new_item.raw_item.name}({new_item.raw_item.arguments})")
         elif isinstance(new_item, ToolCallOutputItem):
-            logger.info("Tool call output: {}", shorten_text(str(new_item.raw_item["output"])))
+            tool_call_output = new_item.raw_item["output"]
+            logfire.info(f"Tool call output: {tool_call_output}")
         else:
-            logger.info("Skipping item: {}", new_item.__class__.__name__)
+            logfire.info(f"Skipping item: {new_item.__class__.__name__}")
 
 
 def remove_tool_messages(messages):
@@ -163,7 +161,7 @@ class AgentService:
         messages = await self.cache.get(key)
         if messages is None:
             messages = []
-            logger.info("No key found for {}", key)
+            logfire.info(f"No key found for {key}")
 
         # remove all tool messages from the memory
         messages = remove_tool_messages(messages)

@@ -1,5 +1,5 @@
+import logfire
 from agents import function_tool
-from loguru import logger
 from mortgage import Loan
 
 
@@ -44,5 +44,5 @@ def compute_loan_details(principal: float, interest: float, term: int) -> str:
 
     res = "\n".join(lines)
 
-    logger.info("Loan summary: {}", res)
+    logfire.info(f"Loan summary: {res}")
     return res

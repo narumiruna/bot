@@ -1,7 +1,7 @@
 from typing import Literal
 
+import logfire
 from agents import function_tool
-from loguru import logger
 from tripplus import RedemptionRequest
 
 
@@ -30,8 +30,8 @@ def search_award(ori: str, dst: str, cabin: Literal["y", "c", "f"], type: Litera
         type=type,
         programs="ALL",
     )
-    logger.debug("RedemptionRequest: {}", req)
+    logfire.debug(f"RedemptionRequest: {req}")
 
     resp = req.do().model_dump_json()
-    logger.debug("RedemptionResponse: {}", resp)
+    logfire.debug(f"RedemptionResponse: {resp}")
     return resp

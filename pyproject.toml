@@ -6,7 +6,6 @@ readme = "README.md"
 authors = [{ name = "narumi", email = "toucans-cutouts0f@icloud.com" }]
 requires-python = ">=3.11,<3.13"
 dependencies = [
-    "loguru>=0.7.2",
     "lxml>=5.3.0",
     "markdownify>=0.13.1",
     "python-dotenv>=1.0.1",
@@ -27,6 +26,7 @@ dependencies = [
     "kabigon>=0.5.1",
     "uv>=0.6.12",
     "typer>=0.15.2",
+    "logfire>=3.12.0",
 ]
 
 [project.scripts]
