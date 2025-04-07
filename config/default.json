@@ -8,6 +8,14 @@
       "playwright": {
           "command": "npx",
           "args": ["@playwright/mcp@latest"]
+      },
+      "yfmcp": {
+          "command": "uvx",
+          "args": ["yfmcp"]
+      },
+      "mcp-server-twse": {
+        "command": "uvx",
+        "args": ["twsemcp"]
       }
     }
   },
