@@ -2,7 +2,7 @@ import asyncio
 from textwrap import dedent
 from typing import cast
 
-import logfire
+from loguru import logger
 from pydantic import BaseModel
 
 from .notes import create_notes_from_chunk
@@ -43,7 +43,7 @@ async def _format(text: str, lang: str = "台灣中文") -> FormattedContent:
         ),
     )
 
-    logfire.info(f"Formatted response: {response}")
+    logger.info(f"Formatted response: {response}")
     return response
 
 

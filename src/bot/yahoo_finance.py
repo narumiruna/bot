@@ -1,12 +1,12 @@
 import re
 from typing import Any
 
-import logfire
+from loguru import logger
 
 try:
     import yfinance as yf  # type: ignore
 except ImportError as e:
-    logfire.error(f"Missing dependency: {e}. Please install yfinance with 'pip install yfinance'")
+    logger.error(f"Missing dependency: {e}. Please install yfinance with 'pip install yfinance'")
 
 
 class TickerError(Exception):
@@ -87,7 +87,7 @@ def query_tickers(symbols: str | list[str]) -> str:
             ticker = yf.Ticker(symbol)
             results.append(format_ticker_info(ticker))
         except Exception as e:
-            logfire.info(f"Failed to get ticker for {symbol}, got error: {e}")
+            logger.info(f"Failed to get ticker for {symbol}, got error: {e}")
 
     return "\n\n".join(results).strip()
 

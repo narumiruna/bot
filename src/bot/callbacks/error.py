@@ -4,7 +4,7 @@ import html
 import json
 import traceback
 
-import logfire
+from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -16,7 +16,7 @@ class ErrorCallback:
         self.chat_id = chat_id
 
     async def __call__(self, update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logfire.error(f"Exception while handling an update: {context.error}")
+        logger.error(f"Exception while handling an update: {context.error}")
 
         update_str = update.to_dict() if isinstance(update, Update) else str(update)
 

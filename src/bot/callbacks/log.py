@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import logfire
+from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
 
 async def message_logging_callback(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    logfire.info(f"Message Update: {update}")
+    logger.info(f"Message Update: {update}")

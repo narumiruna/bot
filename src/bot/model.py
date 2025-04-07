@@ -3,10 +3,10 @@ from __future__ import annotations
 import os
 from functools import cache
 
-import logfire
 from agents import ModelSettings
 from agents import OpenAIChatCompletionsModel
 from agents import set_tracing_disabled
+from loguru import logger
 from openai import AsyncAzureOpenAI
 from openai import AsyncOpenAI
 from openai import OpenAIError
@@ -18,12 +18,12 @@ def get_openai_model() -> OpenAIChatCompletionsModel:
     try:
         model = OpenAIChatCompletionsModel(model_name, openai_client=AsyncAzureOpenAI())
         set_tracing_disabled(True)
-        logfire.info(f"Using Azure OpenAI model: {model}")
+        logger.info(f"Using Azure OpenAI model: {model}")
         return model
     except OpenAIError as e:
-        logfire.warning(f"Unable to create AsyncAzureOpenAI, falling back to AsyncOpenAI, error: {e}")
+        logger.warning(f"Unable to create AsyncAzureOpenAI, falling back to AsyncOpenAI, error: {e}")
     model = OpenAIChatCompletionsModel(model_name, openai_client=AsyncOpenAI())
-    logfire.info(f"Using OpenAI model: {model}")
+    logger.info(f"Using OpenAI model: {model}")
     return model
 
 

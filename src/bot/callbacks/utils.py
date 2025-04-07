@@ -1,4 +1,4 @@
-import logfire
+from loguru import logger
 from telegram import Message
 
 
@@ -49,7 +49,7 @@ def get_message_text(
             if reply_to_message_text:
                 message_text = f"{reply_to_message_text}\n\n{message_text}"
 
-    logfire.info(f"message_text: {message_text}")
+    logger.info(f"message_text: {message_text}")
     return message_text
 
 
