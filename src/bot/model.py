@@ -18,12 +18,12 @@ def get_openai_model() -> OpenAIChatCompletionsModel:
     try:
         model = OpenAIChatCompletionsModel(model_name, openai_client=AsyncAzureOpenAI())
         set_tracing_disabled(True)
-        logger.info(f"Using Azure OpenAI model: {model}")
+        logger.info("Using Azure OpenAI model: {}", model)
         return model
     except OpenAIError as e:
-        logger.warning(f"Unable to create AsyncAzureOpenAI, falling back to AsyncOpenAI, error: {e}")
+        logger.warning("Unable to create AsyncAzureOpenAI, falling back to AsyncOpenAI, error: {}", e)
     model = OpenAIChatCompletionsModel(model_name, openai_client=AsyncOpenAI())
-    logger.info(f"Using OpenAI model: {model}")
+    logger.info("Using OpenAI model: {}", model)
     return model
 
 

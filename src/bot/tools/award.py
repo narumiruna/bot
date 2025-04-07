@@ -30,8 +30,8 @@ def search_award(ori: str, dst: str, cabin: Literal["y", "c", "f"], type: Litera
         type=type,
         programs="ALL",
     )
-    logger.debug(f"RedemptionRequest: {req}")
+    logger.debug("RedemptionRequest: {req}", req=req)
 
     resp = req.do().model_dump_json()
-    logger.debug(f"RedemptionResponse: {resp}")
+    logger.debug("RedemptionResponse: {resp}", resp=resp)
     return resp

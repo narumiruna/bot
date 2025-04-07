@@ -6,7 +6,7 @@ from loguru import logger
 try:
     import yfinance as yf  # type: ignore
 except ImportError as e:
-    logger.error(f"Missing dependency: {e}. Please install yfinance with 'pip install yfinance'")
+    logger.error("Missing dependency: {}. Please install yfinance with 'pip install yfinance'", e)
 
 
 class TickerError(Exception):
@@ -87,7 +87,7 @@ def query_tickers(symbols: str | list[str]) -> str:
             ticker = yf.Ticker(symbol)
             results.append(format_ticker_info(ticker))
         except Exception as e:
-            logger.info(f"Failed to get ticker for {symbol}, got error: {e}")
+            logger.info("Failed to get ticker for {}, got error: {}", symbol, e)
 
     return "\n\n".join(results).strip()
 

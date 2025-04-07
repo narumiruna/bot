@@ -34,7 +34,7 @@ class TranslationCallback:
             message_text = await async_load_url(url)
 
         reply_text = await chains.translate(message_text, lang=self.lang)
-        logger.info(f"Translated text to {self.lang}: {reply_text}")
+        logger.info("Translated text to {}: {}", self.lang, reply_text)
 
         if len(reply_text) > MAX_LENGTH:
             reply_text = create_page(title="Translation", html_content=reply_text.replace("\n", "<br>"))
