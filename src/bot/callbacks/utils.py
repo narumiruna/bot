@@ -49,7 +49,7 @@ def get_message_text(
             if reply_to_message_text:
                 message_text = f"{reply_to_message_text}\n\n{message_text}"
 
-    logfire.info("message_text: {}", message_text)
+    logfire.info(f"message_text: {message_text}")
     return message_text
 
 

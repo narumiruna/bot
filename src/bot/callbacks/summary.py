@@ -20,23 +20,23 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     message_text = get_message_text(message)
     if not message_text:
         return
-    logfire.info("message_text: {}", message_text)
+    logfire.info(f"message_text: {message_text}")
 
     url = parse_url(message_text)
     if not url:
         await message.reply_text(f"Please provide a valid URL, got: {message_text}")
         return
-    logfire.info("Parsed URL: {}", url)
+    logfire.info(f"Parsed URL: {url}")
 
     try:
         text = await async_load_url(url)
     except Exception as e:
-        logfire.error("Failed to load URL: {}", e)
+        logfire.error(f"Failed to load URL: {e}")
         await message.reply_text(f"Unable to load content from: {url}")
         return
-    logfire.info("Text length: {}", len(text))
+    logfire.info(f"Text length: {len(text)}")
 
     result = await chains.summarize(text)
 
-    logfire.info("Summarized text: {}", result)
+    logfire.info(f"Summarized text: {result}")
     await message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)

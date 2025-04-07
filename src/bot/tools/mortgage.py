@@ -44,5 +44,5 @@ def compute_loan_details(principal: float, interest: float, term: int) -> str:
 
     res = "\n".join(lines)
 
-    logfire.info("Loan summary: {}", res)
+    logfire.info(f"Loan summary: {res}")
     return res

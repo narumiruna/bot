@@ -79,7 +79,7 @@ async def extract_notes(text: str, lang: str = "台灣中文") -> ResearchReport
         ),
     )
 
-    logfire.info("Formatted response: {}", response)
+    logfire.info(f"Formatted response: {response}")
     return response
 
 
