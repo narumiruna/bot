@@ -5,6 +5,10 @@
     "name": "default_agent",
     "instructions": "使用台灣正體中文。擅長邏輯思考且嚴謹，會分解問題並且一步一步地思考。",
     "mcp_servers": {
+      "playwright": {
+          "command": "npx",
+          "args": ["@playwright/mcp@latest"]
+      },
       "yfmcp": {
         "command": "uvx",
         "args": ["yfmcp"]
