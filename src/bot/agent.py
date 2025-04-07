@@ -39,6 +39,7 @@ def shorten_text(text: str, width: int = 100, placeholder: str = "...") -> str:
 def log_new_items(new_items: list[RunItem]) -> None:
     for new_item in new_items:
         if isinstance(new_item, MessageOutputItem):
+<<<<<<< HEAD
             logger.info("Message: {}", shorten_text(ItemHelpers.text_message_output(new_item)))
         elif isinstance(new_item, HandoffOutputItem):
             logger.info(
@@ -53,6 +54,20 @@ def log_new_items(new_items: list[RunItem]) -> None:
             logger.info("Tool call output: {}", shorten_text(str(new_item.raw_item["output"])))
         else:
             logger.info("Skipping item: {}", new_item.__class__.__name__)
+=======
+            message = ItemHelpers.text_message_output(new_item)
+            logfire.info(f"Message: {message}")
+        elif isinstance(new_item, HandoffOutputItem):
+            logfire.info(f"Handed off from {new_item.source_agent.name} to {new_item.target_agent.name}")
+        elif isinstance(new_item, ToolCallItem):
+            if isinstance(new_item.raw_item, ResponseFunctionToolCall):
+                logfire.info(f"Calling tool: {new_item.raw_item.name}({new_item.raw_item.arguments})")
+        elif isinstance(new_item, ToolCallOutputItem):
+            tool_call_output = new_item.raw_item["output"]
+            logfire.info(f"Tool call output: {tool_call_output}")
+        else:
+            logfire.info(f"Skipping item: {new_item.__class__.__name__}")
+>>>>>>> 840cedc (fix)
 
 
 def remove_tool_messages(messages):

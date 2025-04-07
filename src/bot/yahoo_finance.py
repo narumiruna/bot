@@ -6,7 +6,11 @@ from loguru import logger
 try:
     import yfinance as yf  # type: ignore
 except ImportError as e:
+<<<<<<< HEAD
     logger.error("Missing dependency: {}. Please install yfinance with 'pip install yfinance'", e)
+=======
+    logfire.error(f"Missing dependency: {e}. Please install yfinance with 'pip install yfinance'")
+>>>>>>> 840cedc (fix)
 
 
 class TickerError(Exception):
