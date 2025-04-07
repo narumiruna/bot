@@ -3,8 +3,8 @@ from __future__ import annotations
 import os
 from typing import Annotated
 
+import logfire
 import typer
-from loguru import logger
 from telegram import Update
 from telegram.ext import Application
 from telegram.ext import CommandHandler
@@ -28,7 +28,7 @@ from .config import load_config
 def get_chat_filter() -> filters.BaseFilter:
     whitelist = os.getenv("BOT_WHITELIST")
     if not whitelist:
-        logger.warning("No whitelist specified, allowing all chats")
+        logfire.warning("No whitelist specified, allowing all chats")
         return filters.ALL
     else:
         chat_ids = [int(chat_id) for chat_id in whitelist.replace(" ", "").split(",")]

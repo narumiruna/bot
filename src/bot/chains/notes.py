@@ -2,7 +2,7 @@ import asyncio
 from textwrap import dedent
 from typing import cast
 
-from loguru import logger
+import logfire
 from pydantic import BaseModel
 
 from .utils import chunk_on_delimiter
@@ -79,7 +79,7 @@ async def extract_notes(text: str, lang: str = "台灣中文") -> ResearchReport
         ),
     )
 
-    logger.info("Formatted response: {}", response)
+    logfire.info("Formatted response: {}", response)
     return response
 
 

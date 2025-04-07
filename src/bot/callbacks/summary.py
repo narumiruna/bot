@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from loguru import logger
+import logfire
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
@@ -20,23 +20,23 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     message_text = get_message_text(message)
     if not message_text:
         return
-    logger.info("message_text: {}", message_text)
+    logfire.info("message_text: {}", message_text)
 
     url = parse_url(message_text)
     if not url:
         await message.reply_text(f"Please provide a valid URL, got: {message_text}")
         return
-    logger.info("Parsed URL: {}", url)
+    logfire.info("Parsed URL: {}", url)
 
     try:
         text = await async_load_url(url)
     except Exception as e:
-        logger.error("Failed to load URL: {}", e)
+        logfire.error("Failed to load URL: {}", e)
         await message.reply_text(f"Unable to load content from: {url}")
         return
-    logger.info("Text length: {}", len(text))
+    logfire.info("Text length: {}", len(text))
 
     result = await chains.summarize(text)
 
-    logger.info("Summarized text: {}", result)
+    logfire.info("Summarized text: {}", result)
     await message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
