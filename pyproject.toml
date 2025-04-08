@@ -17,7 +17,6 @@ dependencies = [
     "lazyopenai[langfuse]>=0.5.0",
     "mortgage>=1.0.5",
     "markdown2>=2.5.1",
-    "twse>=0.2.0",
     "rich>=13.9.4",
     "yfinance>=0.2.54",
     "openai-agents>=0.0.3",
@@ -28,6 +27,7 @@ dependencies = [
     "typer>=0.15.2",
     "logfire>=3.12.0",
     "loguru>=0.7.3",
+    "twse>=0.3.0",
 ]
 
 [project.scripts]
