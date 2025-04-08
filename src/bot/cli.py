@@ -1,23 +1,9 @@
-import os
-
 import typer
 from dotenv import find_dotenv
 from dotenv import load_dotenv
-from loguru import logger
 
 from .bot import run_bot
-
-
-def configure_logfire() -> None:
-    logfire_token = os.getenv("LOGFIRE_TOKEN")
-    if logfire_token is None:
-        logger.warning("Logfire token not found, skipping logfire configuration")
-        return
-
-    import logfire
-
-    logfire.configure()
-    logger.configure(handlers=[logfire.loguru_handler()])
+from .utils import configure_logfire
 
 
 def main():

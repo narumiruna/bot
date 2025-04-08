@@ -2,14 +2,17 @@ import asyncio
 import concurrent.futures
 import functools
 import json
+import os
 import re
 from functools import cache
 from pathlib import Path
 from typing import Any
 
 import kabigon
+import logfire
 import telegraph
 from kabigon.compose import Compose
+from loguru import logger
 
 
 def save_text(text: str, f: str) -> None:
@@ -84,3 +87,15 @@ def load_url(url: str) -> str:
 async def async_load_url(url: str) -> str:
     loader = get_composed_loader()
     return await loader.async_load(url)
+
+
+def logfire_is_enabled() -> bool:
+    return os.getenv("LOGFIRE_TOKEN") is not None
+
+
+def configure_logfire() -> None:
+    if not logfire_is_enabled():
+        return
+
+    logfire.configure()
+    logger.configure(handlers=[logfire.loguru_handler()])
