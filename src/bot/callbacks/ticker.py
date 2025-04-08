@@ -6,7 +6,7 @@ from loguru import logger
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
-from twse.stock_info import query_stock_info
+from twse.stock_info import get_stock_info
 
 from ..yahoo_finance import query_tickers
 
@@ -29,7 +29,7 @@ async def query_ticker_callback(update: Update, context: ContextTypes.DEFAULT_TY
     twse_results = []
     for symbol in context.args:
         try:
-            twse_results += [query_stock_info(symbol.strip()).pretty_repr()]
+            twse_results += [get_stock_info(symbol.strip()).pretty_repr()]
         except json.JSONDecodeError as e:
             logger.error("Failed to get ticker for {}, got error: {}", symbol, e)
             continue
