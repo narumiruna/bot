@@ -16,7 +16,7 @@ class ErrorCallback:
         self.chat_id = chat_id
 
     async def __call__(self, update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logger.error("Exception while handling an update: {}", context.error)
+        logger.error("Exception while handling an update: {error}", error=context.error)
 
         if self.chat_id is None:
             return

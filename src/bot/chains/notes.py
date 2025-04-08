@@ -79,7 +79,7 @@ async def extract_notes(text: str, lang: str = "台灣中文") -> ResearchReport
         ),
     )
 
-    logger.info("Formatted response: {}", response)
+    logger.info("Formatted response: {response}", response=response)
     return response
 
 

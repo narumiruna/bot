@@ -158,7 +158,7 @@ class AgentService:
             self._current_agent = self.triage_agent
         result = await Runner.run(self._current_agent, input=messages)
 
-        logger.info("New items: {}", result.new_items)
+        logger.info("New items: {new_items}", new_items=result.new_items)
 
         # update the memory
         input_items = result.to_input_list()

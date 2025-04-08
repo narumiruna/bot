@@ -43,7 +43,7 @@ async def _format(text: str, lang: str = "台灣中文") -> FormattedContent:
         ),
     )
 
-    logger.info("Formatted response: {}", response)
+    logger.info("Formatted response: {response}", response=response)
     return response
 
 

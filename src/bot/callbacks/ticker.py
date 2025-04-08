@@ -22,7 +22,7 @@ async def query_ticker_callback(update: Update, context: ContextTypes.DEFAULT_TY
     try:
         yf_result = query_tickers(context.args)
     except Exception as e:
-        logger.info("Failed to get ticker for {}, got error: {}", context.args, e)
+        logger.warning("Failed to get ticker for {symbols}, got error: {error}", symbols=context.args, error=e)
         yf_result = ""
 
     # Query TWSE
@@ -31,7 +31,7 @@ async def query_ticker_callback(update: Update, context: ContextTypes.DEFAULT_TY
         try:
             twse_results += [get_stock_info(symbol.strip()).pretty_repr()]
         except json.JSONDecodeError as e:
-            logger.error("Failed to get ticker for {}, got error: {}", symbol, e)
+            logger.warning("Failed to get ticker for {symbol}, got error: {error}", symbol=symbol, error=e)
             continue
 
     # Combine results

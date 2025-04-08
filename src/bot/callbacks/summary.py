@@ -20,23 +20,21 @@ async def summarize_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     message_text = get_message_text(message)
     if not message_text:
         return
-    logger.info("message_text: {}", message_text)
+    logger.info("Message text: {text}", text=message_text)
 
     url = parse_url(message_text)
     if not url:
-        await message.reply_text("Please provide a valid URL, got: {}", message_text)
         return
-    logger.info("Parsed URL: {}", url)
+    logger.info("Parsed URL: {url}", url=url)
 
     try:
         text = await async_load_url(url)
     except Exception as e:
-        logger.error("Failed to load URL: {}", e)
-        await message.reply_text(f"Unable to load content from: {url}")
+        logger.warning("Failed to load URL: {url}, got error: {error}", url=url, error=e)
+        await message.reply_text(f"Failed to load URL: {url}")
         return
-    logger.info("Text length: {}", len(text))
 
     result = await chains.summarize(text)
 
-    logger.info("Summarized text: {}", result)
+    logger.info("Summarized text: {text}", text=result)
     await message.reply_text(result, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
