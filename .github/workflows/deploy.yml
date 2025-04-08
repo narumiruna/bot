@@ -40,6 +40,7 @@ jobs:
           echo AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }} >> .env
           echo AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }} >> .env
           echo LOGFIRE_TOKEN=${{ secrets.LOGFIRE_TOKEN }} >> .env
+          echo LOGFIRE_ENVIRONMENT=prod >> .env
       - name: Copy files
         run: |
           rm -rf ${{ env.WORKDIR }}
