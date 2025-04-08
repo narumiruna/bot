@@ -12,11 +12,14 @@ from ..utils import create_page
 
 
 class ErrorCallback:
-    def __init__(self, chat_id: str) -> None:
+    def __init__(self, chat_id: str | None = None) -> None:
         self.chat_id = chat_id
 
     async def __call__(self, update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         logger.error("Exception while handling an update: {}", context.error)
+
+        if self.chat_id is None:
+            return
 
         update_str = update.to_dict() if isinstance(update, Update) else str(update)
 

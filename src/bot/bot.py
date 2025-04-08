@@ -87,8 +87,6 @@ def run_bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "confi
     app.add_handler(service.get_message_handler(filters=chat_filter & filters.REPLY))
     app.add_handler(MessageHandler(filters=chat_filter, callback=file_callback))
 
-    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
-    if developer_chat_id:
-        app.add_error_handler(ErrorCallback(developer_chat_id))
+    app.add_error_handler(ErrorCallback(os.getenv("DEVELOPER_CHAT_ID")))
 
     app.run_polling(allowed_updates=Update.ALL_TYPES)
