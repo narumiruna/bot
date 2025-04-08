@@ -10,13 +10,14 @@ from .bot import run_bot
 
 def configure_logfire() -> None:
     logfire_token = os.getenv("LOGFIRE_TOKEN")
-    if logfire_token is not None:
-        logger.info("Logfire token found, configuring logfire")
+    if logfire_token is None:
+        logger.warning("Logfire token not found, skipping logfire configuration")
+        return
 
-        import logfire
+    import logfire
 
-        logfire.configure()
-        logger.configure(handlers=[logfire.loguru_handler()])
+    logfire.configure()
+    logger.configure(handlers=[logfire.loguru_handler()])
 
 
 def main():
