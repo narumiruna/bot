@@ -142,7 +142,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.9.4" },
     { name = "telegraph", specifier = ">=2.2.0" },
     { name = "tripplus", git = "https://github.com/narumiruna/tripplus.git" },
-    { name = "twse", specifier = ">=0.3.2" },
+    { name = "twse", specifier = ">=0.3.3" },
     { name = "typer", specifier = ">=0.15.2" },
     { name = "uv", specifier = ">=0.6.12" },
     { name = "yfinance", specifier = ">=0.2.54" },
@@ -2012,7 +2012,7 @@ wheels = [
 
 [[package]]
 name = "twse"
-version = "0.3.2"
+version = "0.3.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -2020,7 +2020,7 @@ dependencies = [
     { name = "pydantic" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/75/34/5c93a5748f2dd9e539f69dd478947aadaa5857b2c30403bf49a3aba8451d/twse-0.3.2-py3-none-any.whl", hash = "sha256:976bf3e3d00cde23c9c9eba916578805886955300897153798cf8d0467b92912", size = 5900 },
+    { url = "https://files.pythonhosted.org/packages/4d/e8/799e9ba7ce1d151bf894d84706163e5e9b9df29ec05255d0fa23ccbb26c3/twse-0.3.3-py3-none-any.whl", hash = "sha256:e33a7a1c6ea4dc9f46410cff6d4604160f89ba81b4a1c2d58be5f8da32a499bb", size = 5941 },
 ]
 
 [[package]]

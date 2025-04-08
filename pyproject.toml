@@ -27,7 +27,7 @@ dependencies = [
     "typer>=0.15.2",
     "logfire>=3.12.0",
     "loguru>=0.7.3",
-    "twse>=0.3.2",
+    "twse>=0.3.3",
 ]
 
 [project.scripts]
