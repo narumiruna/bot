@@ -18,7 +18,7 @@ redis = [
 
 [[package]]
 name = "aioytt"
-version = "0.2.4"
+version = "0.2.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -28,7 +28,7 @@ dependencies = [
     { name = "rich" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ec/74/111102db7bd2d91c576e7d258a6c681b588a94f235cdc49199dc9bedccbf/aioytt-0.2.4-py3-none-any.whl", hash = "sha256:bdaca6465aebf69bc4bc47012546b3d3b2dec4b982c851557713df952234af08", size = 6084 },
+    { url = "https://files.pythonhosted.org/packages/4e/24/dd07285cbc0b9d39ff0f9cd308720d913964c545e418998ca6f1cb3c4fe4/aioytt-0.2.5-py3-none-any.whl", hash = "sha256:64b830ec1d9bfa5359540c450c8b2d0433906202a0063be5a07f88546c2e9448", size = 5488 },
 ]
 
 [[package]]
@@ -127,7 +127,7 @@ mlx = [
 requires-dist = [
     { name = "aiocache", extras = ["redis"], specifier = ">=0.12.3" },
     { name = "duckduckgo-search", specifier = ">=7.5.1" },
-    { name = "kabigon", specifier = ">=0.5.1" },
+    { name = "kabigon", specifier = ">=0.5.3" },
     { name = "lazyopenai", extras = ["langfuse"], specifier = ">=0.5.0" },
     { name = "logfire", specifier = ">=3.12.0" },
     { name = "loguru", specifier = ">=0.7.3" },
@@ -633,7 +633,7 @@ wheels = [
 
 [[package]]
 name = "kabigon"
-version = "0.5.2"
+version = "0.5.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioytt" },
@@ -650,7 +650,7 @@ dependencies = [
     { name = "yt-dlp" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3e/ed/d70531677c7f2a039533f65b40be398524fd844eb15cc9e29dc3b6e900f7/kabigon-0.5.2-py3-none-any.whl", hash = "sha256:9306d9d934f7962b4f80de338de46d7109760a2389a78cce183b7ad32205f032", size = 10344 },
+    { url = "https://files.pythonhosted.org/packages/a2/e0/90e7471d40a259c377402b282f9a01d3ed2e63be65f962c22b09f1a842ec/kabigon-0.5.3-py3-none-any.whl", hash = "sha256:5ac327d378d095d262a62d33e858e88111039a7d7e3240e3d1172091a21662d4", size = 10344 },
 ]
 
 [[package]]
@@ -2311,11 +2311,11 @@ wheels = [
 
 [[package]]
 name = "yt-dlp"
-version = "2025.3.27"
+version = "2025.3.31"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8c/cf/b944738d1508948e00b6d71b2305448ca4ea18fcc1c6ba0c2118270f2e82/yt_dlp-2025.3.27.tar.gz", hash = "sha256:30cb078f803b539b2a66521c5ec86d328c07f74aeca9440069e58619c299cf15", size = 2963084 }
+sdist = { url = "https://files.pythonhosted.org/packages/a2/11/333d16f88b1515d4c601e1dfbf1028e6798f0b2a8ff1dc5aaa7b797aa9e8/yt_dlp-2025.3.31.tar.gz", hash = "sha256:1bfe0e660d1a70a09e27b2d58f92e30b1e2e362cc487829f2f824346ae49fb91", size = 2967466 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9d/8a/d4a533d5bb37e6459fbbf3f801a5f8bffafe78e364a9981ab571a7038db8/yt_dlp-2025.3.27-py3-none-any.whl", hash = "sha256:bef4105af0f25c13c1a505daf46142af45d9312dc2c3553651db083e6860e641", size = 3221898 },
+    { url = "https://files.pythonhosted.org/packages/a8/bf/7b0affb8f163376309696cfd1c677818fa0969fbb9d88225087208799afe/yt_dlp-2025.3.31-py3-none-any.whl", hash = "sha256:8ecb3aa218a3bebe431119f513a8972b9b9d992edf67168c00ab92329a03baec", size = 3226021 },
 ]
 
 [[package]]
