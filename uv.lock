@@ -115,6 +115,7 @@ dev = [
     { name = "toml" },
     { name = "types-aiofiles" },
     { name = "types-cachetools" },
+    { name = "types-deprecated" },
     { name = "types-pytz" },
     { name = "types-pyyaml" },
     { name = "types-redis" },
@@ -159,6 +160,7 @@ dev = [
     { name = "toml", specifier = ">=0.10.2" },
     { name = "types-aiofiles", specifier = ">=24.1.0.20241221" },
     { name = "types-cachetools", specifier = ">=5.5.0.20240820" },
+    { name = "types-deprecated", specifier = ">=1.2.15.20250304" },
     { name = "types-pytz", specifier = ">=2024.2.0.20241003" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20240917" },
     { name = "types-redis", specifier = ">=4.6.0.20241004" },
@@ -2066,6 +2068,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/3f/3b/d29491d754b9e42edd4890648311ffa5d4d000b7d97b92ac4d04faad40d8/types_cffi-1.17.0.20250326.tar.gz", hash = "sha256:6c8fea2c2f34b55e5fb77b1184c8ad849d57cf0ddccbc67a62121ac4b8b32254", size = 16887 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/61/49/ce473d7fbc2c80931ef9f7530fd3ddf31b8a5bca56340590334ce6ffbfb1/types_cffi-1.17.0.20250326-py3-none-any.whl", hash = "sha256:5af4ecd7374ae0d5fa9e80864e8d4b31088cc32c51c544e3af7ed5b5ed681447", size = 20133 },
+]
+
+[[package]]
+name = "types-deprecated"
+version = "1.2.15.20250304"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0e/67/eeefaaabb03b288aad85483d410452c8bbcbf8b2bd876b0e467ebd97415b/types_deprecated-1.2.15.20250304.tar.gz", hash = "sha256:c329030553029de5cc6cb30f269c11f4e00e598c4241290179f63cda7d33f719", size = 8015 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4d/e3/c18aa72ab84e0bc127a3a94e93be1a6ac2cb281371d3a45376ab7cfdd31c/types_deprecated-1.2.15.20250304-py3-none-any.whl", hash = "sha256:86a65aa550ea8acf49f27e226b8953288cd851de887970fbbdf2239c116c3107", size = 8553 },
 ]
 
 [[package]]

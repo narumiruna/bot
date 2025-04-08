@@ -50,6 +50,7 @@ dev = [
     "types-redis>=4.6.0.20241004",
     "types-pyyaml>=6.0.12.20240917",
     "types-aiofiles>=24.1.0.20241221",
+    "types-deprecated>=1.2.15.20250304",
 ]
 mlx = ["mlx-whisper>=0.4.1"]
 
