@@ -111,7 +111,8 @@ dependencies = [
     { name = "rich" },
     { name = "telegraph" },
     { name = "tripplus" },
-    { name = "twse" },
+    { name = "twse", version = "0.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "twse", version = "0.3.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "typer" },
     { name = "uv" },
     { name = "yfinance" },
@@ -155,7 +156,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.9.4" },
     { name = "telegraph", specifier = ">=2.2.0" },
     { name = "tripplus", git = "https://github.com/narumiruna/tripplus.git" },
-    { name = "twse", specifier = ">=0.3.0" },
+    { name = "twse", specifier = ">=0.3.1" },
     { name = "typer", specifier = ">=0.15.2" },
     { name = "uv", specifier = ">=0.6.12" },
     { name = "yfinance", specifier = ">=0.2.54" },
@@ -2018,15 +2019,35 @@ wheels = [
 
 [[package]]
 name = "twse"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.12'",
+]
 dependencies = [
-    { name = "httpx" },
-    { name = "loguru" },
-    { name = "pydantic" },
+    { name = "httpx", marker = "python_full_version < '3.12'" },
+    { name = "loguru", marker = "python_full_version < '3.12'" },
+    { name = "pydantic", marker = "python_full_version < '3.12'" },
+    { name = "rich", marker = "python_full_version < '3.12'" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/00/c7/377b6c57dd884abb9646986a56007c5de00d22e8d3eb80c3df72e0a63b1d/twse-0.3.0-py3-none-any.whl", hash = "sha256:2fb8e004b50a2128bf6a227a8daf8595e3ccad8a2471760239cb220757a5f267", size = 5886 },
+    { url = "https://files.pythonhosted.org/packages/2f/ff/14a3be2d3dfe5d5e9c525e2522b1415b25ba8f4ec2ceb3b1d439da77faa0/twse-0.3.1-py3-none-any.whl", hash = "sha256:1fd41204fdb5205ddc0a630ddb13757feaa93a3784ef1103d66350fc97be8b5a", size = 5912 },
+]
+
+[[package]]
+name = "twse"
+version = "0.3.2"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.12'",
+]
+dependencies = [
+    { name = "httpx", marker = "python_full_version >= '3.12'" },
+    { name = "loguru", marker = "python_full_version >= '3.12'" },
+    { name = "pydantic", marker = "python_full_version >= '3.12'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/75/34/5c93a5748f2dd9e539f69dd478947aadaa5857b2c30403bf49a3aba8451d/twse-0.3.2-py3-none-any.whl", hash = "sha256:976bf3e3d00cde23c9c9eba916578805886955300897153798cf8d0467b92912", size = 5900 },
 ]
 
 [[package]]
