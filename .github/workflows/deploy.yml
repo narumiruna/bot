@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  UNIT: dev.narumi.bot
+  UNIT: bot
   WORKDIR: /Users/narumi/services/bot
   PLIST_DIR: /Users/narumi/Library/LaunchAgents
 
