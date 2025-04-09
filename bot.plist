@@ -5,13 +5,13 @@
     <key>EnvironmentVariables</key>
     <dict>
       <key>PATH</key>
-      <string>/Users/narumi/.cargo/bin:/Users/narumi/.nvm/versions/node/v20.11.1/bin:/Users/narumi/.local/bin:/Users/narumi/.pyenv/shims:/Users/narumi/.pyenv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+      <string>/Users/narumi/.nvm/versions/node/v20.11.1/bin:/Users/narumi/.local/bin:/Users/narumi/.pyenv/shims:/Users/narumi/.pyenv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
     </dict>
     <key>Label</key>
     <string>bot</string>
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/narumi/.cargo/bin/uv</string>
+      <string>/Users/narumi/.local/bin/uv</string>
       <string>run</string>
       <string>bot</string>
     </array>
