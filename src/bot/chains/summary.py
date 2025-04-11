@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import markdown2
+from agents import Agent
+from agents import ModelSettings
+from agents import Runner
 from pydantic import BaseModel
 from pydantic import Field
 
+from ..model import get_openai_model
 from ..utils import create_page
-from .utils import generate
 
-SUMMARY_PROMPT = """
+PROMPT_TEMPLATE = """
 請以台灣繁體中文為以下內容生成：
 
 - **推理過程**：提供一系列推理步驟，說明如何得出摘要、見解。
@@ -89,6 +94,14 @@ class Summary(BaseModel):
         )
 
 
+agent = Agent(
+    "summary",
+    output_type=Summary,
+    model=get_openai_model(),
+    model_settings=ModelSettings(temperature=0.0),
+)
+
+
 async def summarize(text: str) -> str:
     """Generate a summary of the given text.
 
@@ -98,4 +111,5 @@ async def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    return str(await generate(SUMMARY_PROMPT.format(text=text), response_format=Summary))
+    result = await Runner.run(agent, input=PROMPT_TEMPLATE.format(text=text))
+    return str(result.final_output)

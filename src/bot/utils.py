@@ -90,7 +90,7 @@ async def async_load_url(url: str) -> str:
 
 
 def logfire_is_enabled() -> bool:
-    return os.getenv("LOGFIRE_TOKEN") is not None
+    return bool(os.getenv("LOGFIRE_TOKEN"))
 
 
 def configure_logfire() -> None:
