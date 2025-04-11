@@ -94,14 +94,6 @@ class Summary(BaseModel):
         )
 
 
-agent = Agent(
-    "summary",
-    output_type=Summary,
-    model=get_openai_model(),
-    model_settings=ModelSettings(temperature=0.0),
-)
-
-
 async def summarize(text: str) -> str:
     """Generate a summary of the given text.
 
@@ -111,5 +103,14 @@ async def summarize(text: str) -> str:
     Returns:
         str: A formatted string containing the summary, key points, takeaways, and hashtags.
     """
-    result = await Runner.run(agent, input=PROMPT_TEMPLATE.format(text=text))
+    agent = Agent(
+        "summary",
+        output_type=Summary,
+        model=get_openai_model(),
+        model_settings=ModelSettings(temperature=0.0),
+    )
+    result = await Runner.run(
+        agent,
+        input=PROMPT_TEMPLATE.format(text=text),
+    )
     return str(result.final_output)
