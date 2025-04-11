@@ -1,7 +1,10 @@
+from agents import Agent
+from agents import ModelSettings
+from agents import Runner
 from pydantic import BaseModel
 from pydantic import Field
 
-from .utils import generate
+from ..model import get_openai_model
 
 
 class PolishedText(BaseModel):
@@ -32,7 +35,15 @@ SYSTEM_PROMPT = """Your task is to **polish** the input text in any language to 
 """  # noqa
 
 
+agent = Agent(
+    name="Polisher",
+    model=get_openai_model(),
+    model_settings=ModelSettings(temperature=0.0),
+    instructions=SYSTEM_PROMPT,
+    output_type=PolishedText,
+)
+
+
 async def polish(text: str) -> str:
-    return str(
-        await generate(f"Polish the following text:\n{text}", system=SYSTEM_PROMPT, response_format=PolishedText)
-    )
+    result = await Runner.run(agent, input=f"Polish the following text:\n{text}")
+    return str(result.final_output)
