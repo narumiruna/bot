@@ -2014,7 +2014,7 @@ wheels = [
 
 [[package]]
 name = "twse"
-version = "0.3.3"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -2022,7 +2022,7 @@ dependencies = [
     { name = "pydantic" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4d/e8/799e9ba7ce1d151bf894d84706163e5e9b9df29ec05255d0fa23ccbb26c3/twse-0.3.3-py3-none-any.whl", hash = "sha256:e33a7a1c6ea4dc9f46410cff6d4604160f89ba81b4a1c2d58be5f8da32a499bb", size = 5941 },
+    { url = "https://files.pythonhosted.org/packages/b1/2b/6adc17249bcfae6601f881462d1cc02d3d982e0cc7ceb6de83bc519b1bf6/twse-0.4.0-py3-none-any.whl", hash = "sha256:50c4dbf6ad86459d8537c1fd5d2fc3d15c2d2232ceb0560a014f5e569595947d", size = 6008 },
 ]
 
 [[package]]
